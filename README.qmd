@@ -110,6 +110,27 @@ load_ecd(country = c('United States of America', 'Turkey', 'France'))  |>
 
 ```
 
+**Note**: There is some tolerance for typos as long as the typos are in the form of capitilization mistakes. So this works 
+
+
+```{r}
+#| eval: false
+
+load_ecd(country ='UnItED StatEs of America')
+
+```
+
+
+However, this does not work 
+
+```{r}
+#| error: true
+
+load_ecd(country = 'USA')
+
+```
+
+
 ## Python
 
 ```
