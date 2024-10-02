@@ -57,8 +57,7 @@ ecd_country_dictionary |>
 
 ## Python
 
-```{python}
-#| eval: false
+```
 import ecdata as ec
 import polars as pl 
 
@@ -90,7 +89,6 @@ load_ecd(country = 'United States of America') |>
 ## Python
 
 ```
-#| eval: false 
 
 ec.load_ecd(country = 'United States of America').head(int = 2)
 
@@ -115,7 +113,7 @@ load_ecd(country = c('United States of America', 'Turkey', 'France'))  |>
 ## Python
 
 ```
-#| eval: false
+
 
 ec.load_ecd(country = {'United States of America', 'Turkey', 'France'}).head(n = 2)
 

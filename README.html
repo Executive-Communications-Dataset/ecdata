@@ -127,12 +127,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ecdata <span class="im">as</span> ec</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>ec.ecd_country_dictionary().head(<span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<pre><code>import ecdata as ec
+import polars as pl 
+
+ec.ecd_country_dictionary().head(int = 2)
+
+</code></pre>
 </div>
 </div>
 </div>
@@ -170,8 +170,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
-<pre><code>#| eval: false 
-
+<pre><code>
 ec.load_ecd(country = 'United States of America').head(int = 2)
 </code></pre>
 </div>
@@ -217,7 +216,7 @@ ec.load_ecd(country = 'United States of America').head(int = 2)
 </div>
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
-<pre><code>#| eval: false
+<pre><code>
 
 ec.load_ecd(country = {'United States of America', 'Turkey', 'France'}).head(n = 2)
 </code></pre>
