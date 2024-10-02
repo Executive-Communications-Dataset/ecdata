@@ -89,7 +89,7 @@ load_ecd(country = 'United States of America') |>
 
 ## Python
 
-```{python}
+```
 #| eval: false 
 
 ec.load_ecd(country = 'United States of America').head(int = 2)
@@ -114,7 +114,7 @@ load_ecd(country = c('United States of America', 'Turkey', 'France'))  |>
 
 ## Python
 
-```{python}
+```
 #| eval: false
 
 ec.load_ecd(country = {'United States of America', 'Turkey', 'France'}).head(n = 2)
@@ -132,6 +132,10 @@ For the Python version you can feed `load_ecd` a list or a dictionary.
 
 We also provide a set of an example scrappers in part to quickly summarize our replication files and for other researchers to either collect more recent data or expand the cases in our dataset. To call these scrappers simply run:
 
+:::panel-tabset
+
+## R
+
 ```{r}
 #| eval: false
 
@@ -143,5 +147,19 @@ example_scrapper(scrapper_type = 'static')
 example_scrapper(scrapper_type = 'dynamic')
 
 ```
+
+## Python
+
+```
+## static scrapper
+ec.example_scrapper(scrapper_type = 'static')
+
+# warning static scrapper outputs R file
+
+ec.example_scrapper(scraper_type = 'dynamic')
+
+
+```
+:::
 
 If `scrapper_type = 'static'` this will open a R script in your current editor. If `scrapper_type = 'dynamic'` this will open a Python script in your editor.
