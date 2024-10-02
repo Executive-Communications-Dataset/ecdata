@@ -1,5 +1,5 @@
 Package: ecdata
-Title: Loads Data From The Executive Communications Dataset
+Title: Loads Data from the Executive Communications Dataset
 Version: 1.0.0
 Authors@R: c(
     person("Joshua", "Allen", , "joshua.f.allen@gmail.com", role = c("aut", "cre"),
