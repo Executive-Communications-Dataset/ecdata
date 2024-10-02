@@ -16,7 +16,7 @@ Encoding: UTF-8
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 LazyData: true
-BugReports: https://github.com/joshuafayallen/ecdata/issues
+BugReports: https://github.com/Executive-Communications-Dataset/ecdata/issues
 Depends: R (>= 4.0)
 Imports: 
     arrow (>= 16.1.0),

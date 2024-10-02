@@ -10,9 +10,9 @@ Dataset*. It includes subsets of all the country data, the full dataset,
 data dictionaries, and a sample script to help users expand the dataset.
 For our full replication archive, see the relevant subdirectories in
 [our
-GitHub](https://github.com/joshuafayallen/executivestatements/tree/main/raw-data).
+GitHub](https://github.com/Executive-Communications-Dataset/ecdata/tree/main/raw-data).
 For a Python implementation see
-[execcommunications-py](https://github.com/joshuafayallen/executivecommunications-py).
+[execcommunications-py](https://github.com/Executive-Communications-Dataset/ecdata-py).
 
 ## Installation
 
@@ -21,13 +21,13 @@ To install `ecdata` run.
 ## R
 
 ``` r
-pak::pkg_install('joshuafayallen/ecdata')
+pak::pkg_install('Executive-Communications-Dataset/ecdata')
 ```
 
 ## Python
 
 
-    (uv) pip install git+https://github.com/joshuafayallen/executivecommunications-py
+    (uv) pip install git+https://github.com/Executive-Communications-Dataset/ecdata-py
 
 ## Usage
 
@@ -43,13 +43,13 @@ ecd_country_dictionary |>
     head()
 ```
 
-      name_in_dataset  file_name
-    1       Argentina  argentina
-    2       Australia  australia
-    3         Austria    austria
-    4      Azerbaijan azerbaijan
-    5         Bolivia    bolivia
-    6          Brazil     brazil
+         country   language
+    1  Argentina    Spanish
+    2  Australia    English
+    3    Austria    English
+    4 Azerbaijan    English
+    5    Bolivia    Spanish
+    6     Brazil  Portugese
 
 ## Python
 
@@ -71,6 +71,8 @@ countries
 load_ecd(country = 'United States of America') |>
     head(n = 2)
 ```
+
+    ✔ Successfully downloaded data for United States of America
 
                        country
     1 United States of America

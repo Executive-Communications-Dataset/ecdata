@@ -43,7 +43,7 @@ load_ecd = \(country = NULL, language = NULL , full_ecd = FALSE, ecd_version = '
   if(full_ecd == TRUE && isTRUE(is.null(country)) && isTRUE(is.null(language))){
 
   
-  url = glue::glue('https://github.com/joshuafayallen/executivestatements/releases/download/{ecd_version}/full_ecd.parquet')
+  url = glue::glue('https://github.com/Executive-Communications-Dataset/ecdata/releases/download/{ecd_version}/full_ecd.parquet')
   
   ecd_data = read_parquet(url)
     

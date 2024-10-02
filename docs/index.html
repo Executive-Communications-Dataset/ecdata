@@ -112,7 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/joshuafayallen/ecdata"> <i class="bi bi-github" role="img" aria-label="ecdata GitHub">
+    <a class="nav-link" href="https://github.com/Executive-Communications-Dataset/ecdata"> <i class="bi bi-github" role="img" aria-label="ecdata GitHub">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -180,6 +180,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">License</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./CITATION.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citation</span></a>
+  </div>
+</li>
     </ul>
 </div>
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
@@ -198,7 +204,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content"><p align="center">
 <a href="https://joshuafayallen.github.io/ecdata/"> <img src="hex-logo.png" height="350" class="center"></a>
 </p>
-<p><code>ecdata</code> is a minimal package for downloading <em>Executive Communications Dataset</em>. It includes subsets of all the country data, the full dataset, data dictionaries, and a sample script to help users expand the dataset. For our full replication archive, see the relevant subdirectories in <a href="https://github.com/joshuafayallen/executivestatements/tree/main/raw-data">our GitHub</a>. For a Python implementation see <a href="https://github.com/joshuafayallen/executivecommunications-py">execcommunications-py</a>.</p>
+<p><code>ecdata</code> is a minimal package for downloading <em>Executive Communications Dataset</em>. It includes subsets of all the country data, the full dataset, data dictionaries, and a sample script to help users expand the dataset. For our full replication archive, see the relevant subdirectories in <a href="https://github.com/Executive-Communications-Dataset/ecdata/tree/main/raw-data">our GitHub</a>. For a Python implementation see <a href="https://github.com/Executive-Communications-Dataset/ecdata-py">execcommunications-py</a>.</p>
 <section id="installation" class="level2"><h2 class="anchored" data-anchor-id="installation">Installation</h2>
 <p>To install <code>ecdata</code> run.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
@@ -209,12 +215,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html">pkg_install</a></span><span class="op">(</span><span class="st">'joshuafayallen/ecdata'</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html">pkg_install</a></span><span class="op">(</span><span class="st">'Executive-Communications-Dataset/ecdata'</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <pre><code>
-(uv) pip install git+https://github.com/joshuafayallen/executivecommunications-py
+(uv) pip install git+https://github.com/Executive-Communications-Dataset/ecdata-py
 </code></pre>
 </div>
 </div>
@@ -234,13 +240,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="va">ecd_country_dictionary</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  name_in_dataset  file_name
-1       Argentina  argentina
-2       Australia  australia
-3         Austria    austria
-4      Azerbaijan azerbaijan
-5         Bolivia    bolivia
-6          Brazil     brazil</code></pre>
+<pre><code>     country   language
+1  Argentina    Spanish
+2  Australia    English
+3    Austria    English
+4 Azerbaijan    English
+5    Bolivia    Spanish
+6     Brazil  Portugese</code></pre>
 </div>
 </div>
 </div>
@@ -266,6 +272,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ecdata/man/load_ecd.html">load_ecd</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">'United States of America'</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ Successfully downloaded data for United States of America</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                   country
 1 United States of America
@@ -287,7 +296,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ec.load_ecd(country <span class="op">=</span> <span class="st">'United States of America'</span>).head(<span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ec.load_ecd(country <span class="op">=</span> <span class="st">'United States of America'</span>).head(<span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -301,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ecdata/man/load_ecd.html">load_ecd</a></span><span class="op">(</span>country <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'United States of America'</span>, <span class="st">'Turkey'</span>, <span class="st">'France'</span><span class="op">)</span><span class="op">)</span>  <span class="op">|&gt;</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/ecdata/man/load_ecd.html">load_ecd</a></span><span class="op">(</span>country <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'United States of America'</span>, <span class="st">'Turkey'</span>, <span class="st">'France'</span><span class="op">)</span><span class="op">)</span>  <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>✔ Successfully downloaded data for United States of America, Turkey, and France</code></pre>
@@ -336,7 +345,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ec.load_ecd(country <span class="op">=</span> {<span class="st">'United States of America'</span>, <span class="st">'Turkey'</span>, <span class="st">'France'</span>}).head(n <span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ec.load_ecd(country <span class="op">=</span> {<span class="st">'United States of America'</span>, <span class="st">'Turkey'</span>, <span class="st">'France'</span>}).head(n <span class="op">=</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -345,7 +354,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section><section id="example-scrappers" class="level2"><h2 class="anchored" data-anchor-id="example-scrappers">Example Scrappers</h2>
 <p>We also provide a set of an example scrappers in part to quickly summarize our replication files and for other researchers to either collect more recent data or expand the cases in our dataset. To call these scrappers simply run:</p>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># static website scrapper</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># static website scrapper</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/ecdata/man/example_scrapper.html">example_scrapper</a></span><span class="op">(</span>scrapper_type <span class="op">=</span> <span class="st">'static'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># dynamic website scrapper </span></span>

@@ -1,11 +1,11 @@
 
 <p align="center">
-<a href="https://joshuafayallen.github.io/ecdata/">
+<a href="https://executive-communications-dataset.github.io/ecdata/">
 <img src="hex-logo.png" height = "350" class = "center"> </a>
 </p>
 
 
-`ecdata` is a minimal package for downloading *Executive Communications Dataset*. It includes subsets of all the country data, the full dataset, data dictionaries, and a sample script to help users expand the dataset. For our full replication archive, see the relevant subdirectories in [our GitHub](https://github.com/joshuafayallen/executivestatements/tree/main/raw-data). For a Python implementation see [execcommunications-py](https://github.com/joshuafayallen/executivecommunications-py).
+`ecdata` is a minimal package for downloading *Executive Communications Dataset*. It includes subsets of all the country data, the full dataset, data dictionaries, and a sample script to help users expand the dataset. For our full replication archive, see the relevant subdirectories in [our GitHub](https://github.com/Executive-Communications-Dataset/ecdata/tree/main/raw-data). For a Python implementation see [execcommunications-py](https://github.com/Executive-Communications-Dataset/ecdata-py).
 
 ## Installation 
 
@@ -23,7 +23,7 @@ To install `ecdata` run.
 #| results: hide 
 #| eval: false
 
-pak::pkg_install('joshuafayallen/ecdata')
+pak::pkg_install('Executive-Communications-Dataset/ecdata')
 
 ```
 
@@ -31,7 +31,7 @@ pak::pkg_install('joshuafayallen/ecdata')
 
 ```
 
-(uv) pip install git+https://github.com/joshuafayallen/executivecommunications-py
+(uv) pip install git+https://github.com/Executive-Communications-Dataset/ecdata-py
 
 ```
 

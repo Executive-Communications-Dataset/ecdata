@@ -26,7 +26,7 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
     country_names = country_names |>
       within({
         
-        file_names = glue::glue('https://github.com/joshuafayallen/executivestatements/releases/download/{ecd_version}/{file_name}.parquet')
+        file_names = glue::glue('https://github.com/Executive-Communications-Dataset/ecdata/releases/download/{ecd_version}/{file_name}.parquet')
       })
       country_names = country_names$file_names
   
@@ -48,7 +48,7 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
   
     country_names = country_names |>
       within({
-        file_names = glue::glue('https://github.com/joshuafayallen/executivestatements/releases/download/{ecd_version}/{file_name}.parquet')
+        file_names = glue::glue('https://github.com/Executive-Communications-Dataset/ecdata/releases/download/{ecd_version}/{file_name}.parquet')
       })
     
       country_names = country_names$file_names
@@ -75,7 +75,7 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
 
       country_names = country_names |>
         within({
-          file_names = glue::glue('https://github.com/joshuafayallen/executivestatements/releases/download/{ecd_version}/{file_name}.parquet')
+          file_names = glue::glue('https://github.com/Executive-Communications-Dataset/ecdata/releases/download/{ecd_version}/{file_name}.parquet')
         })
       
       

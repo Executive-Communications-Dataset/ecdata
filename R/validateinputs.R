@@ -7,7 +7,7 @@
 
 get_ecd_release = \(){
   
- ecd_versions = piggyback::pb_releases(repo = 'joshuafayallen/executivestatements')
+ ecd_versions = piggyback::pb_releases(repo = 'Executive-Communications-Dataset/ecdata')
   
  versions = ecd_versions$release_name 
  
