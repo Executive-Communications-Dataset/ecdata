@@ -1,7 +1,7 @@
 
 
 <p align="center">
-<a href="https://joshuafayallen.github.io/ecdata/">
+<a href="https://executive-communications-dataset.github.io/ecdata/">
 <img src="hex-logo.png" height = "350" class = "center"> </a>
 </p>
 

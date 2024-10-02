@@ -30,6 +30,10 @@ website:
            file: man/example_scrapper.qmd
          - text: "`load_ecd`"
            file: man/load_ecd.qmd
+      - section: Vignettes
+        contents:
+         - text: "Improving Speed with the Full ECD"
+           file: vignettes/performance.qmd
       - text: News
         file: $ALTDOC_NEWS
       - text: Changelog

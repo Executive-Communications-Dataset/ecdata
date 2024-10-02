@@ -4,7 +4,7 @@
     "href": "CITATION.html",
     "title": "Citation",
     "section": "",
-    "text": "Citation\nTo cite package ‘ecdata’ in publications use:\n\nAllen J, Horne W (2024). ecdata: Loads Data From The Executive Communications Dataset. R package version 1.0.0, commit 6e1b291de2eb08053ead852f98cd3e60bf7b71b3, https://github.com/joshuafayallen/ecdata.",
+    "text": "Citation\nTo cite package ‘ecdata’ in publications use:\n\nAllen J, Horne W (2024). ecdata: Loads Data From The Executive Communications Dataset. R package version 1.0.0, commit 76601cace4438138e3112b55e1a5d84611b74ba5, https://github.com/Executive-Communications-Dataset/ecdata.",
     "crumbs": [
       "Citation"
     ]
@@ -79,7 +79,11 @@
     "href": "vignettes/performance.html",
     "title": "Working With The Full Executive Communications Dataset",
     "section": "",
-    "text": "R\nPython\n\n\n\n\nprint('hello world')\n\n[1] \"hello world\"\n\n\n\n\n\nprint('hello workld')\n\nhello workld"
+    "text": "R\nPython\n\n\n\n\nprint('hello world')\n\n[1] \"hello world\"\n\n\n\n\n\nprint('hello workld')\n\nhello workld",
+    "crumbs": [
+      "Vignettes",
+      "Improving Speed with the Full ECD"
+    ]
   },
   {
     "objectID": "index.html",
