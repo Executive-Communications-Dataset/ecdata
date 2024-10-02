@@ -6,13 +6,7 @@
 \title{ECD country dictionary
 A data dictionary with the countries in our dataset and their corresponding file names on Github}
 \format{
-\subsection{\code{ecd_country_dictionary}}{
-
-a data frame with 41 rows and 2 columns
-\describe{
-\item{name_in_dataset}{Name of the country in the dataset}
-\item{file_name}{Name of the parquet files on GitHub}}
-}
+An object of class \code{data.frame} with 41 rows and 2 columns.
 }
 \source{
 The Executive Communications Dataset
@@ -21,7 +15,9 @@ The Executive Communications Dataset
 ecd_country_dictionary
 }
 \description{
-ECD country dictionary
-A data dictionary with the countries in our dataset and their corresponding file names on Github
+a data frame with 41 rows and 2 columns
+\describe{
+\item{name_in_dataset}{Name of the country in the dataset}
+\item{file_name}{Name of the parquet files on GitHub}}
 }
 \keyword{datasets}

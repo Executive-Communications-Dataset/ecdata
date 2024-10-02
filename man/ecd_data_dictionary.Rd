@@ -4,9 +4,7 @@
 \name{ecd_data_dictionary}
 \alias{ecd_data_dictionary}
 \title{ECD data dictionary
-a data dictionary of the columns in our dataset
-\describe{
-\item{col}{please just call ecd_country_dictionary function}}}
+a data dictionary of the columns in our dataset}
 \format{
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 13 rows and 2 columns.
 }
@@ -19,7 +17,8 @@ ecd_data_dictionary
 \description{
 ECD data dictionary
 a data dictionary of the columns in our dataset
-\describe{
-\item{col}{please just call ecd_country_dictionary function}}
+}
+\seealso{
+\link{func(ecd_data_dictionary)}
 }
 \keyword{datasets}
