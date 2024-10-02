@@ -15,13 +15,14 @@
 
 #' ECD data dictionary
 #' a data dictionary of the columns in our dataset 
+#' 
 #' \describe{
 #'   \item{country}{name of a country in our dataset}
 #'   \item{date}{date of statement}
-#'    \item{title}{title of the statement}
-#'     \item{text}{text of the statement}
-#'      \item{url}{url of the statement}
-#'      \item{file}{name of the file in the replication repo}}
+#'   \item{title}{title of the statement}
+#'   \item{text}{text of the statement}
+#'   \item{url}{url of the statement}
+#'   \item{file}{name of the file in the replication repo}}
 #' 
 #' @source The Executive Communications Dataset
  

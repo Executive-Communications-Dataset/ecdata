@@ -4,14 +4,7 @@
 \name{ecd_data_dictionary}
 \alias{ecd_data_dictionary}
 \title{ECD data dictionary
-a data dictionary of the columns in our dataset
-\describe{
-\item{country}{name of a country in our dataset}
-\item{date}{date of statement}
-\item{title}{title of the statement}
-\item{text}{text of the statement}
-\item{url}{url of the statement}
-\item{file}{name of the file in the replication repo}}}
+a data dictionary of the columns in our dataset}
 \format{
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 13 rows and 2 columns.
 }
@@ -22,8 +15,6 @@ The Executive Communications Dataset
 ecd_data_dictionary
 }
 \description{
-ECD data dictionary
-a data dictionary of the columns in our dataset
 \describe{
 \item{country}{name of a country in our dataset}
 \item{date}{date of statement}
