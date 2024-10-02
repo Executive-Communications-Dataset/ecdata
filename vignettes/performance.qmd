@@ -1,8 +1,6 @@
----
-title: "Working With The Full Executive Communications Dataset"
-format: html
-jupyter: python3
----
+
+
+
 
 :::panel-tabset
 
