@@ -40,7 +40,7 @@ country_dictionary = \(){
         Philippines,  philippines, Filipino
         Poland,  poland, Polish
         Portugal,  portugal, Portugese,
-        Republic of South Korea,  republic_of_south_korea, Korean,
+        Republic of Korea,  republic_of_korea, Korean,
         Russia,  russia, English,
         Spain,  spain, Spanish,
         Turkey,  turkey, Turkish, 
