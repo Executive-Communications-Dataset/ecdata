@@ -2,20 +2,22 @@ Package: ecdata
 Title: Loads Data from the Executive Communications Dataset
 Version: 1.0.0
 Authors@R: c(
-    person("Joshua", "Allen", , "joshua.f.allen@gmail.com", role = c("aut", "cre"),
+    person(given = "Joshua", family = "Allen" , email = "joshua.f.allen@gmail.com", role = c("aut", "cre", 'cph'),
            comment = c(ORCID = "0000-0003-0554-1191")),
-    person("Ryan", "Carlin", , 'rcarlin@gsu.edu', role = c('ctb')),
-    person('Juan','Gomez-Gómez-Cruces', , 'juan.gomezcruces@hpi.de' , role = c('ctb')),
-    person("Will", 'Horne', ,"rwhorne@clemson.edu", role = c('aut', 'ctb')),
-    person('Jamie','Lindh', , "jlindh@unc.edu" ,role = c('ctb')),
-    person('Cecilia','Martinez-Gallardo',  , "cmg@email.unc.edu", role = c('ctb')),
-    person('Miles','Massesy', , 'milesmcma@gmail.com' ,role = c('ctb')))
-Description: Imports The Executive Communications Dataset.
+    person( given = "Ryan", family = "Carlin" , email = 'rcarlin@gsu.edu', role = c('ctb')),
+    person(given = 'Juan', family = 'Gomez-Gómez-Cruces', email = 'juan.gomezcruces@hpi.de' , role = c('ctb')),
+    person(given ="Will", family = 'Horne', email = "rwhorne@clemson.edu", role = c('aut', 'ctb')),
+    person(given = 'Jamie', family ='Lindh', email = "jlindh@unc.edu" ,role = c('ctb')),
+    person(given = 'Cecilia',family ='Martinez-Gallardo', email = "cmg@email.unc.edu", role = c('ctb')),
+    person(given = 'Miles', family = 'Massesy' , email = 'milesmcma@gmail.com' ,role = c('ctb')))
+Description: Imports The Executive Communications Dataset from GitHub releases. The Executive Communications dataset 
+    gathers data from Executive leaders from across the world in a variety of languages.
 License: CC BY 4.0
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 LazyData: true
+URL: https://executive-communications-dataset.github.io/ecdata/, https://github.com/Executive-Communications-Dataset/ecdata
 BugReports: https://github.com/Executive-Communications-Dataset/ecdata/issues
 Depends: R (>= 4.0)
 Imports: 
