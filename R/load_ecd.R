@@ -6,6 +6,7 @@
 #' @param language a character vector with a lanaguage or languages in our dataset to download. For a list of valid languages call "ecd_country_dictionary"
 #' @param full_ecd to download the full Executive Communications Dataset set full_ecd to TRUE and don't provide an argument to the country argument
 #' @param ecd_version a character of ecd versions. 
+#' @returns A tibble with the specified country/countries or language/languages
 #' @importFrom vctrs list_unchop
 #' @importFrom arrow read_parquet
 #' @export

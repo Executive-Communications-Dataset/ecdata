@@ -3,6 +3,7 @@
 #' opens and example web scraper in your text editor 
 #' 
 #' @param scrapper_type calls the example scrapper scripts. Should be one of static or dynamic which matches the kind of scrapper you want to use
+#' @returns an example webscrapper
 #' @importFrom utils file.edit
 #' @examples 
 #' #'

@@ -9,6 +9,9 @@ example_scrapper(scrapper_type = c("static", "dynamic"))
 \arguments{
 \item{scrapper_type}{calls the example scrapper scripts. Should be one of static or dynamic which matches the kind of scrapper you want to use}
 }
+\value{
+an example webscrapper
+}
 \description{
 opens and example web scraper in your text editor
 }

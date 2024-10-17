@@ -22,6 +22,9 @@ load_ecd(
 
 \item{ecd_version}{a character of ecd versions.}
 }
+\value{
+A tibble with the specified country/countries or language/languages
+}
 \description{
 Reading Executive Communications Dataset
 
