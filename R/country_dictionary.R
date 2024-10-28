@@ -5,64 +5,83 @@
 
 country_dictionary = \(){
   
-  country_names = 'name_in_dataset, file_name, language,
-        Argentina,  argentina, Spanish,
-        Australia,  australia, English,
-        Austria,  austria, English,
-        Azerbaijan,  azerbaijan, English,
-        Bolivia,  bolivia, Spanish,
-        Brazil, brazil, Portugese,
-        Canada,  canada, English,
-        Chile,  chile, Spanish,
-        Colombia,  colombia, Spanish,
-        Costa Rica,  costa_rica, Spanish,
-        Czechia,  czechia, Czech,
-        Denmark,  denmark, Danish,
-        Ecuador,  ecuador, Spanish,
-        France,  france, French,
-        Georgia,  georgia, Georgian,
-        Germany,  germany, German,
-        Greece,  greece, Greek,
-        Hong Kong,  hong_kong, Chinese,
-        Hungary,  hungary, Hungarian
-        Iceland,  iceland, Icelandic,
-        India,  india, English,
-        India, india, Hindi,
-        Indonesia,  indonesia, Indonesian, 
-        Israel,  israel, Hebrew,
-        Italy,  italy, Italian
-        Jamaica,  jamaica, English,
-        Japan,  japan, Japanese,
-        Mexico,  mexico, Spanish,
-        New Zealand,  new_zealand, English
-        Nigeria,  nigeria, English,
-        Norway,  norway, Norwegian
-        Philippines,  philippines, Filipino
-        Poland,  poland, Polish
-        Portugal,  portugal, Portugese,
-        Republic of Korea,  republic_of_korea, Korean,
-        Russia,  russia, English,
-        Spain,  spain, Spanish,
-        Turkey,  turkey, Turkish, 
-        United Kingdom,  united_kingdom, English,
-        United States of America,  united_states_of_america, English,
-        Uruguay,  uruguay, Spanish,
-        Venezuela,  venezuela, Spanish'
-
-out = utils::read.csv(
-  text = country_names,
-  colClasses = c('character', 'character', 'character')
-) 
+  country_dictionary = \(){
   
-out = out[, c(1:3)]
-
-for (i in 1:3) {
-
-  out[[i]] = trimws(out[[i]])
+    country_names = data.frame(
+      file_name = rep(
+        c(
+          "argentina", "australia", "austria", "azerbaijan", "bolivia", "brazil",
+          "canada", "chile", "colombia", "costa_rica", "czechia", "denmark",
+          "dominican_republic", "ecuador", "france", "georgia", "germany", "greece",
+          "hong_kong", "hungary", "iceland", "india", "indonesia", "israel", "italy",
+          "jamaica", "japan", "mexico", "new_zealand", "nigeria", "norway",
+          "philippines", "poland", "portugal", "russia", "spain", "turkey",
+          "united_kingdom", "uruguay", "venezuela", "united_states_of_america",
+          "republic_of_korea"
+        ),
+        rep(
+          c(2L, 4L, 2L, 4L, 2L, 4L, 2L, 6L, 2L, 4L),
+          c(3L, 1L, 17L, 1L, 12L, 1L, 2L, 1L, 2L, 2L)
+        )
+      ),
+      language = rep(
+        c(
+          "Spanish", "English", "German", "English", "Spanish", "Portugese", "English",
+          "Spanish", "Czech", "Danish", "Spanish", "French", "Georgian", "German",
+          "Greek", "Chinese", "Hungarian", "Icelandic", "English", "Hindi",
+          "Indonesian", "Hebrew", "Italian", "English", "Japanese", "Spanish",
+          "English", "Norwegian", "Filipino", "Polish", "Portugese", "English",
+          "Spanish", "Turkish", "English", "Spanish", "English", "Korean"
+        ),
+        rep(
+          c(2L, 4L, 2L, 6L, 2L, 4L, 2L, 4L, 2L, 4L, 2L, 6L, 4L),
+          c(3L, 1L, 3L, 1L, 2L, 1L, 15L, 1L, 4L, 1L, 2L, 1L, 3L)
+        )
+      ),
+      abbr = c(
+        "ARG", "AR", "AUS", "AU", "AUT", "AT", "AZE", "AZ", "AZE", "AZ", "BOL", "BO",
+        "BRA", "BR", "CAN", "CA", "CHL", "CL", "COL", "CO", "CRI", "CR", "CZE", "CZ",
+        "DNK", "DK", "DOM", "DO", "ECU", "EC", "FRA", "FR", "GEO", "GE", "DEU", "DE",
+        "GRC", "GR", "HKG", "HK", "HUN", "HU", "ISL", "IS", "IND", "IN", "IND", "IN",
+        "IDN", "ID", "ISR", "IL", "ITA", "IT", "JAM", "JM", "JPN", "JP", "MEX", "MX",
+        "NZL", "NZ", "NGA", "NG", "NOR", "NO", "PHL", "PH", "POL", "PL", "PRT", "PT",
+        "RUS", "RU", "RUS", "RU", "ESP", "ES", "TUR", "TR", "GBR", "GBR", "GB", "GB",
+        "UK", "UK", "URY", "UY", "VEN", "VE", "USA", "USA", "US", "US", "KOR", "KOR",
+        "KR", "KR"
+      ),
+      name_in_dataset = c(
+        "Argentina", "Argentina", "Australia", "Australia", "Austria", "Austria",
+        "Azerbaijan", "Azerbaijan", "Azerbaijan", "Azerbaijan", "Bolivia", "Bolivia",
+        "Brazil", "Brazil", "Canada", "Canada", "Chile", "Chile", "Colombia",
+        "Colombia", "Costa Rica", "Costa Rica", "Czechia", "Czechia", "Denmark",
+        "Denmark", "Dominican Republic", "Dominican Republic", "Ecuador", "Ecuador",
+        "France", "France", "Georgia", "Georgia", "Germany", "Germany", "Greece",
+        "Greece", "Hong Kong", "Hong Kong", "Hungary", "Hungary", "Iceland",
+        "Iceland", "India", "India", "India", "India", "Indonesia", "Indonesia",
+        "Israel", "Israel", "Italy", "Italy", "Jamaica", "Jamaica", "Japan", "Japan",
+        "Mexico", "Mexico", "New Zealand", "New Zealand", "Nigeria", "Nigeria",
+        "Norway", "Norway", "Philippines", "Philippines", "Poland", "Poland",
+        "Portugal", "Portugal", "Russia", "Russia", "Russia", "Russia", "Spain",
+        "Spain", "Turkey", "Turkey", "United Kingdom", "Great Britain",
+        "United Kingdom", "Great Britain", "United Kingdom", "Great Britain",
+        "Uruguay", "Uruguay", "Venezuela", "Venezuela", "United States of America",
+        "United States", "United States of America", "United States",
+        "Republic of Korea", "South Korea", "Republic of Korea", "South Korea"
+      )
+    )
+    
   
-}
-
-return(out)
+    
+  
+  for (i in 2:4) {
+  
+    country_names[[i]] = trimws(country_names[[i]])
+    
+  }
+  
+  return(country_names)
+  
+  }
 
 }
 

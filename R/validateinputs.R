@@ -31,6 +31,7 @@ validate_inputs = \(country = NULL,language = NULL, full_ecd = FALSE, version = 
     within({
       name_in_dataset = tolower(name_in_dataset)
       language = tolower(language)
+      abbr = tolower(abbr)
     })
 
 
@@ -46,8 +47,13 @@ validate_inputs = \(country = NULL,language = NULL, full_ecd = FALSE, version = 
 
   lower_lang = tolower(language)
 
+  check_abr = countries$abbr
+
 
   invalid_countries = any(country_lower %in% check_country)
+
+  invalid_abr = any(country_lower %in%  check_abr)
+
 
   invalid_language = any(lower_lang %in% check_language)
 
@@ -84,7 +90,7 @@ validate_inputs = \(country = NULL,language = NULL, full_ecd = FALSE, version = 
 
 
   }
-  if(invalid_countries == FALSE && !isTRUE(is.null(country)) && isTRUE(is.null(language))){
+  if(invalid_countries == FALSE && invalid_abr == FALSE && !isTRUE(is.null(country)) && isTRUE(is.null(language))){
 
     countries = country_dictionary()$name_in_dataset
 
@@ -96,7 +102,7 @@ validate_inputs = \(country = NULL,language = NULL, full_ecd = FALSE, version = 
 
   }
 
-  if(invalid_language == FALSE && !isTRUE(is.null(language)) && isTRUE(is.null(country))){ 
+  if(invalid_language == FALSE &&  !isTRUE(is.null(language)) && isTRUE(is.null(country))){ 
 
    langs = country_dictionary()$language
 
@@ -120,6 +126,7 @@ validate_inputs = \(country = NULL,language = NULL, full_ecd = FALSE, version = 
 
 
   }
+
 
 
 

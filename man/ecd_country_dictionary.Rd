@@ -6,7 +6,7 @@
 \title{ECD country dictionary
 A data dictionary with the countries in our dataset and their corresponding file names on Github}
 \format{
-An object of class \code{data.frame} with 41 rows and 2 columns.
+An object of class \code{data.frame} with 45 rows and 7 columns.
 }
 \source{
 The Executive Communications Dataset

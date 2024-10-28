@@ -27,8 +27,12 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
       within({
         
         file_names = glue::glue('https://github.com/Executive-Communications-Dataset/ecdata/releases/download/{ecd_version}/{file_name}.parquet')
-      })
+      }) 
+       
+    
       country_names = country_names$file_names
+    
+      country_names = unique(country_names)
   
   }
     
@@ -63,13 +67,16 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
         within({
           name_in_dataset = tolower(name_in_dataset)
           language = tolower(language)
+          abbr = tolower(abbr)
         })
       
         lang_lower = tolower(language)
       
         country_lower = tolower(country)
+        
   
-      country_names = countries[countries$language %in% lang_lower | countries$name_in_dataset %in% country_lower,]
+       country_names = countries[countries$language %in% lang_lower | countries$name_in_dataset %in% country_lower |
+                                 countries$abbr %in% country_lower,]
         
       
 
@@ -80,6 +87,8 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
       
       
         country_names = country_names$file_names
+       
+        country_names = unique(country_names)
   
     }
     
