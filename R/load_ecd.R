@@ -39,7 +39,7 @@
 
 load_ecd = \(country = NULL, language = NULL , full_ecd = FALSE, ecd_version = '1.0.0'){
 
-  validate_inputs(country,language ,full_ecd ,version = ecd_version)
+  validate_inputs(country, language , full_ecd , version = ecd_version)
 
   if(full_ecd == TRUE && isTRUE(is.null(country)) && isTRUE(is.null(language))){
 
