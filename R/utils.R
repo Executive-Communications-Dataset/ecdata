@@ -15,11 +15,12 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
     countries = countries |>
       within({
         name_in_dataset = tolower(name_in_dataset)
+        abbr = tolower(abbr)
       })
     
     country_lower = tolower(country)
   
-    country_names = countries[countries$name_in_dataset %in% country_lower,]
+    country_names = countries[countries$name_in_dataset %in% country_lower | countries$abbr %in% country_lower,]
 
 
   

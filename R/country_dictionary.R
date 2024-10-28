@@ -2,8 +2,6 @@
 #' keywords @internal 
 #' @noRd
 
-
-country_dictionary = \(){
   
   country_dictionary = \(){
   
@@ -83,5 +81,4 @@ country_dictionary = \(){
   
   }
 
-}
 
