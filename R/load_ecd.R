@@ -71,9 +71,13 @@ load_ecd = \(country = NULL, language = NULL , full_ecd = FALSE, ecd_version = '
 
 
       if(nrow(ecd_data) != 0){
-        cli::cli_alert_success('Successfully downloaded data for {country}')
-      }else{
-        
+          
+        ecd_country = ecd_data$country
+
+        ecd_country =  unique(ecd_country)
+
+
+        cli::cli_alert_success('Successfully downloaded data for {ecd_country}')
       }
    
 
