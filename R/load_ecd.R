@@ -6,6 +6,7 @@
 #' @param language a character vector with a lanaguage or languages in our dataset to download. 
 #' @param full_ecd to download the full Executive Communications Dataset set full_ecd to TRUE
 #' @param ecd_version a character of ecd versions. 
+#' @importFrom vctrs list_unchop
 #' @returns A tibble with the specified country/countries or language/languages
 #' @export
 #' @examples
@@ -67,7 +68,7 @@ if(full_ecd == FALSE && !isTRUE(is.null(country)) && isTRUE(is.null(language))){
       ecd_data <- lapply(links_to_read, \(x) arrow::read_parquet(x))
 
       ecd_data <- ecd_data |>
-        vctrs::list_unchop()
+        list_unchop()
 
 
       if(nrow(ecd_data) != 0){
@@ -94,7 +95,7 @@ if(full_ecd == FALSE && isTRUE(is.null(country)) && !isTRUE(is.null(language))){
     links_to_read = link_builder(language = language, ecd_version = ecd_version)
     
     ecd_data = lapply(links_to_read, \(x) arrow::read_parquet(x)) |> 
-      vctrs::list_unchop()
+      list_unchop()
 
     if(nrow(ecd_data) > 0){
 
@@ -111,7 +112,7 @@ if(full_ecd == FALSE && !isTRUE(is.null(country)) && !isTRUE(is.null(language)))
      links_to_read = link_builder(country = country, language = language)
     
     ecd_data = lapply(links_to_read, \(x) arrow::read_parquet(x)) |>
-      vctrs::list_unchop()
+      list_unchop()
 
     if(nrow(ecd_data) > 0){
 
