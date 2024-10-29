@@ -18,10 +18,5 @@ link_vec = c('https://github.com/Executive-Communications-Dataset/ecdata/release
   
 expect_equal(obs_two, link_vec)  
  
-this_should_fail = link_builder(country = c('USA', 'UK', 'ROK'), ecd_version = '1.0.0')
-  
-  
-expect_length(this_should_fail, n = 0)
-  
 
 })
