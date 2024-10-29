@@ -18,6 +18,5 @@ link_vec = c('https://github.com/Executive-Communications-Dataset/ecdata/release
   
 expect_equal(obs_two, link_vec)  
 
-  
 
 })
