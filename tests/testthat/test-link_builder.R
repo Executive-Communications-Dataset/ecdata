@@ -17,6 +17,6 @@ link_vec = c('https://github.com/Executive-Communications-Dataset/ecdata/release
             'https://github.com/Executive-Communications-Dataset/ecdata/releases/download/1.0.0/turkey.parquet')
   
 expect_equal(obs_two, link_vec)  
- 
+
 
 })

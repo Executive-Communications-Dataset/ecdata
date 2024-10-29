@@ -98,3 +98,27 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
     return(country_names)
   
   }
+
+#' keywords @internal 
+#' @noRd
+#' 
+
+  cache_messge = \(){
+    do_it <- getOption("ecdata.verbose", default = interactive()) && getOption("ecdata.cache_warning", default = interactive())
+     
+     if(isTRUE(do_it)){
+     rlang::inform(
+       message = c(
+         "Note: ecdata cache (i.e., stores a sved version) data by default. \n If you expect different outputs try one of the following:",
+         i  = 'Restart your R session or',
+         i = "Run ecdata::.clear_cache()"
+       ),
+       .frequency = "regularly",
+       .frequency_id = "cache_messages"
+     )
+   
+     }
+   
+   
+   }
+    
