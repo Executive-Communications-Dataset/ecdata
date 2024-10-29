@@ -37,4 +37,3 @@ Suggests:
     data.table,
     altdoc
 Config/testthat/edition: 3
-

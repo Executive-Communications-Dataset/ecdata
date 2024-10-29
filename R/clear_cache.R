@@ -2,12 +2,12 @@
 #'
 #' This function clears the memoised cache of all functions memoised by `ecdata`.
 #'
-#' @rdname clear_cache
 #' @return A success message after clearing the cache.
 #' @examples
 #' \dontrun{
 #' clear_cache()
 #' }
+#' 
 #' @export
 
 clear_cache = \(){
@@ -22,11 +22,6 @@ clear_cache = \(){
 
 }
 
-
-#' @rdname clear_cache
-#' @export
-
-.clear_cache <- clear_cache
 
 
 

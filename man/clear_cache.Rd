@@ -2,12 +2,9 @@
 % Please edit documentation in R/clear_cache.R
 \name{clear_cache}
 \alias{clear_cache}
-\alias{.clear_cache}
 \title{Clear function cache}
 \usage{
 clear_cache()
-
-.clear_cache()
 }
 \value{
 A success message after clearing the cache.
@@ -19,4 +16,5 @@ This function clears the memoised cache of all functions memoised by \code{ecdat
 \dontrun{
 clear_cache()
 }
+
 }
