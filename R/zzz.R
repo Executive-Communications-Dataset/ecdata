@@ -55,4 +55,3 @@
   if(memoise_option == 'off') packageStartupMessage('Note:ecdata.cache is set to "off"')
 
 }
-  #nocov end
