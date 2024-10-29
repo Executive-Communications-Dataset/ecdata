@@ -27,7 +27,10 @@ Imports:
     glue (>= 1.4.0),
     piggyback (>= 0.1.5),
     utils,
-    vctrs (>= 0.6.5)
+    vctrs (>= 0.6.5),
+    cachem (>= 1.0.0),
+    rappdirs (>= 0.3.0),
+    memoise (>= 2.0.0)
 Suggests: 
     duckplyr,
     testthat (>= 3.0.0),

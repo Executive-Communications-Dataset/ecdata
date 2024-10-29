@@ -42,7 +42,8 @@ load_ecd = \(country = NULL, language = NULL , full_ecd = FALSE, ecd_version = '
   validate_inputs(country, language , full_ecd , version = ecd_version)
 
   if(full_ecd == TRUE && isTRUE(is.null(country)) && isTRUE(is.null(language))){
-
+ 
+    cache_messge()
   
   url = glue::glue('https://github.com/Executive-Communications-Dataset/ecdata/releases/download/{ecd_version}/full_ecd.parquet')
   
@@ -63,6 +64,8 @@ load_ecd = \(country = NULL, language = NULL , full_ecd = FALSE, ecd_version = '
     if(full_ecd == FALSE && !isTRUE(is.null(country)) && isTRUE(is.null(language))){
 
       links_to_read = link_builder(country = country, ecd_version = ecd_version)
+
+      cache_messge()
 
       ecd_data = lapply(links_to_read, \(x) read_parquet(x))
 
@@ -91,6 +94,7 @@ load_ecd = \(country = NULL, language = NULL , full_ecd = FALSE, ecd_version = '
 
     links_to_read = link_builder(language = language, ecd_version = ecd_version)
 
+    cache_messge()
     
     ecd_data = lapply(links_to_read, \(x) read_parquet(x)) |> 
       list_unchop()
@@ -106,6 +110,8 @@ load_ecd = \(country = NULL, language = NULL , full_ecd = FALSE, ecd_version = '
   if(full_ecd == FALSE && !isTRUE(is.null(country)) && !isTRUE(is.null(language))){
 
      links_to_read = link_builder(country = country, language = language)
+    
+    cache_messge()
     
     ecd_data = lapply(links_to_read, \(x) read_parquet(x)) |>
       list_unchop()
