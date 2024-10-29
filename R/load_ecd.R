@@ -1,19 +1,14 @@
 #' Reading Executive Communications Dataset
-#'  
-#' This function imports data from the ECD 
-#'  
-#' @param country a character vector with a country or countries in our dataset to download.
-#' @param language a character vector with a lanaguage or languages in our dataset to download.
-#' @param full_ecd to download the full Executive Communications Dataset set full_ecd to TRUE.
-#' @param ecd_version a character of ecd version. 
-#' @returns A dataframe with the specified country/countries or language/languages
+#' @aliases load_ecd
+#' @param country a string with a country name or a string vector of country names
+#' @param language a string with a language or character vector of languages
+#' @param full_ecd a boolean when set to true will download the full ECD. Defaults to FALSE
+#' @param ecd_version a string with the ecd_version you want to download
+#' @returns A tibble with the specified country/countries or language/languages
 #' @importFrom vctrs list_unchop
 #' @importFrom arrow read_parquet
-#' @export
-#' 
 #' @examples
 #' \dontrun{
-#' 
 #' library(ecdata)
 #' 
 #' ## load one country 
@@ -36,16 +31,15 @@
 #' }
 #' 
 #' @export
-#' 
 
 
-load_ecd = \(country = NULL, language = NULL , full_ecd = FALSE, ecd_version = '1.0.0'){
+load_ecd = \(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = '1.0.0'){
 
-  validate_inputs(country, language , full_ecd , version = ecd_version)
+  validate_inputs(country, language, full_ecd, version = ecd_version)
 
   if(full_ecd == TRUE && isTRUE(is.null(country)) && isTRUE(is.null(language))){
  
-    cache_messge()
+  cache_messge()
   
   url = glue::glue('https://github.com/Executive-Communications-Dataset/ecdata/releases/download/{ecd_version}/full_ecd.parquet')
   
@@ -130,3 +124,24 @@ load_ecd = \(country = NULL, language = NULL , full_ecd = FALSE, ecd_version = '
   return(ecd_data)
 
   }
+
+
+cache_messge = \(){
+  do_it <- getOption("ecdata.verbose", default = interactive()) && getOption("ecdata.cache_warning", default = interactive())
+   
+   if(isTRUE(do_it)){
+   rlang::inform(
+     message = c(
+       "Note: ecdata cache (i.e., stores a sved version) data by default. \n If you expect different outputs try one of the following:",
+       i  = 'Restart your R session or',
+       i = "Run ecdata::.clear_cache()"
+     ),
+     .frequency = "regularly",
+     .frequency_id = "cache_messages"
+   )
+ 
+   }
+ 
+ 
+ }
+  

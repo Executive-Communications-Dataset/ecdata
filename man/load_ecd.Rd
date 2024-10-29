@@ -3,9 +3,7 @@
 \docType{data}
 \name{load_ecd}
 \alias{load_ecd}
-\title{Reading Executive Communications Dataset
-
-This function imports data from the ECD}
+\title{Reading Executive Communications Dataset}
 \format{
 An object of class \code{formula} of length 2.
 }
@@ -13,25 +11,22 @@ An object of class \code{formula} of length 2.
 load_ecd
 }
 \arguments{
-\item{country}{a character vector with a country or countries in our dataset to download.}
+\item{country}{a string with a country name or a string vector of country names}
 
-\item{language}{a character vector with a lanaguage or languages in our dataset to download.}
+\item{language}{a string with a language or character vector of languages}
 
-\item{full_ecd}{to download the full Executive Communications Dataset set full_ecd to TRUE.}
+\item{full_ecd}{a boolean when set to true will download the full ECD. Defaults to FALSE}
 
-\item{ecd_version}{a character of ecd version.}
+\item{ecd_version}{a string with the ecd_version you want to download}
 }
 \value{
-A dataframe with the specified country/countries or language/languages
+A tibble with the specified country/countries or language/languages
 }
 \description{
 Reading Executive Communications Dataset
-
-This function imports data from the ECD
 }
 \examples{
 \dontrun{
-
 library(ecdata)
 
 ## load one country 
