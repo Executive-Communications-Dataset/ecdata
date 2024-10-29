@@ -13,16 +13,16 @@ An object of class \code{formula} of length 2.
 load_ecd
 }
 \arguments{
-\item{country}{a character vector  with a country or countries in our dataset to download. For a list of valid names, call "ecd_country_dictionary"}
+\item{country}{a character vector with a country or countries in our dataset to download.}
 
-\item{language}{a character vector with a lanaguage or languages in our dataset to download. For a list of valid languages call "ecd_country_dictionary"}
+\item{language}{a character vector with a lanaguage or languages in our dataset to download.}
 
-\item{full_ecd}{to download the full Executive Communications Dataset set full_ecd to TRUE and don't provide an argument to the country argument}
+\item{full_ecd}{to download the full Executive Communications Dataset set full_ecd to TRUE.}
 
-\item{ecd_version}{a character of ecd versions.}
+\item{ecd_version}{a character of ecd version.}
 }
 \value{
-A tibble with the specified country/countries or language/languages
+A dataframe with the specified country/countries or language/languages
 }
 \description{
 Reading Executive Communications Dataset
@@ -31,6 +31,7 @@ This function imports data from the ECD
 }
 \examples{
 \dontrun{
+
 library(ecdata)
 
 ## load one country 

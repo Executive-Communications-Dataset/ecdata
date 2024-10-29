@@ -2,16 +2,18 @@
 #'  
 #' This function imports data from the ECD 
 #'  
-#' @param country a character vector  with a country or countries in our dataset to download. For a list of valid names, call "ecd_country_dictionary"
-#' @param language a character vector with a lanaguage or languages in our dataset to download. For a list of valid languages call "ecd_country_dictionary"
-#' @param full_ecd to download the full Executive Communications Dataset set full_ecd to TRUE and don't provide an argument to the country argument
-#' @param ecd_version a character of ecd versions. 
-#' @returns A tibble with the specified country/countries or language/languages
+#' @param country a character vector with a country or countries in our dataset to download.
+#' @param language a character vector with a lanaguage or languages in our dataset to download.
+#' @param full_ecd to download the full Executive Communications Dataset set full_ecd to TRUE.
+#' @param ecd_version a character of ecd version. 
+#' @returns A dataframe with the specified country/countries or language/languages
 #' @importFrom vctrs list_unchop
 #' @importFrom arrow read_parquet
 #' @export
+#' 
 #' @examples
 #' \dontrun{
+#' 
 #' library(ecdata)
 #' 
 #' ## load one country 
