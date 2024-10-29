@@ -26,7 +26,9 @@
 
  if(memoise_option != 'off'){
    
-   assign(x = 'load_ecd', ~memoise::timeout(86400, cache = cache), envir = rlang::ns_env('ecdata'))
+  assign(x = "load_ecd",
+           value = memoise::memoise(load_ecd, ~ memoise::timeout(86400), cache = cache),
+           envir = rlang::ns_env("ecdata"))
    
  }
 
@@ -37,7 +39,7 @@
 }
 
 
-.onAttach = \(libname, pkgname){
+.onAttach <- function(libname, pkgname){
 
 
   memoise_option = getOption('ecdata.cache', default = 'memory')
