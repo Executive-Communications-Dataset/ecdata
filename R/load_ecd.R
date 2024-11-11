@@ -68,7 +68,10 @@ if(full_ecd == FALSE && !isTRUE(is.null(country)) && isTRUE(is.null(language))){
 
       ecd_data = arrow::open_dataset(tmp)
    
+if(nrow(ecd_data) > 0){
 
+  cli::cli_alert_success('Note: Data for: {country} was successfully downloaded. To bring data into memory call dplyr::collect()')
+}
 
   
 
@@ -87,7 +90,10 @@ if(full_ecd == FALSE && isTRUE(is.null(country)) && !isTRUE(is.null(language))){
 
     ecd_data = arrow::open_dataset(tmp)
    
+    if(nrow(ecd_data) > 0){
 
+      cli::cli_alert_success('Note: Data for: {language} was successfully downloaded. To bring data into memory call dplyr::collect()')
+    }
 
   }
     
@@ -99,13 +105,21 @@ if(full_ecd == FALSE && !isTRUE(is.null(country)) && !isTRUE(is.null(language)))
 
       ecd_data = arrow::open_dataset(tmp)
 
+      if(nrow(ecd_data) > 0){
+        
+        cli::cli_alert_success('Note: Data for: {language} and {country} were successfully downloaded. To bring data into memory call dplyr::collect')
 
+      }
+  
+    }
 
-  }
+  
+    return(ecd_data)
+  
+}
 
     
-  return(ecd_data)
 
-  }
+  
 
 
