@@ -9,7 +9,7 @@
 #' @returns A tibble with the specified country/countries or language/languages
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(ecdata)
 #' 
 #' ## load one country 
@@ -37,6 +37,7 @@ load_ecd <- \(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = '1.0.0
 
   validate_inputs(country = country ,language = language, full_ecd = full_ecd,version = ecd_version)
 
+  cache_message()
 
   if(full_ecd == TRUE && isTRUE(is.null(country)) && isTRUE(is.null(language))){
   
@@ -83,7 +84,6 @@ if(full_ecd == FALSE && !isTRUE(is.null(country)) && isTRUE(is.null(language))){
 
 if(full_ecd == FALSE && isTRUE(is.null(country)) && !isTRUE(is.null(language))){
 
-  cache_messge()
      
     if('English' %in% language){
       cli::cli_alert_info('One of the languages in language is set to English. Note due to data availability Azerbaijan and Russian will be included in this data')

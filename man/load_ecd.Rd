@@ -31,7 +31,7 @@ Reading Executive Communications Dataset
 This function imports data from the ECD
 }
 \examples{
-\dontrun{
+\donttest{
 library(ecdata)
 
 ## load one country 

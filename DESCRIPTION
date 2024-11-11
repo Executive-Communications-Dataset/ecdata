@@ -10,8 +10,8 @@ Authors@R: c(
     person(given = 'Jamie', family ='Lindh', email = "jlindh@unc.edu" ,role = c('ctb')),
     person(given = 'Cecilia',family ='Martinez-Gallardo', email = "cmg@email.unc.edu", role = c('ctb')),
     person(given = 'Miles', family = 'Massesy' , email = 'milesmcma@gmail.com' ,role = c('ctb')))
-Description: Imports The Executive Communications Dataset from GitHub releases. The Executive Communications dataset 
-    gathers data from Executive leaders from across the world in a variety of languages.
+Description: A minimal package for downloading data from 'GitHub' repositories of the 
+    Executive Communications Database. 
 License: CC BY 4.0
 Encoding: UTF-8
 RoxygenNote: 7.3.2

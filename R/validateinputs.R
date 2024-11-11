@@ -1,5 +1,6 @@
 #' Get latest release 
 #' keywords @internal 
+#' @returns No return. This function is meant to check the inputs of the load_ecd function
 #' @noRd
 
 

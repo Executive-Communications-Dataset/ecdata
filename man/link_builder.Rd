@@ -6,6 +6,9 @@
 \usage{
 link_builder(country = NULL, language = NULL, ecd_version)
 }
+\value{
+A glue string with the correct links to the Github data.
+}
 \description{
 Build our links
 }
