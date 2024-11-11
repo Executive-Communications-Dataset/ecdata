@@ -27,6 +27,7 @@ Imports:
     glue (>= 1.4.0),
     piggyback (>= 0.1.5),
     utils,
+    tools, 
     curl,
     cachem (>= 1.0.0),
     memoise (>= 2.0.0)
