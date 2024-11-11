@@ -57,6 +57,7 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
       })
     
       country_names = country_names$file_names
+      country_names = unique(country_names)
   
   }
     
