@@ -4,7 +4,7 @@
 #'
 #' @return A success message after clearing the cache.
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' clear_cache()
 #' }
 #' 

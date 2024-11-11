@@ -13,7 +13,7 @@ A success message after clearing the cache.
 This function clears the memoised cache of all functions memoised by \code{ecdata}.
 }
 \examples{
-\dontrun{
+\donttest{
 clear_cache()
 }
 

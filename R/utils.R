@@ -1,7 +1,7 @@
 #' Build our links 
 #' 
 #' @keywords internal
-#' 
+#' @returns A glue string with the correct links to the Github data.
 #' @export
 #' 
 
@@ -57,6 +57,7 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
       })
     
       country_names = country_names$file_names
+      country_names = unique(country_names)
   
   }
     
@@ -100,10 +101,11 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
   }
 
 #' keywords @internal 
+#' @returns A cache message
 #' @noRd
 #' 
 
-  cache_messge = \(){
+  cache_message = \(){
     do_it <- getOption("ecdata.verbose", default = interactive()) && getOption("ecdata.cache_warning", default = interactive())
      
      if(isTRUE(do_it)){
@@ -111,7 +113,8 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
        message = c(
          "Note: ecdata cache (i.e., stores a sved version) data by default. \n If you expect different outputs try one of the following:",
          i  = 'Restart your R session or',
-         i = "Run ecdata::.clear_cache()"
+         i = "Run ecdata::.clear_cache()",
+         "To disable this warning, run `options(ecddata.verbose = FALSSE)` of add it to your .Rprofile"
        ),
        .frequency = "regularly",
        .frequency_id = "cache_messages"
