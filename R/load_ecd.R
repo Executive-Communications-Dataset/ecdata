@@ -1,7 +1,6 @@
-#' @title Reading Executive Communications Dataset
+#' Reading Executive Communications Dataset
 #'  
-#' @description This function imports data from the ECD 
-#'  
+#' This function imports data from the ECD  
 #' @param country a character vector  with a country or countries in our dataset to download. 
 #' @param language a character vector with a lanaguage or languages in our dataset to download. 
 #' @param full_ecd to download the full Executive Communications Dataset set full_ecd to TRUE
@@ -9,7 +8,7 @@
 #' @returns A tibble with the specified country/countries or language/languages
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(ecdata)
 #' 
 #' ## load one country 
@@ -35,12 +34,14 @@
 
 load_ecd <- \(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = '1.0.0'){
 
-  validate_inputs(country, language, full_ecd, version = ecd_version)
+  validate_inputs(country = country ,language = language, full_ecd = full_ecd,version = ecd_version)
 
+  cache_message()
+
+  tmp = tempdir()
 
   if(full_ecd == TRUE && isTRUE(is.null(country)) && isTRUE(is.null(language))){
   
-      cache_messge()
   
   url <- glue::glue('https://github.com/Executive-Communications-Dataset/ecdata/releases/download/{ecd_version}/full_ecd.parquet')
   
@@ -60,32 +61,21 @@ load_ecd <- \(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = '1.0.0
 
 if(full_ecd == FALSE && !isTRUE(is.null(country)) && isTRUE(is.null(language))){
   
-  cache_messge()
 
       links_to_read <- link_builder(country = country, ecd_version = ecd_version)
 
-      ecd_data <- lapply(links_to_read, \(x) arrow::read_parquet(x))
+      curl::multi_download(links_to_read, file.path(tmp, basename(links_to_read)))
 
-      ecd_data <- ecd_data |>
-        vctrs::list_unchop()
-
-
-      if(nrow(ecd_data) != 0){
-          
-        ecd_country = ecd_data$country
-
-        ecd_country =  unique(ecd_country)
-
-
-        cli::cli_alert_success('Successfully downloaded data for {ecd_country}')
-      }
+      ecd_data = arrow::open_dataset(tmp)
    
 
-    }
+
+  
+
+}
 
 if(full_ecd == FALSE && isTRUE(is.null(country)) && !isTRUE(is.null(language))){
 
-  cache_messge()
      
     if('English' %in% language){
       cli::cli_alert_info('One of the languages in language is set to English. Note due to data availability Azerbaijan and Russian will be included in this data')
@@ -93,31 +83,23 @@ if(full_ecd == FALSE && isTRUE(is.null(country)) && !isTRUE(is.null(language))){
 
     links_to_read = link_builder(language = language, ecd_version = ecd_version)
     
-    ecd_data = lapply(links_to_read, \(x) arrow::read_parquet(x)) |> 
-      vctrs::list_unchop()
+    curl::multi_download(links_to_read, file.path(tmp, basename(links_to_read)))
 
-    if(nrow(ecd_data) > 0){
-
-      cli::cli_alert_success('Successfully downloaded data for {language}')
-    }
+    ecd_data = arrow::open_dataset(tmp)
+   
 
 
   }
     
 if(full_ecd == FALSE && !isTRUE(is.null(country)) && !isTRUE(is.null(language))){
 
-  cache_messge()
-
      links_to_read = link_builder(country = country, language = language)
     
-    ecd_data = lapply(links_to_read, \(x) arrow::read_parquet(x)) |>
-      vctrs::list_unchop()
+     curl::multi_download(links_to_read, file.path(tmp, basename(links_to_read)))
 
-    if(nrow(ecd_data) > 0){
+      ecd_data = arrow::open_dataset(tmp)
 
-      cli::cli_alert_success("Successfully downloaded {country} and {language}")
-    }
-    
+
 
   }
 

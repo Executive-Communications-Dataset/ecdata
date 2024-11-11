@@ -3,7 +3,9 @@
 \docType{data}
 \name{load_ecd}
 \alias{load_ecd}
-\title{Reading Executive Communications Dataset}
+\title{Reading Executive Communications Dataset
+
+This function imports data from the ECD}
 \format{
 An object of class \code{formula} of length 2.
 }
@@ -23,10 +25,12 @@ load_ecd
 A tibble with the specified country/countries or language/languages
 }
 \description{
+Reading Executive Communications Dataset
+
 This function imports data from the ECD
 }
 \examples{
-\dontrun{
+\donttest{
 library(ecdata)
 
 ## load one country 
