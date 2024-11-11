@@ -17,7 +17,7 @@ Encoding: UTF-8
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 LazyData: true
-URL: https://executive-communications-dataset.github.io/ecdata/, https://github.com/Executive-Communications-Dataset/ecdata
+URL: https://github.com/Executive-Communications-Dataset/ecdata, https://executive-communications-dataset.github.io/ecdata/
 BugReports: https://github.com/Executive-Communications-Dataset/ecdata/issues
 Depends: R (>= 4.0)
 Imports: 
@@ -27,9 +27,9 @@ Imports:
     glue (>= 1.4.0),
     piggyback (>= 0.1.5),
     utils,
+    tools,
     vctrs (>= 0.6.5),
     cachem (>= 1.0.0),
-    rappdirs (>= 0.3.0),
     memoise (>= 2.0.0)
 Suggests: 
     duckplyr,

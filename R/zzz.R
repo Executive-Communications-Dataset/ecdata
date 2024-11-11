@@ -22,7 +22,7 @@
 
   if(memoise_option == "filesystem"){
     
-    cache_dir = rappdirs::user_cache_dir(appname = "ecdata")
+    cache_dir = tools::R_user_dir(package = "ecdata", which = 'cache')
 
     dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
     
