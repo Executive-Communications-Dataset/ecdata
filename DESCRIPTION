@@ -27,8 +27,7 @@ Imports:
     glue (>= 1.4.0),
     piggyback (>= 0.1.5),
     utils,
-    tools,
-    vctrs (>= 0.6.5),
+    curl,
     cachem (>= 1.0.0),
     memoise (>= 2.0.0)
 Suggests: 

@@ -2,9 +2,10 @@
 % Please edit documentation in R/load_ecd.R
 \name{load_ecd}
 \alias{load_ecd}
-\title{Reading Executive Communications Dataset
-
-This function imports data from the ECD}
+\title{Reading Executive Communications Dataset}
+\format{
+An object of class \code{formula} of length 2.
+}
 \usage{
 load_ecd(
   country = NULL,

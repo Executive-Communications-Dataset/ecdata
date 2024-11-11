@@ -39,6 +39,8 @@ load_ecd <- \(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = '1.0.0
 
   cache_message()
 
+  tmp = tempdir()
+
   if(full_ecd == TRUE && isTRUE(is.null(country)) && isTRUE(is.null(language))){
   
   
@@ -63,24 +65,15 @@ if(full_ecd == FALSE && !isTRUE(is.null(country)) && isTRUE(is.null(language))){
 
       links_to_read <- link_builder(country = country, ecd_version = ecd_version)
 
-      ecd_data <- lapply(links_to_read, \(x) arrow::read_parquet(x))
+      curl::multi_download(links_to_read, file.path(tmp, basename(links_to_read)))
 
-      ecd_data <- ecd_data |>
-        list_unchop()
-
-
-      if(nrow(ecd_data) != 0){
-          
-        ecd_country = ecd_data$country
-
-        ecd_country =  unique(ecd_country)
-
-
-        cli::cli_alert_success('Successfully downloaded data for {ecd_country}')
-      }
+      ecd_data = arrow::open_dataset(tmp)
    
 
-    }
+
+  
+
+}
 
 if(full_ecd == FALSE && isTRUE(is.null(country)) && !isTRUE(is.null(language))){
 
@@ -91,28 +84,23 @@ if(full_ecd == FALSE && isTRUE(is.null(country)) && !isTRUE(is.null(language))){
 
     links_to_read = link_builder(language = language, ecd_version = ecd_version)
     
-    ecd_data = lapply(links_to_read, \(x) arrow::read_parquet(x)) |> 
-      list_unchop()
+    curl::multi_download(links_to_read, file.path(tmp, basename(links_to_read)))
 
-    if(nrow(ecd_data) > 0){
-
-      cli::cli_alert_success('Successfully downloaded data for {language}')
-    }
+    ecd_data = arrow::open_dataset(tmp)
+   
 
 
   }
     
 if(full_ecd == FALSE && !isTRUE(is.null(country)) && !isTRUE(is.null(language))){
+
      links_to_read = link_builder(country = country, language = language)
     
-    ecd_data = lapply(links_to_read, \(x) arrow::read_parquet(x)) |>
-      list_unchop()
+     curl::multi_download(links_to_read, file.path(tmp, basename(links_to_read)))
 
-    if(nrow(ecd_data) > 0){
+      ecd_data = arrow::open_dataset(tmp)
 
-      cli::cli_alert_success("Successfully downloaded {country} and {language}")
-    }
-    
+
 
   }
 
