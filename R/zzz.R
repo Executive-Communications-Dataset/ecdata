@@ -22,7 +22,7 @@
 
   if(memoise_option == "filesystem"){
     
-    cache_dir = tool(package = "ecdata", which = 'cache')
+    cache_dir = tools::R_user_dir(package = "ecdata", which = 'cache')
 
     dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
     
