@@ -32,8 +32,8 @@ website:
            file: man/load_ecd.qmd
       - section: Vignettes
         contents:
-         - text: "Improving Speed with the Full ECD"
-           file: vignettes/performance.qmd
+         - text: "Introduction"
+           file: vignettes/Introduction.Rmd
       - text: News
         file: $ALTDOC_NEWS
       - text: Changelog
