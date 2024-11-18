@@ -39,7 +39,6 @@ load_ecd = function(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = 
 
   cache_message()
 
-  tmp = tempdir()
 
   if(full_ecd == TRUE && isTRUE(is.null(country)) && isTRUE(is.null(language))){
   

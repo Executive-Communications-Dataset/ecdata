@@ -111,7 +111,7 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
      if(isTRUE(do_it)){
      rlang::inform(
        message = c(
-         "Note: ecdata cache (i.e., stores a sved version) data by default. \n If you expect different outputs try one of the following:",
+         "Note: ecdata cache (i.e., stores a saved version) data by default. \n If you expect different outputs try one of the following:",
          i  = 'Restart your R session or',
          i = "Run ecdata::.clear_cache()",
          "To disable this warning, run `options(ecddata.verbose = FALSE)` of add it to your .Rprofile"

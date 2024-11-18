@@ -16,6 +16,42 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(ecdata)
+library(dplyr)
 ```
 
-The Executive Communcations Dataset (ECD) is a dataset comprised of executive communications across 41 differenct countries. The `ecdata` package is meant 
+The Executive Communcations Dataset (ECD) is a dataset comprised of executive communications across 41 differenct countries. The `ecdata` package is a minimal package to download data from the ecd repositories. It includes caching and data dicitionaries. 
+
+## `load_ecd`
+
+The default function for loading the ECD is `load_ecd`. This function will download data from our repositories and load them into memory. You can load the full ECD by setting `load_ecd(full_ecd = TRUE)` This can take awhile because you are downloading a `1.9GB` parquet file.  
+
+
+```{r}
+
+full_ecd = load_ecd(full_ecd = TRUE) 
+
+head(full_ecd)
+
+```
+
+
+If you want a specific country or countries you can feed a character vector to the `country` argument. 
+
+
+```{r}
+
+load_ecd(country = 'Greece')
+
+```
+
+The country argument tolerates some typos, common abbreviations, and common country names. 
+
+
+
+```{r}
+
+load_ecd(country = 'united states')
+
+load_ecd(country = 'UK')
+
+```

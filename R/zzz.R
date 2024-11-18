@@ -16,6 +16,7 @@
         memoise_option <- 'memory'
   } 
 
+
   if (is.null(getOption("ecdata.cache"))) {
     options("ecdata.cache" = "memory")
   }
@@ -29,10 +30,7 @@
     cache = cachem::cache_disk(dir = cache_dir)
   }
 
-  if(memoise_option == "memory"){
-    
-    cache = cachem::cache_mem()
-  }
+  if(memoise_option == "memory") cache <- cachem::cache_mem()
 
  if(memoise_option != 'off'){
    
