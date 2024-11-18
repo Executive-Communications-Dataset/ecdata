@@ -1,0 +1,21 @@
+---
+title: "Loading The ECD"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Loading_The_ECD}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ecdata)
+```
+
+The Executive Communcations Dataset (ECD) is a dataset comprised of executive communications across 41 differenct countries. The `ecdata` package is meant 
