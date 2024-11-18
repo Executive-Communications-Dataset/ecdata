@@ -6,7 +6,7 @@
 
 
 
-get_ecd_release = function{
+get_ecd_release = function(){
   
  ecd_versions = piggyback::pb_releases(repo = 'Executive-Communications-Dataset/ecdata')
   
