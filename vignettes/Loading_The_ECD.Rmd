@@ -1,5 +1,5 @@
 ---
-title: "Loading The ECD"
+title: "Loading_The_ECD"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Loading_The_ECD}
@@ -57,6 +57,8 @@ load_ecd(country = 'Uk')
 ```
 
 
+Note that the time to download and load a file will vary a lot due to various file sizes. 
+
 If instead you want a specific language or languages you can set a language option to your query using the `language` argument. 
 
 
@@ -67,4 +69,40 @@ load_ecd(language = 'French')
 
 ```
 
-This 
+This will only load data for a specific language. In this case this is equivalent of setting `country = 'France'` however, for English, Spanish, German, and Portugese will load data from multiple countries. 
+
+
+## `lazy_load_ecd`
+
+We also have a "lazy" option which will download the files and then use `arrow::open_dataset` to open the dataset out of memory. 
+
+
+```{r}
+
+nigeria = lazy_load_ecd(country = 'Nigeria')
+
+class(nigeria)
+
+```
+
+
+To bring the dataset into memory you simply need to call. 
+
+```{r}
+
+nigeria |>
+  collect()
+
+```
+
+This has some speed benefits when data wrangling. One thing to be aware of is that if you lazy load a dataset previously it may bring in additional files. To prevent this behavior run 
+
+
+
+```{r eval = FALSE}
+
+clear_cache()
+
+```
+
+Then restart your R session.
