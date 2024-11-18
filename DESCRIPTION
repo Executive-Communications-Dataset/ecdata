@@ -1,6 +1,6 @@
 Package: ecdata
 Title: Loads Data from the Executive Communications Dataset
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: c(
     person(given = "Joshua", family = "Allen" , email = "joshua.f.allen@gmail.com", role = c("aut", "cre", 'cph'),
            comment = c(ORCID = "0000-0003-0554-1191")),

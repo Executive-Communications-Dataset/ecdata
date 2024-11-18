@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(ecdata)
-library(dplyr)
+
 ```
 
 The Executive Communcations Dataset (ECD) is a dataset comprised of executive communications across 41 differenct countries. The `ecdata` package is a minimal package to download data from the ecd repositories. It includes caching and data dicitionaries. 
@@ -91,7 +91,7 @@ To bring the dataset into memory you simply need to call.
 ```{r}
 
 nigeria |>
-  collect()
+  dplyr::collect()
 
 ```
 
