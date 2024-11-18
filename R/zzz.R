@@ -9,9 +9,7 @@
 
  memoise_option = getOption('ecdata.cache', default = "memory")
   
-  if(!memoise_option %in% c('memory', 'filesystem', 'off')){
-        memoise_option <- 'memory'
-  } 
+  if(!memoise_option %in% c('memory', 'filesystem', 'off'))  memoise_option <- 'memory'
 
 
   if (is.null(getOption("ecdata.cache"))) {
