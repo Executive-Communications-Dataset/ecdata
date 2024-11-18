@@ -1,12 +1,12 @@
-#' Reading Executive Communications Dataset
+#' Reading Executive Communications Dataset lazily
 #'  
-#' This function imports data from the ECD  
+#' This function imports data from the ECD lazily meaning the data is out loaded out of memory
 #' @param country a character vector  with a country or countries in our dataset to download. 
 #' @param language a character vector with a lanaguage or languages in our dataset to download. 
 #' @param full_ecd to download the full Executive Communications Dataset set full_ecd to TRUE
 #' @param ecd_version a character of ecd versions. 
 #' @returns A tibble with the specified country/countries or language/languages
-#' @importFrom vctrs list_unchop
+#' @importFrom curl multi_download
 #' @export
 #' @examples
 #' \donttest{
@@ -33,7 +33,7 @@
 #' 
 
 
-load_ecd = function(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = '1.0.0'){
+lazy_load_ecd = function(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = '1.0.0'){
 
   validate_inputs(country = country ,language = language, full_ecd = full_ecd,version = ecd_version)
 
@@ -46,34 +46,40 @@ load_ecd = function(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = 
   
   url <- glue::glue('https://github.com/Executive-Communications-Dataset/ecdata/releases/download/{ecd_version}/full_ecd.parquet')
   
-  ecd_data <- arrow::read_parquet(url)
+  multi_download(url, file.path(tmp, basename(url)))
+  
+  ecd_data <- arrow::open_dataset(tmp)
     
   if(nrow(ecd_data) > 0){
     cli::cli_alert_success('Successfully downloaded the full ECD')
 
   }
-}
+  else{
+
+    cli::cli_alert_danger('Download of ECD  failed')
+  }
+    
+  }
+  
 
 if(full_ecd == FALSE && !isTRUE(is.null(country)) && isTRUE(is.null(language))){
+  
 
-  links_to_read = link_builder(country = country, ecd_version = ecd_version)
+      links_to_read <- link_builder(country = country, ecd_version = ecd_version)
 
-  ecd_data = lapply(links_to_read, \(x) arrow::read_parquet(x)) |>
-    list_unchop()
+      multi_download(links_to_read, file.path(tmp, basename(links_to_read)))
+
+      ecd_data = arrow::open_dataset(tmp)
    
-  if(nrow(ecd_data) != 0){
-          
-    ecd_country = ecd_data$country
-    
-    ecd_country =  unique(ecd_country)
+if(nrow(ecd_data) > 0){
 
-    cli::cli_alert_success('Successfully downloaded {ecd_country}.')
+  cli::cli_alert_success('Note: Data for: {country} was successfully downloaded. To bring data into memory call dplyr::collect()')
+}
 
   
 
 }
 
-} 
 if(full_ecd == FALSE && isTRUE(is.null(country)) && !isTRUE(is.null(language))){
 
      
@@ -83,16 +89,13 @@ if(full_ecd == FALSE && isTRUE(is.null(country)) && !isTRUE(is.null(language))){
 
     links_to_read = link_builder(language = language, ecd_version = ecd_version)
     
-    ecd_data = lapply(links_to_read, \(x) arrow::read_parquet(x)) |>
-      list_unchop()
+    multi_download(links_to_read, file.path(tmp, basename(links_to_read)))
 
-    
+    ecd_data = arrow::open_dataset(tmp)
    
     if(nrow(ecd_data) > 0){
 
-       ecd_langs = unique(ecd_data$country)
-
-      cli::cli_alert_success('Note: Data for: {ecd_langs} was successfully downloaded.')
+      cli::cli_alert_success('Note: Data for: {language} was successfully downloaded. To bring data into memory call dplyr::collect()')
     }
 
   }
@@ -101,8 +104,7 @@ if(full_ecd == FALSE && !isTRUE(is.null(country)) && !isTRUE(is.null(language)))
 
      links_to_read = link_builder(country = country, language = language)
     
-     ecd_data = lapply(links_to_read, \(x) arrow::read_parquet(x)) |>
-       list_unchop()
+     multi_download(links_to_read, file.path(tmp, basename(links_to_read)))
 
       ecd_data = arrow::open_dataset(tmp)
 
@@ -118,9 +120,3 @@ if(full_ecd == FALSE && !isTRUE(is.null(country)) && !isTRUE(is.null(language)))
     return(ecd_data)
   
 }
-
-    
-
-  
-
-

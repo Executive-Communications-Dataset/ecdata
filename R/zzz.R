@@ -1,6 +1,6 @@
 
 
-.onLoad = \(libname,pkgname){
+.onLoad = function(libname,pkgname){
 
   rlang::check_installed(
     pkg = "arrow (>= 16.1.0)",

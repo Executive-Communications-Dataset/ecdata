@@ -19,7 +19,7 @@ Roxygen: list(markdown = TRUE)
 LazyData: true
 URL: https://github.com/Executive-Communications-Dataset/ecdata, https://executive-communications-dataset.github.io/ecdata/
 BugReports: https://github.com/Executive-Communications-Dataset/ecdata/issues
-Depends: R (>= 4.1)
+Depends: R (>= 4.0)
 Imports: 
     arrow (>= 16.1.0),
     cli (>= 3.6.3),
@@ -29,7 +29,9 @@ Imports:
     utils,
     tools,
     cachem (>= 1.0.0),
-    memoise (>= 2.0.0)
+    memoise (>= 2.0.0),
+    vctrs,
+    curl
 Suggests: 
     duckplyr,
     testthat (>= 3.0.0),

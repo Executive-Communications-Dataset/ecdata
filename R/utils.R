@@ -105,7 +105,7 @@ link_builder = \(country = NULL, language = NULL, ecd_version){
 #' @noRd
 #' 
 
-  cache_message = \(){
+  cache_message = function(){
     do_it <- getOption("ecdata.verbose", default = interactive()) && getOption("ecdata.cache_warning", default = interactive())
      
      if(isTRUE(do_it)){

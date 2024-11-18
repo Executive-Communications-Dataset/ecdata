@@ -6,7 +6,7 @@
 
 
 
-get_ecd_release = \(){
+get_ecd_release = function{
   
  ecd_versions = piggyback::pb_releases(repo = 'Executive-Communications-Dataset/ecdata')
   
@@ -22,7 +22,7 @@ return(versions)
 #' keywords @internal 
 #' @noRd
 
-validate_inputs = \(country = NULL,language = NULL, full_ecd = FALSE, version = '1.0.0'){
+validate_inputs = function(country = NULL,language = NULL, full_ecd = FALSE, version = '1.0.0'){
  
   versions = get_ecd_release()
 

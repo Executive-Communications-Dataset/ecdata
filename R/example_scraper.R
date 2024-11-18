@@ -20,7 +20,7 @@
 #' 
 
 
-example_scraper = \(scrapper_type = c('static', 'dynamic')){
+example_scraper = function(scrapper_type = c('static', 'dynamic')){
  
 
 arg = match.arg(scrapper_type)

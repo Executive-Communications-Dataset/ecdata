@@ -4,13 +4,13 @@
 #'
 #' @return A success message after clearing the cache.
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' clear_cache()
 #' }
 #' 
 #' @export
 
-clear_cache = \(){
+clear_cache = function(){
 
   memoise::forget(load_ecd)
   
