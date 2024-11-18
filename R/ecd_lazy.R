@@ -51,7 +51,7 @@ lazy_load_ecd = function(country=NULL, language=NULL , full_ecd=FALSE, ecd_versi
   ecd_data <- arrow::open_dataset(tmp)
     
   if(nrow(ecd_data) > 0){
-    cli::cli_alert_success('Successfully downloaded the full ECD')
+    cli::cli_alert_success('Successfully downloaded the full ECD. To bring data into memory call dplyr::collect')
 
   }
   else{
