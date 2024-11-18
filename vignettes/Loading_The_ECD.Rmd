@@ -65,11 +65,11 @@ If instead you want a specific language or languages you can set a language opti
 
 ```{r}
 
-load_ecd(language = 'French')
+load_ecd(language = 'Turkish')
 
 ```
 
-This will only load data for a specific language. In this case this is equivalent of setting `country = 'France'` however, for English, Spanish, German, and Portugese will load data from multiple countries. 
+This will only load data for a specific language. In this case this is equivalent of setting `country = 'Turkey'` however, for English, Spanish, German, and Portugese will load data from multiple countries. 
 
 
 ## `lazy_load_ecd`
