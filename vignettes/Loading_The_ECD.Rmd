@@ -26,7 +26,7 @@ The Executive Communcations Dataset (ECD) is a dataset comprised of executive co
 The default function for loading the ECD is `load_ecd`. This function will download data from our repositories and load them into memory. You can load the full ECD by setting `load_ecd(full_ecd = TRUE)` This can take awhile because you are downloading a `1.9GB` parquet file.  
 
 
-```{r}
+```{r load-full-ecd, eval = FALSE}
 
 full_ecd = load_ecd(full_ecd = TRUE) 
 
@@ -52,6 +52,19 @@ The country argument tolerates some typos, common abbreviations, and common coun
 
 load_ecd(country = 'united states')
 
-load_ecd(country = 'UK')
+load_ecd(country = 'Uk')
 
 ```
+
+
+If instead you want a specific language or languages you can set a language option to your query using the `language` argument. 
+
+
+
+```{r}
+
+load_ecd(language = 'French')
+
+```
+
+This 
