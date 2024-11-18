@@ -30,7 +30,7 @@ The default function for loading the ECD is `load_ecd`. This function will downl
 
 full_ecd = load_ecd(full_ecd = TRUE) 
 
-head(full_ecd)
+
 
 ```
 
@@ -50,9 +50,9 @@ The country argument tolerates some typos, common abbreviations, and common coun
 
 ```{r}
 
-load_ecd(country = 'united states')
+load_ecd(country = 'south korea')
 
-load_ecd(country = 'Uk')
+load_ecd(country = 'Nz')
 
 ```
 
@@ -81,7 +81,7 @@ We also have a "lazy" option which will download the files and then use `arrow::
 
 nigeria = lazy_load_ecd(country = 'Nigeria')
 
-class(nigeria)
+
 
 ```
 
