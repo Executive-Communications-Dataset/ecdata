@@ -74,7 +74,7 @@ Note that the time to download and load a file will vary a lot due to various fi
 We also have a "lazy" option which will download the files and then use `arrow::open_dataset` to open the dataset out of memory. 
 
 
-```{r}
+```{r eval = FALSE}
 
 nigeria = lazy_load_ecd(country = 'Nigeria')
 
@@ -85,7 +85,7 @@ nigeria = lazy_load_ecd(country = 'Nigeria')
 
 To bring the dataset into memory you simply need to call. 
 
-```{r}
+```{r eval = FALSE}
 
 nigeria |>
   dplyr::collect()
