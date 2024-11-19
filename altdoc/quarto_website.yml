@@ -33,7 +33,7 @@ website:
       - section: Vignettes
         contents:
          - text: "Introduction"
-           file: vignettes/Introduction.Rmd
+           file: vignettes/introduction.qmd
       - text: News
         file: $ALTDOC_NEWS
       - text: Changelog

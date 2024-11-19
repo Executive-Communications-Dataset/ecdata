@@ -17,3 +17,5 @@
 ^.venv$
 ^.nojekyll$
 ^CRAN-SUBMISSION$
+^.qmd$
+^ectut$

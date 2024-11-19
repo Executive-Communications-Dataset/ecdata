@@ -1,0 +1,38 @@
+---
+title: "Introduction to ECD"
+format: html
+engine: knitr
+vignette: |
+  %\VignetteIndexEntry{Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  # fig.path = "man/figures/README-",
+  out.width = "70%",
+  fig.width = 8,
+  dpi = 300,
+  asp = 0.625
+)
+```
+
+When political executives speak, the world – citizens, markets, international organizations, allies, rivals, the press 
+listens. Indeed, few things shape politics more than what political executives say in public. It is not surprising,
+therefore, that vast literatures in American and Comparative Politics, International Relations, Political Psychology,
+Communications, and Political Theory debate the origins and impact of leaders’ rhetoric. What is surprising is the
+absence of a broad, cross-national dataset of speeches by political executives. Without it, scholars cannot answer
+even basic descriptive questions related to the rate, content, and timing of political executive communications over
+time and space, let alone more theoretically interesting questions about the causes and consequences of executive communications. 
+
+We present the Executive Communications Dataset (ECD). The ECD covers the years between 1964 and 2024 in 42 countries with 108,289 commmunications (speeches, press conferences,  press releases etc) in 23 lanaguages. To faciliatate data distribution we developed the `ecdata` package in R and Python. 
+
+
+
+
+```{r}
+
+```

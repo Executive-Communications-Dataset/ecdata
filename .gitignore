@@ -25,3 +25,4 @@ _quarto/*
 /.quarto/
 ^_quarto$
 inst/doc
+ectut
