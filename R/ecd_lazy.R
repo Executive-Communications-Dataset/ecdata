@@ -9,19 +9,19 @@
 #' @importFrom curl multi_download
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' library(ecdata)
 #' 
 #' ## load one country 
 #' 
-#' load_ecd(country = 'United States of America')
+#' lazy_load_ecd(country = 'Greece')
 #' 
 #' ## displays data from the USA
 #' 
 #' 
 #' ## load multiple countries 
 #' 
-#' load_ecd(country = c('Turkey', 'Republic of South Korea', 'India'))
+#' lazy_load_ecd(country = c('Turkey', 'Republic of South Korea'))
 #'
 #' ## displays data from Turkey, South Korea, and India
 #' 

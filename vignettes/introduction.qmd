@@ -1,24 +1,8 @@
 ---
 title: "Introduction to ECD"
 format: html
-engine: knitr
-vignette: |
-  %\VignetteIndexEntry{Tutorial}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
-```{r include=FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  # fig.path = "man/figures/README-",
-  out.width = "70%",
-  fig.width = 8,
-  dpi = 300,
-  asp = 0.625
-)
-```
 
 When political executives speak, the world – citizens, markets, international organizations, allies, rivals, the press 
 listens. Indeed, few things shape politics more than what political executives say in public. It is not surprising,
@@ -28,11 +12,185 @@ absence of a broad, cross-national dataset of speeches by political executives. 
 even basic descriptive questions related to the rate, content, and timing of political executive communications over
 time and space, let alone more theoretically interesting questions about the causes and consequences of executive communications. 
 
-We present the Executive Communications Dataset (ECD). The ECD covers the years between 1964 and 2024 in 42 countries with 108,289 commmunications (speeches, press conferences,  press releases etc) in 23 lanaguages. To faciliatate data distribution we developed the `ecdata` package in R and Python. 
+We present the Executive Communications Dataset (ECD). The ECD covers the years between 1964 and 2024 in 42 countries with 108,289 commmunications (speeches, press conferences,  press releases etc) in 23 lanaguages. To faciliatate data distribution we developed the `ecdata` package in R and Python. The ecdata package is a lightweight package that is heavily inspired by [nflreadr](https://nflreadr.nflverse.com/) for downloading data from the ECD repositories. The both packages includes data dictionaries, lazy loading, and caching by default.
+
+## Installation
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+library(ecdata)
+library(dplyr)
 
 
+```
+
+
+```{python}
+#| echo: false
+
+import polars as pl
+import ecdata as ec
+
+```
+
+
+You can download the latest stable releases of the packages through CRAN and PyPi 
+
+:::panel-tabset
+
+
+### R
+
+```{r}
+#| eval: false
+install.packages('ecdata')
+library(ecdata)
+library(dplyr)
+
+
+```
+
+
+
+### Python
+
+```{python}
+#| eval: false
+
+%pip install ecdata
+%pip install polars
+
+import ecdata as ec
+import polars as pl
+
+
+```
+
+
+
+:::
+
+
+
+## Usage 
+
+### `load_ecd`
+
+The primary function that is shared across the Python and R distributions of the package is the `load_ecd` function. This function accepts four primary arguments:
 
 
 ```{r}
+#| echo: false
+
+tibble::tribble(~'Argument', ~`R Specific Quirks`, ~`Python Specific Quirks`, 
+                            'country', 'A String/A String Vector', 'String, Dictionary, or List',
+                            'language',  'A String/A String Vector', 'String, Dictionary, or List',
+                            'full_ecd', 'A boolean if set to TRUE downloads full dataset. Defaults to FALSE', 'A boolean if set to True downloads full dataset. Defaults to False',
+                            'ecd_version', 'A character string of the ECD version you want to download. Defaults to latest version', 'A character string of the ECD version you want to download. Defaults to latest version') |>
+                                tinytable::tt()
+
 
 ```
+
+Functionally the `ecd_version` argument is not entirely useful since there has only been one release of the data. 
+
+
+Say we only wanted data for South Korea^[I choose South Korea because the underlying file is relatively small compared to some of the other country files.] we can simply set the country argument like this: 
+
+:::panel-tabset
+### R 
+```{r}
+
+rok = load_ecd(country = 'Republic of Korea')
+
+```
+
+###  Python
+
+```{python}
+
+rok = ec.load_ecd(country = 'Republic of Korea', ecd_version = '1.0.0', cache = False)
+
+rok.head()
+
+```
+
+:::
+We implement caching by default so you will get a pretty shouty warning every few hours in R. `load_ecd` has some tolerance for common names, abbreviations, and mixed punctuations of countries so if we wanted to download the same data using `RK`, `ROK`, or `South Korea` these will all download the South Korean data. 
+
+:::panel-tabset
+
+### R 
+
+```{r}
+
+sk = load_ecd(country = 'South Korea')
+
+```
+
+### Python
+
+```{python}
+
+sk = ec.load_ecd(country = 'South Korea')
+
+```
+
+:::
+
+If you are not interested in single country case studies you can feed multiple countries to the country argument. In R we use a string vector. For Python you can use a list! 
+
+
+
+```{python}
+
+list_version = ec.load_ecd(country = ['South Korea', 'Turkey'])
+
+
+```
+
+
+The same functionality is extended to the language argument too!
+
+
+## lazy_load_ecd
+
+Both versions of the package allow you to use lazy loading to defer computation till you are done querying the dataset. To do this all you need to is call `lazy_load_ecd` 
+
+:::panel-tabset
+
+### R 
+
+```{r}
+
+turkey_korea_lazy = lazy_load_ecd(country = c('South Korea', 'Turkey')) 
+
+turkey_korea_lazy |>
+  filter(country == 'Turkey') |>
+  collect() |>
+  head()
+
+
+```
+
+
+### Python
+
+```{python}
+
+turkey_rok_lazy = ec.lazy_load_ecd(['South Korea','Turkey'])
+
+turkey_rok_lazy.filter(pl.col('country') == 'Turkey').collect().head()
+
+
+```
+
+
+
+:::
+
+
+This has a lot of speed benefits when you are working with larger datasets. 

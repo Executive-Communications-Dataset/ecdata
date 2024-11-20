@@ -30,6 +30,8 @@ website:
            file: man/example_scrapper.qmd
          - text: "`load_ecd`"
            file: man/load_ecd.qmd
+         - text: "`lazy_load_ecd`"
+           file: man/lazy_load_ecd.qmd
       - section: Vignettes
         contents:
          - text: "Introduction"
