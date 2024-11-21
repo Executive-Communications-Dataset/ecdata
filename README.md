@@ -5,158 +5,501 @@
 <img src="hex-logo.png" height = "350" class = "center"> </a>
 </p>
 
-`ecdata` is a minimal package for downloading *Executive Communications
-Dataset*. It includes subsets of all the country data, the full dataset,
-data dictionaries, and a sample script to help users expand the dataset.
-For our full replication archive, see the relevant subdirectories in
-[our
-GitHub](https://github.com/Executive-Communications-Dataset/ecdata/tree/main/raw-data).
-For a Python implementation see
-[execcommunications-py](https://github.com/Executive-Communications-Dataset/ecdata-py).
+When political executives speak, the world – citizens, markets,
+international organizations, allies, rivals, the press listens. Indeed,
+few things shape politics more than what political executives say in
+public. It is not surprising, therefore, that vast literatures in
+American and Comparative Politics, International Relations, Political
+Psychology, Communications, and Political Theory debate the origins and
+impact of leaders’ rhetoric. What is surprising is the absence of a
+broad, cross-national dataset of speeches by political executives.
+Without it, scholars cannot answer even basic descriptive questions
+related to the rate, content, and timing of political executive
+communications over time and space, let alone more theoretically
+interesting questions about the causes and consequences of executive
+communications.
+
+We present the Executive Communications Dataset (ECD). The ECD covers
+the years between 1964 and 2024 in 42 countries with 108,289
+commmunications (speeches, press conferences, press releases etc) in 23
+lanaguages. To faciliatate data distribution we developed the `ecdata`
+package in R and Python. The ecdata package is a lightweight package
+that is heavily inspired by [nflreadr](https://nflreadr.nflverse.com/)
+for downloading data from the ECD repositories. The both packages
+includes data dictionaries, lazy loading, and caching by default.
 
 ## Installation
 
-To install `ecdata` run.
+You can download the latest stable releases of the packages through CRAN
+and PyPi
 
-## R
+### R
 
 ``` r
-pak::pkg_install('Executive-Communications-Dataset/ecdata')
+install.packages('ecdata')
+library(ecdata)
+library(dplyr)
 ```
 
-## Python
+### Python
 
+``` python
+%pip install ecdata
+%pip install polars
 
-    (uv) pip install git+https://github.com/Executive-Communications-Dataset/ecdata-py
+import ecdata as ec
+import polars as pl
+```
 
 ## Usage
 
-To see a list of countries in our dataset and the associated file name
-in the GitHub release, you can run:
+### `load_ecd`
 
-## R
+The primary function that is shared across the Python and R
+distributions of the package is the `load_ecd` function. This function
+accepts four primary arguments:
 
-``` r
-library(ecdata)
+<table style="width:99%;">
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 46%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr>
+<th>Argument</th>
+<th>R Specific Quirks</th>
+<th>Python Specific Quirks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>country</td>
+<td>A String/A String Vector</td>
+<td>String, Dictionary, or List</td>
+</tr>
+<tr>
+<td>language</td>
+<td>A String/A String Vector</td>
+<td>String, Dictionary, or List</td>
+</tr>
+<tr>
+<td>full_ecd</td>
+<td>A boolean if set to TRUE downloads full dataset. Defaults to
+FALSE</td>
+<td>A boolean if set to True downloads full dataset. Defaults to
+False</td>
+</tr>
+<tr>
+<td>ecd_version</td>
+<td>A character string of the ECD version you want to download. Defaults
+to latest version</td>
+<td>A character string of the ECD version you want to download. Defaults
+to latest version</td>
+</tr>
+</tbody>
+</table>
 
-ecd_country_dictionary |>
-    head()
-```
+Functionally the `ecd_version` argument is not entirely useful since
+there has only been one release of the data.
 
-      name_in_dataset  file_name language abbr_three_letter abbr_two_letter
-    1       Argentina  argentina  Spanish               ARG              AR
-    2       Australia  australia  English               AUS              AU
-    3         Austria    austria  English               AUT              AT
-    4      Azerbaijan azerbaijan  English               AZE              AZ
-    5      Azerbaijan azerbaijan  English               AZE              AZ
-    6         Bolivia    bolivia  Spanish               BOL              BO
-      other_valid_inputs common_abr
-    1               <NA>       <NA>
-    2               <NA>       <NA>
-    3               <NA>       <NA>
-    4               <NA>       <NA>
-    5               <NA>       <NA>
-    6               <NA>       <NA>
+Say we only wanted data for South Korea[1] we can simply set the country
+argument like this:
 
-## Python
-
-    import ecdata as ec
-    import polars as pl 
-
-    ec.ecd_country_dictionary().head(int = 2)
-
-## Loading the Executive Communications Dataset
-
-We offer variety of options to load the ECD. You can specify single
-countries
-
-## R
-
-``` r
-load_ecd(country = 'United States of America') |>
-    head(n = 2)
-```
-
-    ✔ Successfully downloaded United States of America.
-
-                       country
-    1 United States of America
-    2 United States of America
-                                                                                                                              url
-    1 https://www.presidency.ucsb.edu/documents/statement-the-president-american-women-concerning-their-role-securing-world-peace
-    2 https://www.presidency.ucsb.edu/documents/statement-the-president-american-women-concerning-their-role-securing-world-peace
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  text
-    1                                                                                                                                                                                                                                                                                                                                    AS THE mothers of our children, women are most intimately concerned with the future of the human race. They realize that the nuclear threat to their own families is a threat to all mankind.
-    2 I have been asked how women can best translate their concern into effective participation toward preserving peace. As a first step, there is no substitute for information. While the issues may be complex, they are not beyond the understanding of any intelligent person who takes the time to study them. Understanding does not require either a military background or access to top secret documents. The best sources of information are your own congressman or the Arms Control and Disarmament Agency in Washington.
-            date
-    1 1963-11-01
-    2 1963-11-01
-                                                                                            title
-    1 Statement by the President to American Women Concerning Their Role in Securing World Peace.
-    2 Statement by the President to American Women Concerning Their Role in Securing World Peace.
-            executive type language file isonumber gwc cowcodes polity_v polity_iv
-    1 John F. Kennedy <NA>  English <NA>       840 USA      USA      USA       USA
-    2 John F. Kennedy <NA>  English <NA>       840 USA      USA      USA       USA
-      vdem year_of_statement office
-    1   20              1963   <NA>
-    2   20              1963   <NA>
-
-## Python
-
-
-    ec.load_ecd(country = 'United States of America').head(int = 2)
-
-You can specify multiple countries to `load_ecd` like this
-
-## R
+### R
 
 ``` r
-load_ecd(country = c('United States of America', 'Turkey', 'France'))  |>
-    head(n = 3)
+rok = load_ecd(country = 'Republic of Korea')
 ```
 
-**Note**: There is some tolerance for typos as long as the typos are in
-the form of capitilization mistakes. So this works
+    ✔ Successfully downloaded Republic of Korea.
+
+### Python
+
+``` python
+rok = ec.load_ecd(country = 'Republic of Korea', ecd_version = '1.0.0', cache = False)
+
+rok.head()
+```
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 17)</small>
+
+<table class="dataframe" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr>
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">url</th>
+<th data-quarto-table-cell-role="th">text</th>
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">executive</th>
+<th data-quarto-table-cell-role="th">type</th>
+<th data-quarto-table-cell-role="th">language</th>
+<th data-quarto-table-cell-role="th">file</th>
+<th data-quarto-table-cell-role="th">isonumber</th>
+<th data-quarto-table-cell-role="th">gwc</th>
+<th data-quarto-table-cell-role="th">cowcodes</th>
+<th data-quarto-table-cell-role="th">polity_v</th>
+<th data-quarto-table-cell-role="th">polity_iv</th>
+<th data-quarto-table-cell-role="th">vdem</th>
+<th data-quarto-table-cell-role="th">year_of_statement</th>
+<th data-quarto-table-cell-role="th">office</th>
+</tr>
+<tr>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>datetime[μs, UTC]</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>f64</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+<th>str</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Republic of Korea"</td>
+<td>"https://www.president.go.kr/pr…</td>
+<td>"​위대하고 자랑스러운 국민 여러분! 고맙습니다. 다시 …</td>
+<td>2022-03-10 00:00:00 UTC</td>
+<td>"정직한 정부, 정직한 대통령 되겠습니다."</td>
+<td>"Yoon Suk Yeol"</td>
+<td>"Speech"</td>
+<td>"Korean"</td>
+<td>null</td>
+<td>410.0</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>42.0</td>
+<td>2022.0</td>
+<td>null</td>
+</tr>
+<tr>
+<td>"Republic of Korea"</td>
+<td>"https://www.president.go.kr/pr…</td>
+<td>"​위대하고 자랑스러운 국민 여러분! 고맙습니다. 다시 …</td>
+<td>2022-03-10 00:00:00 UTC</td>
+<td>"정직한 정부, 정직한 대통령 되겠습니다."</td>
+<td>"Yoon Suk Yeol"</td>
+<td>"Speech"</td>
+<td>"Korean"</td>
+<td>null</td>
+<td>410.0</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>42.0</td>
+<td>2022.0</td>
+<td>null</td>
+</tr>
+<tr>
+<td>"Republic of Korea"</td>
+<td>"https://www.president.go.kr/pr…</td>
+<td>"​위대하고 자랑스러운 국민 여러분! 고맙습니다. 다시 …</td>
+<td>2022-03-10 00:00:00 UTC</td>
+<td>"정직한 정부, 정직한 대통령 되겠습니다."</td>
+<td>"Yoon Suk Yeol"</td>
+<td>"Speech"</td>
+<td>"Korean"</td>
+<td>null</td>
+<td>410.0</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>42.0</td>
+<td>2022.0</td>
+<td>null</td>
+</tr>
+<tr>
+<td>"Republic of Korea"</td>
+<td>"https://www.president.go.kr/pr…</td>
+<td>"​위대하고 자랑스러운 국민 여러분! 고맙습니다. 다시 …</td>
+<td>2022-03-10 00:00:00 UTC</td>
+<td>"정직한 정부, 정직한 대통령 되겠습니다."</td>
+<td>"Yoon Suk Yeol"</td>
+<td>"Speech"</td>
+<td>"Korean"</td>
+<td>null</td>
+<td>410.0</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>42.0</td>
+<td>2022.0</td>
+<td>null</td>
+</tr>
+<tr>
+<td>"Republic of Korea"</td>
+<td>"https://www.president.go.kr/pr…</td>
+<td>"늘 국민 편에 서겠습니다. "</td>
+<td>2022-04-01 00:00:00 UTC</td>
+<td>"초심을 잃지 않고, 겸손한 자세로 국민만 보고 가겠습니…</td>
+<td>"Yoon Suk Yeol"</td>
+<td>"Speech"</td>
+<td>"Korean"</td>
+<td>null</td>
+<td>410.0</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>"ROK"</td>
+<td>42.0</td>
+<td>2022.0</td>
+<td>null</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+We implement caching by default so you will get a pretty shouty warning
+every few hours in R. `load_ecd` has some tolerance for common names,
+abbreviations, and mixed punctuations of countries so if we wanted to
+download the same data using `RK`, `ROK`, or `South Korea` these will
+all download the South Korean data.
+
+### R
 
 ``` r
-load_ecd(country ='UnItED StatEs of America')
+sk = load_ecd(country = 'South Korea')
 ```
 
-## Python
+    ✔ Successfully downloaded Republic of Korea.
 
+### Python
 
+``` python
 
-    ec.load_ecd(country = {'United States of America', 'Turkey', 'France'}).head(n = 2)
+sk = ec.load_ecd(country = 'South Korea')
+```
 
-For the Python version you can feed `load_ecd` a list or a dictionary.
+If you are not interested in single country case studies you can feed
+multiple countries to the country argument. In R we use a string vector.
+For Python you can use a list!
 
-## Example Scrappers
+``` python
 
-We also provide a set of an example scrappers in part to quickly
-summarize our replication files and for other researchers to either
-collect more recent data or expand the cases in our dataset. To call
-these scrappers simply run:
+list_version = ec.load_ecd(country = ['South Korea', 'Turkey'])
+```
 
-## R
+The same functionality is extended to the language argument too!
+
+## lazy_load_ecd
+
+Both versions of the package allow you to use lazy loading to defer
+computation till you are done querying the dataset. To do this all you
+need to is call `lazy_load_ecd`
+
+### R
 
 ``` r
-# static website scrapper
-example_scrapper(scrapper_type = 'static')
-
-# dynamic website scrapper 
-
-example_scrapper(scrapper_type = 'dynamic')
+turkey_korea_lazy = lazy_load_ecd(country = c('South Korea', 'Turkey')) 
 ```
 
-## Python
+    ✔ Note: Data for: South Korea and Turkey was successfully downloaded. To bring data into memory call dplyr::collect()
 
-    ## static scrapper
-    ec.example_scrapper(scrapper_type = 'static')
+``` r
+turkey_korea_lazy |>
+  filter(country == 'Turkey') |>
+  collect() |>
+  head()
+```
 
-    # warning static scrapper outputs R file
+    # A tibble: 6 × 17
+      country url     text  date                title executive type  language file 
+      <chr>   <chr>   <chr> <dttm>              <chr> <chr>     <chr> <chr>    <chr>
+    1 Turkey  https:… Bugü… 2023-04-08 00:00:00 Başa… Recep Ta… Spee… Turkish  <NA> 
+    2 Turkey  https:… Noks… 2023-04-08 00:00:00 Başa… Recep Ta… Spee… Turkish  <NA> 
+    3 Turkey  https:… Nası… 2023-04-08 00:00:00 Başa… Recep Ta… Spee… Turkish  <NA> 
+    4 Turkey  https:… Sizl… 2023-04-08 00:00:00 Başa… Recep Ta… Spee… Turkish  <NA> 
+    5 Turkey  https:… Bir … 2023-04-08 00:00:00 Başa… Recep Ta… Spee… Turkish  <NA> 
+    6 Turkey  https:… Ülke… 2023-04-08 00:00:00 Başa… Recep Ta… Spee… Turkish  <NA> 
+    # ℹ 8 more variables: isonumber <dbl>, gwc <chr>, cowcodes <chr>,
+    #   polity_v <chr>, polity_iv <chr>, vdem <dbl>, year_of_statement <dbl>,
+    #   office <chr>
 
-    ec.example_scrapper(scraper_type = 'dynamic')
+### Python
 
-If `scrapper_type = 'static'` this will open a R script in your current
-editor. If `scrapper_type = 'dynamic'` this will open a Python script in
-your editor.
+``` python
+turkey_rok_lazy = ec.lazy_load_ecd(['South Korea','Turkey'])
+
+turkey_rok_lazy.filter(pl.col('country') == 'Turkey').collect().head()
+```
+
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 17)</small>
+
+<table class="dataframe" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr>
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">url</th>
+<th data-quarto-table-cell-role="th">text</th>
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">executive</th>
+<th data-quarto-table-cell-role="th">type</th>
+<th data-quarto-table-cell-role="th">language</th>
+<th data-quarto-table-cell-role="th">file</th>
+<th data-quarto-table-cell-role="th">isonumber</th>
+<th data-quarto-table-cell-role="th">gwc</th>
+<th data-quarto-table-cell-role="th">cowcodes</th>
+<th data-quarto-table-cell-role="th">polity_v</th>
+<th data-quarto-table-cell-role="th">polity_iv</th>
+<th data-quarto-table-cell-role="th">vdem</th>
+<th data-quarto-table-cell-role="th">year_of_statement</th>
+<th data-quarto-table-cell-role="th">office</th>
+</tr>
+<tr>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>datetime[μs, UTC]</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>f64</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+<th>str</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Turkey"</td>
+<td>"https://www.tccb.gov.tr/konusm…</td>
+<td>"Türkiye Cumhuriyeti’nin 11. Cu…</td>
+<td>2014-08-28 00:00:00 UTC</td>
+<td>"Devir Teslim Töreni’nde Yaptık…</td>
+<td>"Recep Tayyip Erdogan"</td>
+<td>"Speech"</td>
+<td>"Turkish"</td>
+<td>null</td>
+<td>792.0</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>99.0</td>
+<td>2014.0</td>
+<td>null</td>
+</tr>
+<tr>
+<td>"Turkey"</td>
+<td>"https://www.tccb.gov.tr/konusm…</td>
+<td>"Çok Değerli Abdullah Gül Karde…</td>
+<td>2014-08-28 00:00:00 UTC</td>
+<td>"Devir Teslim Töreni’nde Yaptık…</td>
+<td>"Recep Tayyip Erdogan"</td>
+<td>"Speech"</td>
+<td>"Turkish"</td>
+<td>null</td>
+<td>792.0</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>99.0</td>
+<td>2014.0</td>
+<td>null</td>
+</tr>
+<tr>
+<td>"Turkey"</td>
+<td>"https://www.tccb.gov.tr/konusm…</td>
+<td>"Saygıdeğer Devlet Başkanları,"</td>
+<td>2014-08-28 00:00:00 UTC</td>
+<td>"Devir Teslim Töreni’nde Yaptık…</td>
+<td>"Recep Tayyip Erdogan"</td>
+<td>"Speech"</td>
+<td>"Turkish"</td>
+<td>null</td>
+<td>792.0</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>99.0</td>
+<td>2014.0</td>
+<td>null</td>
+</tr>
+<tr>
+<td>"Turkey"</td>
+<td>"https://www.tccb.gov.tr/konusm…</td>
+<td>"Cumhurbaşkanları,"</td>
+<td>2014-08-28 00:00:00 UTC</td>
+<td>"Devir Teslim Töreni’nde Yaptık…</td>
+<td>"Recep Tayyip Erdogan"</td>
+<td>"Speech"</td>
+<td>"Turkish"</td>
+<td>null</td>
+<td>792.0</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>99.0</td>
+<td>2014.0</td>
+<td>null</td>
+</tr>
+<tr>
+<td>"Turkey"</td>
+<td>"https://www.tccb.gov.tr/konusm…</td>
+<td>"Meclis Başkanları ve Başbakanl…</td>
+<td>2014-08-28 00:00:00 UTC</td>
+<td>"Devir Teslim Töreni’nde Yaptık…</td>
+<td>"Recep Tayyip Erdogan"</td>
+<td>"Speech"</td>
+<td>"Turkish"</td>
+<td>null</td>
+<td>792.0</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>"TUR"</td>
+<td>99.0</td>
+<td>2014.0</td>
+<td>null</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+This has a lot of speed benefits when you are working with larger
+datasets.
+
+[1] I choose South Korea because the underlying file is relatively small
+compared to some of the other country files.
