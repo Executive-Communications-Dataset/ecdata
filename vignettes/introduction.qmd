@@ -24,6 +24,7 @@ We present the Executive Communications Dataset (ECD). The ECD covers the years 
 library(ecdata)
 library(dplyr)
 
+py_install(c('ecdata', 'polars'))
 
 ```
 
