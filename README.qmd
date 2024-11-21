@@ -23,15 +23,18 @@ To install `ecdata` run.
 #| results: hide 
 #| eval: false
 
-pak::pkg_install('Executive-Communications-Dataset/ecdata')
+
+#
+install.packages('ecdata')
+
 
 ```
 
 ## Python
 
-```
+```{python}
+#| eval: false
 
-(uv) pip install git+https://github.com/Executive-Communications-Dataset/ecdata-py
 
 ```
 
@@ -57,7 +60,7 @@ ecd_country_dictionary |>
 
 ## Python
 
-```
+```{python}
 import ecdata as ec
 import polars as pl 
 
@@ -80,7 +83,7 @@ We offer variety of options to load the ECD. You can specify single countries
 
 ```{r}
 
-load_ecd(country = 'United States of America') |>
+load_ecd(country = 'Greece') |>
     head(n = 2)
 
 
@@ -88,9 +91,9 @@ load_ecd(country = 'United States of America') |>
 
 ## Python
 
-```
+```{python}
 
-ec.load_ecd(country = 'United States of America').head(int = 2)
+ec.load_ecd(country = 'Turkey').head(int = 2)
 
 ```
 
@@ -104,6 +107,7 @@ You can specify multiple countries to `load_ecd` like this
 ## R
 
 ```{r}
+#| eval: false
 
 load_ecd(country = c('United States of America', 'Turkey', 'France'))  |>
     head(n = 3)
@@ -120,30 +124,16 @@ load_ecd(country ='UnItED StatEs of America')
 
 ```
 
-
-However, this does not work 
+Additionally some common abbreviations/names of countries are supported. So this will work as expected
 
 ```{r}
-#| error: true
-
-load_ecd(country = 'USA')
-
-```
+#| eval: false
 
 
-## Python
+load_ecd('South Korea')
 
 ```
 
-
-ec.load_ecd(country = {'United States of America', 'Turkey', 'France'}).head(n = 2)
-
-```
-
-
-:::
-
-For the Python version you can feed `load_ecd` a list or a dictionary.
 
 
 ## Example Scrappers

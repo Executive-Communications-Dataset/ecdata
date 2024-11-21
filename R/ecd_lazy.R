@@ -28,7 +28,6 @@
 #' # load full ecd 
 #' 
 #' 
-#' load_ecd(full_ecd = TRUE)
 #' }
 #' 
 

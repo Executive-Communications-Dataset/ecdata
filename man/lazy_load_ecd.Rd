@@ -31,26 +31,25 @@ Reading Executive Communications Dataset lazily
 This function imports data from the ECD lazily meaning the data is out loaded out of memory
 }
 \examples{
-\donttest{
+\dontrun{
 library(ecdata)
 
 ## load one country 
 
-load_ecd(country = 'United States of America')
+lazy_load_ecd(country = 'Greece')
 
 ## displays data from the USA
 
 
 ## load multiple countries 
 
-load_ecd(country = c('Turkey', 'Republic of South Korea', 'India'))
+lazy_load_ecd(country = c('Turkey', 'Republic of South Korea'))
 
 ## displays data from Turkey, South Korea, and India
 
 # load full ecd 
 
 
-load_ecd(full_ecd = TRUE)
 }
 
 }

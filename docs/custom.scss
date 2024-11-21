@@ -1,0 +1,26 @@
+/*-- scss:defaults --*/
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap');
+
+
+$font-family-sans-serif: "Merriweather";
+$font-family-monospace: "JetBrains Mono";
+
+$body-color: #222 !default;
+$link-color: #5e7ca1;
+$code-color: #222;
+$navbar-bg: #44636f;    
+$navbar-fg: #222;    
+$navbar-hl: #67322e;
+$sidebar-fg: #222;
+$sidebar-hl: #67322e;
+$toc-color: #222;
+$toc-hl: #67322e;
+
+
+
+code>a, code>span {
+    font-family: 'JetBrains Mono' monospace;
+    font-feature-settings: "ss01" 1;
+    font-size: 1.1rem;
+  }

@@ -21,14 +21,12 @@
 #' 
 #' ## load multiple countries 
 #' 
-#' load_ecd((country = c('Turkey', 'Republic of South Korea')))
+#' load_ecd(country = c('Turkey', 'Republic of South Korea'))
 #'
 #' ## displays data from Turkey, South Korea, and India
 #' 
 #' # load full ecd 
-#' 
-#' 
-#' load_ecd(full_ecd = TRUE)
+#'
 #' }
 #' 
 

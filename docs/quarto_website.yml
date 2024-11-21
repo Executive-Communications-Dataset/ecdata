@@ -1,0 +1,62 @@
+project:
+  type: website
+  output-dir: ../docs/
+
+# Note: freeze functionality can be set at a project level or for individual .qmd files
+# execute:
+#   freeze: false
+
+website:
+  title: "$ALTDOC_PACKAGE_NAME"
+  code-links: true
+  navbar:
+    search: true
+    right:
+      - icon: github
+        href: $ALTDOC_PACKAGE_URL_GITHUB
+        aria-label: $ALTDOC_PACKAGE_NAME GitHub
+  sidebar:
+    collapse-level: 1
+    contents:
+      - text: Home
+        file: index.qmd
+      - section: Functions
+        contents:
+         - text: "`ecd_country_dictionary`"
+           file: man/ecd_country_dictionary.qmd
+         - text: "`ecd_data_dictionary`"
+           file: man/ecd_data_dictionary.qmd
+         - text: "`example_scrapper`"
+           file: man/example_scrapper.qmd
+         - text: "`load_ecd`"
+           file: man/load_ecd.qmd
+         - text: "`lazy_load_ecd`"
+           file: man/lazy_load_ecd.qmd
+      - section: Vignettes
+        contents:
+         - text: "Introduction"
+           file: vignettes/introduction.qmd
+      - text: News
+        file: $ALTDOC_NEWS
+      - text: Changelog
+        file: $ALTDOC_CHANGELOG
+      - text: License
+        file: $ALTDOC_LICENSE
+      - text: Licence
+        file: $ALTDOC_LICENCE
+      - text: Code of conduct
+        file: $ALTDOC_CODE_OF_CONDUCT
+      - text: Citation
+        file: $ALTDOC_CITATION
+
+format:
+  html:
+    toc: true
+    theme:
+      - flatly
+      - custom.scss
+    code-link: true
+    code-copy: true
+    code-overflow: scroll
+
+#     number-sections: false
