@@ -3,42 +3,22 @@ title: "Introduction to ECD"
 format: html
 ---
 
-
-When political executives speak, the world – citizens, markets, international organizations, allies, rivals, the press 
-listens. Indeed, few things shape politics more than what political executives say in public. It is not surprising,
-therefore, that vast literatures in American and Comparative Politics, International Relations, Political Psychology,
-Communications, and Political Theory debate the origins and impact of leaders’ rhetoric. What is surprising is the
-absence of a broad, cross-national dataset of speeches by political executives. Without it, scholars cannot answer
-even basic descriptive questions related to the rate, content, and timing of political executive communications over
-time and space, let alone more theoretically interesting questions about the causes and consequences of executive communications. 
-
-We present the Executive Communications Dataset (ECD). The ECD covers the years between 1964 and 2024 in 42 countries with 108,289 commmunications (speeches, press conferences,  press releases etc) in 23 lanaguages. To faciliatate data distribution we developed the `ecdata` package in R and Python. The ecdata package is a lightweight package that is heavily inspired by [nflreadr](https://nflreadr.nflverse.com/) for downloading data from the ECD repositories. The both packages includes data dictionaries, lazy loading, and caching by default.
-
-## Installation
+In this vignette I introduce you to the basic functions of the `ecdata` package. You can download the latest stable releases of the packages through CRAN and PyPi 
 
 ```{r}
-#| echo: false
-#| warning: false
-#| message: false
-
 library(ecdata)
 library(dplyr)
 
-
-
 ```
+
 
 
 ```{python}
-#| echo: false
 
-import polars as pl
 import ecdata as ec
+import polars as pl
 
 ```
-
-
-You can download the latest stable releases of the packages through CRAN and PyPi 
 
 :::panel-tabset
 
@@ -76,8 +56,6 @@ import polars as pl
 
 
 
-## Usage 
-
 ### `load_ecd`
 
 The primary function that is shared across the Python and R distributions of the package is the `load_ecd` function. This function accepts four primary arguments:
@@ -107,6 +85,8 @@ Say we only wanted data for South Korea^[I choose South Korea because the underl
 
 rok = load_ecd(country = 'Republic of Korea')
 
+head(rok, 2)
+
 ```
 
 ###  Python
@@ -115,7 +95,7 @@ rok = load_ecd(country = 'Republic of Korea')
 
 rok = ec.load_ecd(country = 'Republic of Korea', ecd_version = '1.0.0', cache = False)
 
-rok.head()
+rok.head(2)
 
 ```
 
@@ -172,7 +152,7 @@ turkey_korea_lazy = lazy_load_ecd(country = c('South Korea', 'Turkey'))
 turkey_korea_lazy |>
   filter(country == 'Turkey') |>
   collect() |>
-  head()
+  head(2)
 
 
 ```
@@ -184,7 +164,7 @@ turkey_korea_lazy |>
 
 turkey_rok_lazy = ec.lazy_load_ecd(['South Korea','Turkey'])
 
-turkey_rok_lazy.filter(pl.col('country') == 'Turkey').collect().head()
+turkey_rok_lazy.filter(pl.col('country') == 'Turkey').collect().head(2)
 
 
 ```
@@ -194,4 +174,3 @@ turkey_rok_lazy.filter(pl.col('country') == 'Turkey').collect().head()
 :::
 
 
-This has a lot of speed benefits when you are working with larger datasets. 

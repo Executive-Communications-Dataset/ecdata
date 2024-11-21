@@ -223,13 +223,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation">Installation</a></li>
-  <li>
-<a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a>
-  <ul class="collapse">
-<li><a href="#load_ecd" id="toc-load_ecd" class="nav-link" data-scroll-target="#load_ecd"><code>load_ecd</code></a></li>
-  </ul>
-</li>
+<li><a href="#load_ecd" id="toc-load_ecd" class="nav-link active" data-scroll-target="#load_ecd"><code>load_ecd</code></a></li>
   <li><a href="#lazy_load_ecd" id="toc-lazy_load_ecd" class="nav-link" data-scroll-target="#lazy_load_ecd">lazy_load_ecd</a></li>
   </ul><div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="undefined"><i class="bi bi-link-45deg"></i></a></li></ul></div></nav>
     </div>
@@ -249,10 +243,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
 
 
-</header><p>When political executives speak, the world – citizens, markets, international organizations, allies, rivals, the press listens. Indeed, few things shape politics more than what political executives say in public. It is not surprising, therefore, that vast literatures in American and Comparative Politics, International Relations, Political Psychology, Communications, and Political Theory debate the origins and impact of leaders’ rhetoric. What is surprising is the absence of a broad, cross-national dataset of speeches by political executives. Without it, scholars cannot answer even basic descriptive questions related to the rate, content, and timing of political executive communications over time and space, let alone more theoretically interesting questions about the causes and consequences of executive communications.</p>
-<p>We present the Executive Communications Dataset (ECD). The ECD covers the years between 1964 and 2024 in 42 countries with 108,289 commmunications (speeches, press conferences, press releases etc) in 23 lanaguages. To faciliatate data distribution we developed the <code>ecdata</code> package in R and Python. The ecdata package is a lightweight package that is heavily inspired by <a href="https://nflreadr.nflverse.com/">nflreadr</a> for downloading data from the ECD repositories. The both packages includes data dictionaries, lazy loading, and caching by default.</p>
-<section id="installation" class="level2"><h2 class="anchored" data-anchor-id="installation">Installation</h2>
-<p>You can download the latest stable releases of the packages through CRAN and PyPi</p>
+</header><p>In this vignette I introduce you to the basic functions of the <code>ecdata</code> package. You can download the latest stable releases of the packages through CRAN and PyPi</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Executive-Communications-Dataset/ecdata">ecdata</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ecdata <span class="im">as</span> ec</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist">
 <li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">R</a></li>
@@ -261,23 +275,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'ecdata'</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">'ecdata'</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Executive-Communications-Dataset/ecdata">ecdata</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install ecdata</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install polars</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ecdata <span class="im">as</span> ec</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install ecdata</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install polars</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ecdata <span class="im">as</span> ec</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
-</section><section id="usage" class="level2"><h2 class="anchored" data-anchor-id="usage">Usage</h2>
 <section id="load_ecd" class="level3"><h3 class="anchored" data-anchor-id="load_ecd"><code>load_ecd</code></h3>
 <p>The primary function that is shared across the Python and R distributions of the package is the <code>load_ecd</code> function. This function accepts four primary arguments:</p>
 <div class="cell">
@@ -286,8 +299,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
     <script>
 
-      function styleCell_jc8dimj7j5iio5pepmag(i, j, css_id) {
-          var table = document.getElementById("tinytable_jc8dimj7j5iio5pepmag");
+      function styleCell_ghcdyztzx35bg94fxv9r(i, j, css_id) {
+          var table = document.getElementById("tinytable_ghcdyztzx35bg94fxv9r");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -297,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_jc8dimj7j5iio5pepmag');
+        var table = document.getElementById('tinytable_ghcdyztzx35bg94fxv9r');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -305,8 +318,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_jc8dimj7j5iio5pepmag(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_jc8dimj7j5iio5pepmag");
+      function spanCell_ghcdyztzx35bg94fxv9r(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_ghcdyztzx35bg94fxv9r");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -336,24 +349,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 },  ], css_id: 'tinytable_css_ettypk73ivvanx70xbg3',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_9vlcqp1bp9lsnoumkdn5',}, 
+          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 },  ], css_id: 'tinytable_css_gmas4taic659g1yvkvv8',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_34rgrak2gp1jliffpopb',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_jc8dimj7j5iio5pepmag(cell.i, cell.j, group.css_id);
+                  styleCell_ghcdyztzx35bg94fxv9r(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script><style>
       /* tinytable css entries after */
-      .table td.tinytable_css_ettypk73ivvanx70xbg3, .table th.tinytable_css_ettypk73ivvanx70xbg3 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_9vlcqp1bp9lsnoumkdn5, .table th.tinytable_css_9vlcqp1bp9lsnoumkdn5 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_gmas4taic659g1yvkvv8, .table th.tinytable_css_gmas4taic659g1yvkvv8 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_34rgrak2gp1jliffpopb, .table th.tinytable_css_34rgrak2gp1jliffpopb { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
 <div class="container">
-      <table class="table table-borderless" id="tinytable_jc8dimj7j5iio5pepmag" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_ghcdyztzx35bg94fxv9r" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
 <thead><tr>
 <th scope="col">Argument</th>
                 <th scope="col">R Specific Quirks</th>
@@ -396,17 +409,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">rok</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ecdata/man/load_ecd.html">load_ecd</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">'Republic of Korea'</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">rok</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ecdata/man/load_ecd.html">load_ecd</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">'Republic of Korea'</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>✔ Successfully downloaded Republic of Korea.</code></pre>
+</div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">rok</span>, <span class="fl">2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 17
+  country   url   text  date                title executive type  language file 
+  &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt; &lt;dttm&gt;              &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;
+1 Republic… http… 위대… 2022-03-10 00:00:00 정직… Yoon Suk… Spee… Korean   &lt;NA&gt; 
+2 Republic… http… 위대… 2022-03-10 00:00:00 정직… Yoon Suk… Spee… Korean   &lt;NA&gt; 
+# ℹ 8 more variables: isonumber &lt;dbl&gt;, gwc &lt;chr&gt;, cowcodes &lt;chr&gt;,
+#   polity_v &lt;chr&gt;, polity_iv &lt;chr&gt;, vdem &lt;dbl&gt;, year_of_statement &lt;dbl&gt;,
+#   office &lt;chr&gt;</code></pre>
 </div>
 </div>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>rok <span class="op">=</span> ec.load_ecd(country <span class="op">=</span> <span class="st">'Republic of Korea'</span>, ecd_version <span class="op">=</span> <span class="st">'1.0.0'</span>, cache <span class="op">=</span> <span class="va">False</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>rok.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>rok <span class="op">=</span> ec.load_ecd(country <span class="op">=</span> <span class="st">'Republic of Korea'</span>, ecd_version <span class="op">=</span> <span class="st">'1.0.0'</span>, cache <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>rok.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <style>
@@ -416,7 +440,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (5, 17)</small>
+<small>shape: (2, 17)</small>
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
@@ -497,63 +521,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>2022.0</td>
 <td>null</td>
 </tr>
-<tr class="odd">
-<td>"Republic of Korea"</td>
-<td>"https://www.president.go.kr/pr…</td>
-<td>"​위대하고 자랑스러운 국민 여러분!&nbsp;고맙습니다.&nbsp;다시 …</td>
-<td>2022-03-10 00:00:00 UTC</td>
-<td>"정직한 정부, 정직한 대통령 되겠습니다."</td>
-<td>"Yoon Suk Yeol"</td>
-<td>"Speech"</td>
-<td>"Korean"</td>
-<td>null</td>
-<td>410.0</td>
-<td>"ROK"</td>
-<td>"ROK"</td>
-<td>"ROK"</td>
-<td>"ROK"</td>
-<td>42.0</td>
-<td>2022.0</td>
-<td>null</td>
-</tr>
-<tr class="even">
-<td>"Republic of Korea"</td>
-<td>"https://www.president.go.kr/pr…</td>
-<td>"​위대하고 자랑스러운 국민 여러분!&nbsp;고맙습니다.&nbsp;다시 …</td>
-<td>2022-03-10 00:00:00 UTC</td>
-<td>"정직한 정부, 정직한 대통령 되겠습니다."</td>
-<td>"Yoon Suk Yeol"</td>
-<td>"Speech"</td>
-<td>"Korean"</td>
-<td>null</td>
-<td>410.0</td>
-<td>"ROK"</td>
-<td>"ROK"</td>
-<td>"ROK"</td>
-<td>"ROK"</td>
-<td>42.0</td>
-<td>2022.0</td>
-<td>null</td>
-</tr>
-<tr class="odd">
-<td>"Republic of Korea"</td>
-<td>"https://www.president.go.kr/pr…</td>
-<td>"늘 국민 편에 서겠습니다.&nbsp;"</td>
-<td>2022-04-01 00:00:00 UTC</td>
-<td>"초심을 잃지 않고, 겸손한 자세로 국민만 보고 가겠습니…</td>
-<td>"Yoon Suk Yeol"</td>
-<td>"Speech"</td>
-<td>"Korean"</td>
-<td>null</td>
-<td>410.0</td>
-<td>"ROK"</td>
-<td>"ROK"</td>
-<td>"ROK"</td>
-<td>"ROK"</td>
-<td>42.0</td>
-<td>2022.0</td>
-<td>null</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -571,7 +538,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sk</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ecdata/man/load_ecd.html">load_ecd</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">'South Korea'</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sk</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ecdata/man/load_ecd.html">load_ecd</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">'South Korea'</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>✔ Successfully downloaded Republic of Korea.</code></pre>
 </div>
@@ -579,19 +546,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>sk <span class="op">=</span> ec.load_ecd(country <span class="op">=</span> <span class="st">'South Korea'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>sk <span class="op">=</span> ec.load_ecd(country <span class="op">=</span> <span class="st">'South Korea'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
 <p>If you are not interested in single country case studies you can feed multiple countries to the country argument. In R we use a string vector. For Python you can use a list!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>list_version <span class="op">=</span> ec.load_ecd(country <span class="op">=</span> [<span class="st">'South Korea'</span>, <span class="st">'Turkey'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>list_version <span class="op">=</span> ec.load_ecd(country <span class="op">=</span> [<span class="st">'South Korea'</span>, <span class="st">'Turkey'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The same functionality is extended to the language argument too!</p>
-</section></section><section id="lazy_load_ecd" class="level2"><h2 class="anchored" data-anchor-id="lazy_load_ecd">lazy_load_ecd</h2>
+</section><section id="lazy_load_ecd" class="level2"><h2 class="anchored" data-anchor-id="lazy_load_ecd">lazy_load_ecd</h2>
 <p>Both versions of the package allow you to use lazy loading to defer computation till you are done querying the dataset. To do this all you need to is call <code>lazy_load_ecd</code></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist">
@@ -601,24 +568,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">turkey_korea_lazy</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ecdata/man/lazy_load_ecd.html">lazy_load_ecd</a></span><span class="op">(</span>country <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'South Korea'</span>, <span class="st">'Turkey'</span><span class="op">)</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">turkey_korea_lazy</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ecdata/man/lazy_load_ecd.html">lazy_load_ecd</a></span><span class="op">(</span>country <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'South Korea'</span>, <span class="st">'Turkey'</span><span class="op">)</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>✔ Note: Data for: South Korea and Turkey was successfully downloaded. To bring data into memory call dplyr::collect()</code></pre>
 </div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">turkey_korea_lazy</span> <span class="op">|&gt;</span></span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">turkey_korea_lazy</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">country</span> <span class="op">==</span> <span class="st">'Turkey'</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">collect</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 17
+<pre><code># A tibble: 2 × 17
   country url     text  date                title executive type  language file 
   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;dttm&gt;              &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;
 1 Turkey  https:… Bugü… 2023-04-08 00:00:00 Başa… Recep Ta… Spee… Turkish  &lt;NA&gt; 
 2 Turkey  https:… Noks… 2023-04-08 00:00:00 Başa… Recep Ta… Spee… Turkish  &lt;NA&gt; 
-3 Turkey  https:… Nası… 2023-04-08 00:00:00 Başa… Recep Ta… Spee… Turkish  &lt;NA&gt; 
-4 Turkey  https:… Sizl… 2023-04-08 00:00:00 Başa… Recep Ta… Spee… Turkish  &lt;NA&gt; 
-5 Turkey  https:… Bir … 2023-04-08 00:00:00 Başa… Recep Ta… Spee… Turkish  &lt;NA&gt; 
-6 Turkey  https:… Ülke… 2023-04-08 00:00:00 Başa… Recep Ta… Spee… Turkish  &lt;NA&gt; 
 # ℹ 8 more variables: isonumber &lt;dbl&gt;, gwc &lt;chr&gt;, cowcodes &lt;chr&gt;,
 #   polity_v &lt;chr&gt;, polity_iv &lt;chr&gt;, vdem &lt;dbl&gt;, year_of_statement &lt;dbl&gt;,
 #   office &lt;chr&gt;</code></pre>
@@ -627,9 +590,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>turkey_rok_lazy <span class="op">=</span> ec.lazy_load_ecd([<span class="st">'South Korea'</span>,<span class="st">'Turkey'</span>])</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>turkey_rok_lazy.<span class="bu">filter</span>(pl.col(<span class="st">'country'</span>) <span class="op">==</span> <span class="st">'Turkey'</span>).collect().head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>turkey_rok_lazy <span class="op">=</span> ec.lazy_load_ecd([<span class="st">'South Korea'</span>,<span class="st">'Turkey'</span>])</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>turkey_rok_lazy.<span class="bu">filter</span>(pl.col(<span class="st">'country'</span>) <span class="op">==</span> <span class="st">'Turkey'</span>).collect().head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <style>
@@ -639,7 +602,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (5, 17)</small>
+<small>shape: (2, 17)</small>
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
@@ -720,63 +683,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>2014.0</td>
 <td>null</td>
 </tr>
-<tr class="odd">
-<td>"Turkey"</td>
-<td>"https://www.tccb.gov.tr/konusm…</td>
-<td>"Saygıdeğer Devlet Başkanları,"</td>
-<td>2014-08-28 00:00:00 UTC</td>
-<td>"Devir Teslim Töreni’nde Yaptık…</td>
-<td>"Recep Tayyip Erdogan"</td>
-<td>"Speech"</td>
-<td>"Turkish"</td>
-<td>null</td>
-<td>792.0</td>
-<td>"TUR"</td>
-<td>"TUR"</td>
-<td>"TUR"</td>
-<td>"TUR"</td>
-<td>99.0</td>
-<td>2014.0</td>
-<td>null</td>
-</tr>
-<tr class="even">
-<td>"Turkey"</td>
-<td>"https://www.tccb.gov.tr/konusm…</td>
-<td>"Cumhurbaşkanları,"</td>
-<td>2014-08-28 00:00:00 UTC</td>
-<td>"Devir Teslim Töreni’nde Yaptık…</td>
-<td>"Recep Tayyip Erdogan"</td>
-<td>"Speech"</td>
-<td>"Turkish"</td>
-<td>null</td>
-<td>792.0</td>
-<td>"TUR"</td>
-<td>"TUR"</td>
-<td>"TUR"</td>
-<td>"TUR"</td>
-<td>99.0</td>
-<td>2014.0</td>
-<td>null</td>
-</tr>
-<tr class="odd">
-<td>"Turkey"</td>
-<td>"https://www.tccb.gov.tr/konusm…</td>
-<td>"Meclis Başkanları ve Başbakanl…</td>
-<td>2014-08-28 00:00:00 UTC</td>
-<td>"Devir Teslim Töreni’nde Yaptık…</td>
-<td>"Recep Tayyip Erdogan"</td>
-<td>"Speech"</td>
-<td>"Turkish"</td>
-<td>null</td>
-<td>792.0</td>
-<td>"TUR"</td>
-<td>"TUR"</td>
-<td>"TUR"</td>
-<td>"TUR"</td>
-<td>99.0</td>
-<td>2014.0</td>
-<td>null</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -785,7 +691,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>This has a lot of speed benefits when you are working with larger datasets.</p>
 
 
 </section><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
