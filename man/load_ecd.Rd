@@ -31,6 +31,7 @@ Reading Executive Communications Dataset
 This function imports data from the ECD
 }
 \examples{
+\dontshow{if (interactive() && curl::has_internet()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 library(ecdata)
 
@@ -38,7 +39,6 @@ library(ecdata)
 
 load_ecd(country = 'Greece')
 
-## displays data from the USA
 
 
 ## load multiple countries 
@@ -47,8 +47,8 @@ load_ecd(country = c('Turkey', 'Republic of South Korea'))
 
 ## displays data from Turkey, South Korea, and India
 
-# load full ecd 
+
 
 }
-
+\dontshow{\}) # examplesIf}
 }

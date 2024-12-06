@@ -1,0 +1,68 @@
+---
+title: "Loading_The_ECD"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Loading_The_ECD}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+In this vignette I introduce you to the basic functions of the `ecdata` package. You can download the latest stable releases of the packages through CRAN and PyPi 
+
+```{r}
+library(ecdata)
+library(dplyr)
+
+```
+
+
+
+### `load_ecd`
+
+The primary function that is shared across the Python and R distributions of the package is the `load_ecd` function. This function accepts four primary arguments:
+
+
+```{r}
+#| echo: false
+
+tibble::tribble(~'Argument', ~`R Specific Quirks`, ~`Python Specific Quirks`, 
+                            'country', 'A String/A String Vector', 'String, Dictionary, or List',
+                            'language',  'A String/A String Vector', 'String, Dictionary, or List',
+                            'full_ecd', 'A boolean if set to TRUE downloads full dataset. Defaults to FALSE', 'A boolean if set to True downloads full dataset. Defaults to False',
+                            'ecd_version', 'A character string of the ECD version you want to download. Defaults to latest version', 'A character string of the ECD version you want to download. Defaults to latest version') |>
+                                tinytable::tt()
+
+
+```
+
+Functionally the `ecd_version` argument is not entirely useful since there has only been one release of the data. 
+
+
+Say we only wanted data for South Korea^[I choose South Korea because the underlying file is relatively small compared to some of the other country files.] we can simply set the country argument like this: 
+
+
+```{r}
+
+rok = load_ecd(country = 'Republic of Korea')
+
+head(rok, 2)
+
+```
+
+
+We implement caching by default so you will get a pretty shouty warning every few hours in R. `load_ecd` has some tolerance for common names, abbreviations, and mixed punctuations of countries so if we wanted to download the same data using `RK`, `ROK`, or `South Korea` these will all download the South Korean data. 
+
+
+### R 
+
+```{r}
+
+sk = load_ecd(country = 'South Korea')
+
+```
+
+
+The same functionality is extended to the language argument too!
+

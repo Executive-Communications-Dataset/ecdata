@@ -32,9 +32,6 @@
   assign(x = "load_ecd",
            value = memoise::memoise(load_ecd, ~ memoise::timeout(86400), cache = cache),
            envir = rlang::ns_env("ecdata"))
-   assign(x = "lazy_load_ecd",
-          value = memoise::memoise(lazy_load_ecd, ~ memoise::timeout(86400), cache = cache),
-        envir = rlang::ns_env("ecdata"))
    
  }
 

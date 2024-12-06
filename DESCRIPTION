@@ -31,14 +31,16 @@ Imports:
     cachem (>= 1.0.0),
     memoise (>= 2.0.0),
     vctrs,
-    curl
 Suggests: 
     duckplyr,
     testthat (>= 3.0.0),
     data.table,
-    dplyr, 
+    dplyr,
     altdoc,
     knitr,
-    rmarkdown
+    rmarkdown,
+    tinytable,
+    tibble,
+    curl
 Config/testthat/edition: 3
 VignetteBuilder: knitr

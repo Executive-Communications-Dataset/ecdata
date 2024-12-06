@@ -18,5 +18,5 @@
 ^.nojekyll$
 ^CRAN-SUBMISSION$
 ^.qmd$
-^ectut$
-^taxi$
+^ecdata.Rproj$
+^devel$

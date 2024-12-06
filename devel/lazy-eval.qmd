@@ -1,0 +1,60 @@
+---
+title: "Lazy Loading versus loading"
+format: html
+---
+
+In the package we offer two different versions of the `load_ecd` function one that directly imports the data into memory and one that uses 'lazy loading' so it is worth spending a little time on the difference for the unititiated. In @lst-setup we are going to use a relatively simple example that uses the NYC taxi dataset. 
+
+
+```{r}
+#| label: lst-setup
+library(arrow)
+library(microbenchmark)
+library(data.table)
+library(dplyr)
+
+# bucket = s3_bucket("voltrondata-labs-datasets/nyc-taxi-tiny")
+# copy_files(from = bucket, to = 'taxi')
+
+lazy_taxi = open_dataset('taxi') |>
+    to_duckdb()
+
+not_lazy = open_dataset('taxi') |>
+    collect()
+
+dt_taxi = as.data.table(not_lazy)
+
+```
+
+
+We are using this example since there are a lot of source materials and exposes a little bit of the underlying logic of how our functions a bit more clearly. The data is by no means "big" but at `r scales::comma(nrow(not_lazy))` it is still a much bigger than a lot of political science dataset. 
+
+
+Lets take a fairly simple example by just doing grouped summaries
+
+```{r}
+
+microbenchmark(
+    not_lazy = not_lazy |>
+        summarise(avg_tip = mean(tip_amount), .by = passenger_count),
+    dt = dt_taxi[, avg_tip := mean(tip_amount), keyby = passenger_count],
+    lazy = lazy_taxi |>
+        summarise(avg_tip = mean(tip_amount), .by = passenger_count),
+times = 1000)
+
+```
+
+Effectively what is happening is that we are waiting till the end to actually do all the computation. This has some speed gains compared to trusty old `dplyr`. The reason we went will this approach is that while `data.table` is fantastic package presently it does not support this functionality.^[If they ever did I shutter to think how much faster that package could get.] The main reason we decided to employ this functionality was because some cases are quiet large and may require additional data cleaning. 
+
+To actually bring this into memory you simply need to call `dplyr::collect` like we did in @lst-setup
+
+
+
+```{r}
+
+lazy_taxi |>
+        summarise(avg_tip = mean(tip_amount), .by = passenger_count) |>
+        collect() |>
+        head(n = 5)
+
+```

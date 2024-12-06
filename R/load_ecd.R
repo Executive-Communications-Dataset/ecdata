@@ -8,7 +8,7 @@
 #' @returns A tibble with the specified country/countries or language/languages
 #' @importFrom vctrs list_unchop
 #' @export
-#' @examples
+#' @examplesIf interactive() && curl::has_internet()
 #' \dontrun{
 #' library(ecdata)
 #' 
@@ -16,7 +16,6 @@
 #' 
 #' load_ecd(country = 'Greece')
 #' 
-#' ## displays data from the USA
 #' 
 #' 
 #' ## load multiple countries 
@@ -25,7 +24,7 @@
 #'
 #' ## displays data from Turkey, South Korea, and India
 #' 
-#' # load full ecd 
+#' 
 #'
 #' }
 #' 

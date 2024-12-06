@@ -8,7 +8,7 @@
 #' @returns A tibble with the specified country/countries or language/languages
 #' @importFrom curl multi_download
 #' @export
-#' @examples
+#' @examplesIf interactive() && curl::has_internet()
 #' \dontrun{
 #' library(ecdata)
 #' 
@@ -16,16 +16,13 @@
 #' 
 #' lazy_load_ecd(country = 'Greece')
 #' 
-#' ## displays data from the USA
-#' 
-#' 
 #' ## load multiple countries 
 #' 
 #' lazy_load_ecd(country = c('Turkey', 'Republic of South Korea'))
 #'
 #' ## displays data from Turkey, South Korea, and India
 #' 
-#' # load full ecd 
+#' 
 #' 
 #' 
 #' }
