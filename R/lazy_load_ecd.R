@@ -5,25 +5,30 @@
 #' @param language a character vector with a lanaguage or languages in our dataset to download. 
 #' @param full_ecd to download the full Executive Communications Dataset set full_ecd to TRUE
 #' @param ecd_version a character of ecd versions. 
-#' @returns An Arrow Dataset that can be materialized using dplyr::collect()
-#' @importFrom curl multi_download has_internet
-#' @importFrom arrow read_parquet open_dataset
-#' @importFrom rlang abort
-#' @importFrom cli cli_alert_success cli_alert_danger cli_alert_info
+#' @returns A tibble with the specified country/countries or language/languages
+#' @importFrom curl multi_download
 #' @export
 #' @examplesIf interactive() && curl::has_internet()
 #' \dontrun{
 #' library(ecdata)
 #' 
 #' ## load one country 
-#' ds <- lazy_load_ecd(country = 'Greece')
+#' 
+#' lazy_load_ecd(country = 'Greece')
 #' 
 #' ## load multiple countries 
-#' ds <- lazy_load_ecd(country = c('Turkey', 'Republic of South Korea'))
 #' 
-#' ## To materialize the data into memory:
-#' df <- ds |> dplyr::collect()
+#' lazy_load_ecd(country = c('Turkey', 'Republic of South Korea'))
+#'
+#' ## displays data from Turkey, South Korea, and India
+#' 
+#' 
+#' 
+#' 
 #' }
+#' 
+
+
 lazy_load_ecd = function(country=NULL, language=NULL, full_ecd=FALSE, ecd_version = '1.0.0'){
   if (!curl::has_internet()) {
     rlang::abort("Internet is required to use this function")
