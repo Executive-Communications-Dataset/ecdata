@@ -27,3 +27,6 @@ _quarto/*
 ^_quarto$
 inst/doc
 ectut
+.Rhistory
+.DS_Store
+__pycache__/
