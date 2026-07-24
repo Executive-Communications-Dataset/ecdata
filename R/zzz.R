@@ -28,11 +28,14 @@
   if(memoise_option == "memory") cache <- cachem::cache_mem()
 
  if(memoise_option != 'off'){
-   
-  assign(x = "load_ecd",
-           value = memoise::memoise(load_ecd, ~ memoise::timeout(86400), cache = cache),
+
+  ## memoise the downloader rather than load_ecd itself. Everything load_ecd does
+  ## around the download, in particular the known issue warnings, then happens on
+  ## every call instead of only on the first one.
+  assign(x = "load_ecd_impl",
+           value = memoise::memoise(load_ecd_impl, ~ memoise::timeout(86400), cache = cache),
            envir = rlang::ns_env("ecdata"))
-   
+
  }
 
  if(is.null(getOption("ecdata.verbose")) && isFALSE(getOption("ecdata.cache_warning"))) {

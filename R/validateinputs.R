@@ -1,7 +1,17 @@
-#' Get latest release 
-#' keywords @internal 
-#' @returns No return. This function is meant to check the inputs of the load_ecd function
-#' @noRd
+#' List the published releases of the ECD
+#'
+#' Returns the release names available on GitHub. Any of them can be passed to
+#' the `ecd_version` argument of [load_ecd()] or [lazy_load_ecd()].
+#'
+#' @returns A character vector of release names
+#' @export
+#' @examplesIf interactive() && curl::has_internet()
+#' \dontrun{
+#' library(ecdata)
+#'
+#' get_ecd_release()
+#'
+#' }
 
 
 
@@ -31,7 +41,7 @@ validate_inputs = function(country = NULL,language = NULL, full_ecd = FALSE, ver
   countries = countries |>
     within({
       name_in_dataset = tolower(name_in_dataset)
-      language = tolower(language)
+      language = fold_language(language)
       abbr = tolower(abbr)
     })
 
@@ -46,7 +56,7 @@ validate_inputs = function(country = NULL,language = NULL, full_ecd = FALSE, ver
 
   check_language = countries$language
 
-  lower_lang = tolower(language)
+  lower_lang = fold_language(language)
 
   check_abr = countries$abbr
 

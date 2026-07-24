@@ -23,7 +23,7 @@ lazy_load_ecd(
 \item{ecd_version}{a character of ecd versions.}
 }
 \value{
-A tibble with the specified country/countries or language/languages
+An arrow Dataset with the specified country/countries or language/languages. Call \code{dplyr::collect()} to bring it into memory.
 }
 \description{
 Reading Executive Communications Dataset lazily
@@ -41,9 +41,9 @@ lazy_load_ecd(country = 'Greece')
 
 ## load multiple countries 
 
-lazy_load_ecd(country = c('Turkey', 'Republic of South Korea'))
+lazy_load_ecd(country = c('Turkey', 'Republic of Korea'))
 
-## displays data from Turkey, South Korea, and India
+## displays data from Turkey and South Korea
 
 
 

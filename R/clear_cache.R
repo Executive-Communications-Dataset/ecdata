@@ -12,8 +12,12 @@
 
 clear_cache = function(){
 
-  memoise::forget(load_ecd)
-  
+  if(memoise::is.memoised(load_ecd_impl)){
+
+    memoise::forget(load_ecd_impl)
+
+  }
+
   cli::cli_alert_success('ecdata function cache cleared')
 
 

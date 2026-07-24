@@ -10,7 +10,9 @@ load_ecd(
   country = NULL,
   language = NULL,
   full_ecd = FALSE,
-  ecd_version = "1.0.0"
+  ecd_version = "1.0.0",
+  normalize_schema = TRUE,
+  deduplicate = FALSE
 )
 }
 \arguments{
@@ -21,6 +23,10 @@ load_ecd(
 \item{full_ecd}{to download the full Executive Communications Dataset set full_ecd to TRUE}
 
 \item{ecd_version}{a character of ecd versions.}
+
+\item{normalize_schema}{the country files do not all share a schema. When TRUE, the default, each file is put on the 17 documented columns before the files are combined. Set to FALSE to get the columns exactly as they are published.}
+
+\item{deduplicate}{several country files contain the same statement many times over. When TRUE rows that are duplicated on url, text and date are dropped. Defaults to FALSE so that row counts match the published files.}
 }
 \value{
 A tibble with the specified country/countries or language/languages
@@ -43,9 +49,11 @@ load_ecd(country = 'Greece')
 
 ## load multiple countries 
 
-load_ecd(country = c('Turkey', 'Republic of South Korea'))
+load_ecd(country = c('Turkey', 'Republic of Korea'))
 
-## displays data from Turkey, South Korea, and India
+## drop the duplicated rows in the country files that have them
+
+load_ecd(country = 'India', deduplicate = TRUE)
 
 
 
