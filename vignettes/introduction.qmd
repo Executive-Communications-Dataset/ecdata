@@ -100,7 +100,7 @@ rok.head(2)
 ```
 
 :::
-We implement caching by default so you will get a pretty shouty warning every few hours in R. `load_ecd` has some tolerance for common names, abbreviations, and mixed punctuations of countries so if we wanted to download the same data using `RK`, `ROK`, or `South Korea` these will all download the South Korean data. 
+We implement caching by default so you will get a pretty shouty warning every few hours in R. `load_ecd` has some tolerance for common names, abbreviations, and mixed punctuations of countries so if we wanted to download the same data using `KR`, `KOR`, or `South Korea` these will all download the South Korean data. 
 
 :::panel-tabset
 
@@ -174,3 +174,28 @@ turkey_rok_lazy.filter(pl.col('country') == 'Turkey').collect().head(2)
 :::
 
 
+### Schema and duplicate handling
+
+The published country files do not all carry the same columns, and `date` is a
+plain date in two of them and a UTC timestamp in the rest. `load_ecd` puts every
+file onto the 17 documented columns before combining them, so a multi country
+call returns one rectangle no matter which countries you ask for. Pass
+`normalize_schema = FALSE` if you would rather have the columns exactly as they
+are published.
+
+Several country files repeat the same statement many times over: about 99% of the
+rows in `india.parquet` and `denmark.parquet` are exact duplicates. Row counts
+match the published files by default. Pass `deduplicate = TRUE` to drop rows that
+repeat on url, text and date.
+
+```{r}
+#| eval: false
+
+india = load_ecd(country = 'India', deduplicate = TRUE)
+
+```
+
+`load_ecd` warns you when you load a file with a known problem in it. The full
+list of known problems in release 1.0.0, and the script that finds them, are in
+[`data-validation/`](https://github.com/Executive-Communications-Dataset/ecdata/tree/main/data-validation)
+in the package repository.

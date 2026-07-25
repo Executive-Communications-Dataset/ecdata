@@ -20,3 +20,5 @@
 ^.qmd$
 ^ecdata.Rproj$
 ^devel$
+^data-validation$
+^\.Rhistory$

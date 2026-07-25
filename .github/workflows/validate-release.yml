@@ -1,0 +1,115 @@
+name: Validate release
+
+# Checks the parquet assets of a release against the invariants in
+# data-validation/ecd_validate.py. Runs when a release is published and on
+# demand. See data-validation/README.md.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release tag to validate, e.g. 1.0.0'
+        type: string
+        required: true
+      fail-on:
+        description: 'Severity that fails the run'
+        type: choice
+        options: [CRITICAL, ERROR, WARN, INFO, NONE]
+        default: NONE
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install polars duckdb requests
+
+      - name: Resolve the version to validate
+        id: version
+        run: |
+          version="${{ inputs.version || github.event.release.tag_name }}"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Validating release $version"
+
+      - name: Download the release assets
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          mkdir -p release-assets
+          curl -fsSL -o release-assets/full_ecd.parquet \
+            "https://github.com/${{ github.repository }}/releases/download/$VERSION/full_ecd.parquet" \
+            || { echo "full_ecd.parquet is not published for $VERSION, continuing without it"; rm -f release-assets/full_ecd.parquet; }
+
+      - name: Validate
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          FAIL_ON: ${{ inputs.fail-on || 'NONE' }}
+        run: |
+          full_ecd=()
+          if [ -f release-assets/full_ecd.parquet ]; then
+            full_ecd=(--full-ecd release-assets/full_ecd.parquet)
+          fi
+
+          # NONE is not a severity the script knows about; it is how this
+          # workflow says "report everything, fail on nothing". Release 1.0.0
+          # does not pass, so reporting is the useful default until it does.
+          severity="$FAIL_ON"
+          if [ "$severity" = "NONE" ]; then
+            severity=CRITICAL
+          fi
+
+          set +e
+          python data-validation/ecd_validate.py \
+            --download "$VERSION" \
+            --data-dir release-assets \
+            "${full_ecd[@]}" \
+            --out "report-$VERSION.txt" \
+            --json "findings-$VERSION.json" \
+            --fail-on "$severity"
+          status=$?
+          set -e
+
+          if [ "$FAIL_ON" = "NONE" ]; then
+            echo "fail-on is NONE; reporting findings without failing the run (exit was $status)"
+            exit 0
+          fi
+
+          exit $status
+
+      - name: Summarise
+        if: always()
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if [ -f "report-$VERSION.txt" ]; then
+            {
+              echo '### ECD validation report'
+              echo
+              echo '```'
+              head -c 60000 "report-$VERSION.txt"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecd-validation-${{ steps.version.outputs.version }}
+          path: |
+            report-*.txt
+            findings-*.json
+          if-no-files-found: warn

@@ -1,0 +1,790 @@
+==============================================================================
+ECD VALIDATION REPORT  --  19 CRITICAL, 55 ERROR, 107 WARN, 29 INFO
+==============================================================================
+
+[CRITICAL] corpus.foreign_domain  (ecuador)
+    193,751 of 214,977 rows (90.1%) cite hosts that do not match this country's expected domains ['.ec']. These rows are labeled with the wrong country.
+      - top_foreign_hosts: ['gobiernodanilomedina.do (193,751)']
+
+[CRITICAL] corpus.shared_urls  (dominican_republic / ecuador)
+    'dominican_republic' and 'ecuador' share 14,994 source URLs (Jaccard 1.00). Distinct countries should not overlap; this usually means one corpus was pooled into both files and the country/executive labels assigned by sort order.
+      - urls_a: 14994
+      - urls_b: 14994
+      - shared: 14994
+
+[CRITICAL] full_ecd.rows_duplicated  (Ecuador)
+    full_ecd holds 429,954 rows against 214,977 in the country asset (2.00x). The file was concatenated more than once.
+
+[CRITICAL] full_ecd.rows_lost  (Portugal)
+    full_ecd holds 1 rows but the country asset holds 64,522 -- 64,521 documents are missing from the pooled dataset. A row count of 1 with null content is the signature of a failed join.
+
+[CRITICAL] rows.cartesian_blowup  (denmark)
+    Documents are replicated within themselves. Worst URL holds 157,990 rows for only 370 distinct paragraphs (427x). 177 of the top 200 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.stm.dk/statsministeren/taler/statsminister-mette-frederiksens-tale-ved-folketingets-aabn
+
+[CRITICAL] rows.cartesian_blowup  (france)
+    Documents are replicated within themselves. Worst URL holds 42,834 rows for only 20 distinct paragraphs (2142x). 34 of the top 63 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.elysee.fr/emmanuel-macron/2024/04/15/j-100-avant-les-jeux-olympiques-et-paralympiques-vi
+
+[CRITICAL] rows.cartesian_blowup  (india)
+    Documents are replicated within themselves. Worst URL holds 158,472 rows for only 149 distinct paragraphs (1064x). 46 of the top 200 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.pmindia.gov.in/hi/news_updates/%e0%a4%b2%e0%a5%8b%e0%a4%95%e0%a4%b8%e0%a4%ad%e0%a4%be-%e
+
+[CRITICAL] rows.exact_duplicates  (austria)
+    20,685 of 34,579 rows (59.8%) are exact duplicates on (url, text, date). Only 13,894 distinct rows remain.
+      - distinct_rows: 13,894
+
+[CRITICAL] rows.exact_duplicates  (denmark)
+    4,752,110 of 4,801,705 rows (99.0%) are exact duplicates on (url, text, date). Only 49,595 distinct rows remain.
+      - distinct_rows: 49,595
+
+[CRITICAL] rows.exact_duplicates  (france)
+    123,286 of 139,666 rows (88.3%) are exact duplicates on (url, text, date). Only 16,380 distinct rows remain.
+      - distinct_rows: 16,380
+
+[CRITICAL] rows.exact_duplicates  (india)
+    7,887,809 of 7,970,491 rows (99.0%) are exact duplicates on (url, text, date). Only 82,682 distinct rows remain.
+      - distinct_rows: 82,682
+
+[CRITICAL] rows.exact_duplicates  (mexico)
+    594,967 of 933,412 rows (63.7%) are exact duplicates on (url, text, date). Only 338,445 distinct rows remain.
+      - distinct_rows: 338,445
+
+[CRITICAL] rows.exact_duplicates  (turkey)
+    234,327 of 299,628 rows (78.2%) are exact duplicates on (url, text, date). Only 65,301 distinct rows remain.
+      - distinct_rows: 65,301
+
+[CRITICAL] schema.concat_fails  (dominican_republic)
+    load_ecd() will raise when 'dominican_republic' is combined with another country: InvalidOperationError. Any multi-country or language-based call that touches this file errors out.
+      - paired_with: argentina
+
+[CRITICAL] schema.concat_fails  (germany)
+    load_ecd() will raise when 'germany' is combined with another country: InvalidOperationError. Any multi-country or language-based call that touches this file errors out.
+      - paired_with: argentina
+
+[CRITICAL] schema.concat_fails  (portugal)
+    load_ecd() will raise when 'portugal' is combined with another country: InvalidOperationError. Any multi-country or language-based call that touches this file errors out.
+      - paired_with: argentina
+
+[CRITICAL] schema.concat_fails  (united_states_of_america)
+    load_ecd() will raise when 'united_states_of_america' is combined with another country: InvalidOperationError. Any multi-country or language-based call that touches this file errors out.
+      - paired_with: argentina
+
+[CRITICAL] text.mojibake  (venezuela)
+    17,803 rows (100.0%) contain UTF-8 bytes that were decoded as latin-1/cp1252 (e.g. 'RepÃºblica' for 'República'). Re-decode at ingest.
+
+[CRITICAL] url.malformed  (jamaica)
+    6,481 of 6,481 URLs (100.0%) contain more than one scheme -- the base URL was concatenated onto an already absolute link. These do not resolve.
+
+[ERROR] column.all_null  (russia)
+    4 column(s) are 100% null and carry no information.
+      - columns: ['url', 'type', 'file', 'office']
+
+[ERROR] column.all_null  (united_states_of_america)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['file', 'language', 'office']
+
+[ERROR] corpus.foreign_domain  (dominican_republic)
+    21,226 of 214,977 rows (9.9%) cite hosts that do not match this country's expected domains ['.do']. These rows are labeled with the wrong country.
+      - top_foreign_hosts: ['www.comunicacion.gob.ec (20,539)', 'www.presidencia.gob.ec (687)']
+
+[ERROR] corpus.non_primary_source  (colombia)
+    2,603 of 2,603 rows (100.0%) cite a third-party platform rather than an official government source. The `url` is not a citable primary record and these links are prone to rot.
+      - hosts: ['www.youtube.com (2,603)']
+
+[ERROR] executive.near_duplicate_name  (greece)
+    'Antonis Samaras' (3,445 rows) and 'Ioannis Samaras' (24 rows) differ by a few characters (87% similar). Almost certainly one person split by a misspelling -- any group-by on executive silently splits their tenure.
+
+[ERROR] executive.near_duplicate_name  (united_states_of_america)
+    'Joseph R. Biden, Jr.' (475 rows) and 'Jooseph R. Biden, Jr.' (115,871 rows) differ by a few characters (98% similar). Almost certainly one person split by a misspelling -- any group-by on executive silently splits their tenure.
+
+[ERROR] executive.term_overlap  (austria)
+    'Sebastian Kurz' and 'Brigitte Bierlein' are both credited with documents across an overlapping 174-day window (2019-06-14 to 2019-12-05). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (brazil)
+    'Dilma Rousseff' and 'Michel Temer' are both credited with documents across an overlapping 109-day window (2016-01-24 to 2016-05-12). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (chile)
+    'Sebastián Piñera' and 'Gabriel Boric' are both credited with documents across an overlapping 63-day window (2022-01-07 to 2022-03-11). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (denmark)
+    'Lars Lokke Rasmussen' and 'Helle Thorning-Schmidt' are both credited with documents across an overlapping 1363-day window (2011-10-04 to 2015-06-28). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (greece)
+    'Kyriakos Misotakis' and 'Ioannis Samaras' are both credited with documents across an overlapping 32-day window (2023-05-25 to 2023-06-26). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (israel)
+    'Benjamin Netanyahu' and 'Naftali Bennett' are both credited with documents across an overlapping 381-day window (2021-06-14 to 2022-06-30). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (israel)
+    'Benjamin Netanyahu' and 'Yair Lapid' are both credited with documents across an overlapping 181-day window (2022-07-01 to 2022-12-29). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (italy)
+    'Massimo D'Alema/Giuliano Amato' and 'Giuliano Amato' are both credited with documents across an overlapping 303-day window (2000-01-01 to 2000-10-30). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (italy)
+    'Silvio Berlusconi' and 'Romano Prodi' are both credited with documents across an overlapping 707-day window (2006-05-18 to 2008-04-24). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (italy)
+    'Matteo Renzi' and 'Paolo Gentiloni' are both credited with documents across an overlapping 206-day window (2016-05-09 to 2016-12-01). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (russia)
+    'Vladimir Putin' and 'Dmitry Medvedec' are both credited with documents across an overlapping 1460-day window (2008-05-08 to 2012-05-07). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (united_states_of_america)
+    'Gerald R. Ford' and 'Jimmy Carter' are both credited with documents across an overlapping 1460-day window (1977-01-20 to 1981-01-19). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (united_states_of_america)
+    'Gerald R. Ford' and 'Ronald Reagan' are both credited with documents across an overlapping 2922-day window (1981-01-20 to 1989-01-20). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (united_states_of_america)
+    'Gerald R. Ford' and 'George Bush' are both credited with documents across an overlapping 1461-day window (1989-01-20 to 1993-01-20). One of them is being assigned another leader's statements.
+
+[ERROR] executive.term_overlap  (united_states_of_america)
+    'Gerald R. Ford' and 'William J. Clinton' are both credited with documents across an overlapping 1300-day window (1993-01-20 to 1996-08-12). One of them is being assigned another leader's statements.
+
+[ERROR] rows.cartesian_blowup  (austria)
+    Documents are replicated within themselves. Worst URL holds 1,560 rows for only 259 distinct paragraphs (6x). 114 of the top 195 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.bmeia.gv.at/ministerium/presse/reden/2012/was-braucht-europa-fuer-die-zukunft-von-aussen
+
+[ERROR] rows.cartesian_blowup  (azerbaijan)
+    Documents are replicated within themselves. Worst URL holds 28 rows for only 14 distinct paragraphs (2x). 2 of the top 2 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://president.az/en/articles/view/25696
+
+[ERROR] rows.cartesian_blowup  (canada)
+    Documents are replicated within themselves. Worst URL holds 120 rows for only 30 distinct paragraphs (4x). 1 of the top 1 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.pm.gc.ca/en/news/speeches/2020/09/25/prime-ministers-remarks-announcing-new-agreements-s
+
+[ERROR] rows.cartesian_blowup  (chile)
+    Documents are replicated within themselves. Worst URL holds 6 rows for only 3 distinct paragraphs (2x). 1 of the top 1 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://prensa.presidencia.cl/comunicado.aspx?id=199151
+
+[ERROR] rows.cartesian_blowup  (dominican_republic)
+    Documents are replicated within themselves. Worst URL holds 184 rows for only 88 distinct paragraphs (2x). 0 of the top 1 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://gobiernodanilomedina.do/discurso/discurso-presidente-medina-ante-empresarios-iberoamericanos
+
+[ERROR] rows.cartesian_blowup  (ecuador)
+    Documents are replicated within themselves. Worst URL holds 184 rows for only 88 distinct paragraphs (2x). 0 of the top 1 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://gobiernodanilomedina.do/discurso/discurso-presidente-medina-ante-empresarios-iberoamericanos
+
+[ERROR] rows.cartesian_blowup  (germany)
+    Documents are replicated within themselves. Worst URL holds 558 rows for only 175 distinct paragraphs (3x). 1 of the top 2 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.bundesregierung.de/breg-de/aktuelles/regierungspressekonferenz-vom-17-april-2024-2271766
+
+[ERROR] rows.cartesian_blowup  (hong_kong)
+    Documents are replicated within themselves. Worst URL holds 140 rows for only 57 distinct paragraphs (2x). 91 of the top 94 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.info.gov.hk/gia/general/202207/06/P2022070600476.htm
+
+[ERROR] rows.cartesian_blowup  (hungary)
+    Documents are replicated within themselves. Worst URL holds 28 rows for only 14 distinct paragraphs (2x). 1 of the top 1 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://kormany.hu/hirek/a-kovetkezo-evtizedet-a-jarvanyok-es-a-migracio-hatarozza-meg
+
+[ERROR] rows.cartesian_blowup  (israel)
+    Documents are replicated within themselves. Worst URL holds 64 rows for only 32 distinct paragraphs (2x). 4 of the top 4 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.gov.il/he/departments/news/event_australia301017
+
+[ERROR] rows.cartesian_blowup  (italy)
+    Documents are replicated within themselves. Worst URL holds 560 rows for only 70 distinct paragraphs (8x). 6 of the top 7 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.sitiarcheologici.palazzochigi.it/www.governo.it/aprile%202013/www.governo.it/Notizie/Pal
+
+[ERROR] rows.cartesian_blowup  (mexico)
+    Documents are replicated within themselves. Worst URL holds 2,148 rows for only 360 distinct paragraphs (6x). 27 of the top 200 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.gob.mx/presidencia/es/articulos/version-estenografica-conferencia-de-prensa-del-presiden
+
+[ERROR] rows.cartesian_blowup  (philippines)
+    Documents are replicated within themselves. Worst URL holds 337 rows for only 119 distinct paragraphs (3x). 56 of the top 59 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://pco.gov.ph/presidential-speech/speech-by-president-ferdinand-r-marcos-jr-at-the-national-coo
+
+[ERROR] rows.cartesian_blowup  (poland)
+    Documents are replicated within themselves. Worst URL holds 524 rows for only 216 distinct paragraphs (2x). 0 of the top 2 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.gov.pl/web/premier/bezpieczenstwo-polski-na-pierwszym-miejscu--stan-wyjatkowy-przy-grani
+
+[ERROR] rows.cartesian_blowup  (republic_of_korea)
+    Documents are replicated within themselves. Worst URL holds 1,172 rows for only 293 distinct paragraphs (4x). 71 of the top 74 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.president.go.kr/president/speeches/mHxYV8eU
+
+[ERROR] rows.cartesian_blowup  (turkey)
+    Documents are replicated within themselves. Worst URL holds 2,616 rows for only 315 distinct paragraphs (8x). 34 of the top 200 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.tccb.gov.tr/konusmalar/353/125097/insan-haklari-eylem-plani-tanitim-toplantisi-nda-yapti
+
+[ERROR] rows.cartesian_blowup  (united_kingdom)
+    Documents are replicated within themselves. Worst URL holds 82 rows for only 41 distinct paragraphs (2x). 1 of the top 1 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.gov.uk/government/news/uk-and-welsh-governments-reach-26-million-deal-to-establish-new-f
+
+[ERROR] rows.cartesian_blowup  (united_states_of_america)
+    Documents are replicated within themselves. Worst URL holds 598 rows for only 297 distinct paragraphs (2x). 2 of the top 4 offending URLs have a whole-number ratio, which points to a many-to-many join rather than repetition in the source.
+      - worst_url: https://www.presidency.ucsb.edu/documents/proclamation-6445-agreement-trade-relations-between-the-un
+
+[ERROR] rows.exact_duplicates  (colombia)
+    585 of 2,603 rows (22.5%) are exact duplicates on (url, text, date). Only 2,018 distinct rows remain.
+      - distinct_rows: 2,018
+
+[ERROR] rows.exact_duplicates  (czechia)
+    18,978 of 74,384 rows (25.5%) are exact duplicates on (url, text, date). Only 55,406 distinct rows remain.
+      - distinct_rows: 55,406
+
+[ERROR] rows.exact_duplicates  (germany)
+    14,553 of 59,674 rows (24.4%) are exact duplicates on (url, text, date). Only 45,121 distinct rows remain.
+      - distinct_rows: 45,121
+
+[ERROR] rows.exact_duplicates  (hong_kong)
+    1,061 of 2,900 rows (36.6%) are exact duplicates on (url, text, date). Only 1,839 distinct rows remain.
+      - distinct_rows: 1,839
+
+[ERROR] rows.exact_duplicates  (philippines)
+    3,910 of 20,724 rows (18.9%) are exact duplicates on (url, text, date). Only 16,814 distinct rows remain.
+      - distinct_rows: 16,814
+
+[ERROR] rows.exact_duplicates  (republic_of_korea)
+    7,218 of 16,420 rows (44.0%) are exact duplicates on (url, text, date). Only 9,202 distinct rows remain.
+      - distinct_rows: 9,202
+
+[ERROR] schema.dtype_conflict  (dataset)
+    Column 'date' has conflicting dtypes across files (expected Datetime(time_unit='us', time_zone='UTC')). A vertical concat will fail.
+      - variants: {'Date': ['dominican_republic', 'portugal']}
+
+[ERROR] schema.extra_columns  (dataset)
+    10 column(s) outside the canonical schema are present. These look like raw scraper output that was not dropped before release.
+      - columns: {'subject': ['dominican_republic'], 'exec_name': ['dominican_republic'], 'term_start': ['dominican_republic'], 'term_end': ['dominican_republic'], 'saving_name': ['germany', 'united_states_of_america'], 'start_date': ['germany'], 'end_date': ['germany'], 'link': ['portugal'], 'urls': ['portugal'], 'tags': ['portugal']}
+
+[ERROR] schema.missing_column  (dataset)
+    Canonical column 'url' is absent from 1 file(s).
+      - files: ['portugal']
+
+[ERROR] schema.missing_column  (dataset)
+    Canonical column 'title' is absent from 1 file(s).
+      - files: ['dominican_republic']
+
+[ERROR] schema.missing_column  (dataset)
+    Canonical column 'type' is absent from 1 file(s).
+      - files: ['portugal']
+
+[ERROR] schema.missing_column  (dataset)
+    Canonical column 'language' is absent from 1 file(s).
+      - files: ['portugal']
+
+[ERROR] schema.missing_column  (dataset)
+    Canonical column 'file' is absent from 2 file(s).
+      - files: ['dominican_republic', 'portugal']
+
+[ERROR] schema.missing_column  (dataset)
+    Canonical column 'year_of_statement' is absent from 1 file(s).
+      - files: ['portugal']
+
+[ERROR] schema.missing_column  (dataset)
+    Canonical column 'office' is absent from 2 file(s).
+      - files: ['dominican_republic', 'portugal']
+
+[ERROR] type.contaminated  (united_states_of_america)
+    11 value(s) in `type` are executive names, not document categories. Two fields have been crossed.
+      - values: ['John F. Kennedy', 'Lyndon B. Johnson', 'Richard Nixon', 'Gerald R. Ford', 'Jimmy Carter', 'Ronald Reagan', 'George Bush', 'William J. Clinton']
+
+[WARN] column.all_null  (argentina)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['type', 'file', 'office']
+
+[WARN] column.all_null  (australia)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (austria)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (azerbaijan)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['type', 'file', 'office']
+
+[WARN] column.all_null  (bolivia)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['type', 'file', 'office']
+
+[WARN] column.all_null  (brazil)
+    1 column(s) are 100% null and carry no information.
+      - columns: ['office']
+
+[WARN] column.all_null  (canada)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (chile)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['type', 'file', 'office']
+
+[WARN] column.all_null  (colombia)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['type', 'file', 'office']
+
+[WARN] column.all_null  (costa_rica)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (czechia)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['type', 'file', 'office']
+
+[WARN] column.all_null  (denmark)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (dominican_republic)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['exec_name', 'term_start', 'term_end']
+
+[WARN] column.all_null  (ecuador)
+    9 column(s) are 100% null and carry no information.
+      - columns: ['file', 'isonumber', 'gwc', 'cowcodes', 'polity_v', 'polity_iv', 'vdem', 'year_of_statement', 'office']
+
+[WARN] column.all_null  (france)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (georgia)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['type', 'file', 'office']
+
+[WARN] column.all_null  (germany)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office', 'saving_name']
+
+[WARN] column.all_null  (greece)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['type', 'file', 'office']
+
+[WARN] column.all_null  (hong_kong)
+    7 column(s) are 100% null and carry no information.
+      - columns: ['type', 'file', 'gwc', 'cowcodes', 'polity_v', 'polity_iv', 'office']
+
+[WARN] column.all_null  (hungary)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['type', 'file', 'office']
+
+[WARN] column.all_null  (iceland)
+    5 column(s) are 100% null and carry no information.
+      - columns: ['type', 'file', 'polity_v', 'polity_iv', 'office']
+
+[WARN] column.all_null  (india)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (indonesia)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (israel)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (italy)
+    1 column(s) are 100% null and carry no information.
+      - columns: ['office']
+
+[WARN] column.all_null  (jamaica)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (japan)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (mexico)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (new_zealand)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (nigeria)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (norway)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (philippines)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (poland)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (republic_of_korea)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (spain)
+    3 column(s) are 100% null and carry no information.
+      - columns: ['type', 'file', 'office']
+
+[WARN] column.all_null  (turkey)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (united_kingdom)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (uruguay)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.all_null  (venezuela)
+    2 column(s) are 100% null and carry no information.
+      - columns: ['file', 'office']
+
+[WARN] column.high_null_rate  (brazil)
+    Column(s) are mostly null.
+      - rates: {'url': '56.6%', 'file': '43.4%'}
+
+[WARN] executive.composite_value  (italy)
+    'Romano Prodi/Massimo D'Alema' (1,958 rows) packs more than one person into a single value, so it will not group or join.
+
+[WARN] executive.composite_value  (italy)
+    'Massimo D'Alema/Giuliano Amato' (536 rows) packs more than one person into a single value, so it will not group or join.
+
+[WARN] full_ecd.schema_drift  (full_ecd)
+    full_ecd carries columns outside the canonical schema.
+      - columns: {'saving_name': 'String'}
+
+[WARN] rows.exact_duplicates  (azerbaijan)
+    23 of 1,871 rows (1.2%) are exact duplicates on (url, text, date). Only 1,848 distinct rows remain.
+      - distinct_rows: 1,848
+
+[WARN] rows.exact_duplicates  (dominican_republic)
+    6,426 of 214,977 rows (3.0%) are exact duplicates on (url, text, date). Only 208,551 distinct rows remain.
+      - distinct_rows: 208,551
+
+[WARN] rows.exact_duplicates  (ecuador)
+    6,426 of 214,977 rows (3.0%) are exact duplicates on (url, text, date). Only 208,551 distinct rows remain.
+      - distinct_rows: 208,551
+
+[WARN] rows.exact_duplicates  (hungary)
+    2,275 of 28,175 rows (8.1%) are exact duplicates on (url, text, date). Only 25,900 distinct rows remain.
+      - distinct_rows: 25,900
+
+[WARN] rows.exact_duplicates  (indonesia)
+    282 of 16,153 rows (1.7%) are exact duplicates on (url, text, date). Only 15,871 distinct rows remain.
+      - distinct_rows: 15,871
+
+[WARN] rows.exact_duplicates  (italy)
+    957 of 21,316 rows (4.5%) are exact duplicates on (url, text, date). Only 20,359 distinct rows remain.
+      - distinct_rows: 20,359
+
+[WARN] rows.exact_duplicates  (norway)
+    164 of 8,487 rows (1.9%) are exact duplicates on (url, text, date). Only 8,323 distinct rows remain.
+      - distinct_rows: 8,323
+
+[WARN] rows.exact_duplicates  (poland)
+    722 of 29,273 rows (2.5%) are exact duplicates on (url, text, date). Only 28,551 distinct rows remain.
+      - distinct_rows: 28,551
+
+[WARN] rows.exact_duplicates  (spain)
+    2,145 of 162,109 rows (1.3%) are exact duplicates on (url, text, date). Only 159,964 distinct rows remain.
+      - distinct_rows: 159,964
+
+[WARN] rows.exact_duplicates  (united_states_of_america)
+    64,427 of 1,423,478 rows (4.5%) are exact duplicates on (url, text, date). Only 1,359,051 distinct rows remain.
+      - distinct_rows: 1,359,051
+
+[WARN] text.empty  (denmark)
+    7 rows have empty or whitespace-only text.
+
+[WARN] text.empty  (dominican_republic)
+    5,804 rows have empty or whitespace-only text.
+
+[WARN] text.empty  (ecuador)
+    5,804 rows have empty or whitespace-only text.
+
+[WARN] text.empty  (germany)
+    347 rows have empty or whitespace-only text.
+
+[WARN] text.empty  (iceland)
+    3 rows have empty or whitespace-only text.
+
+[WARN] text.empty  (israel)
+    86 rows have empty or whitespace-only text.
+
+[WARN] text.empty  (italy)
+    1 rows have empty or whitespace-only text.
+
+[WARN] text.empty  (poland)
+    8 rows have empty or whitespace-only text.
+
+[WARN] text.empty  (portugal)
+    447 rows have empty or whitespace-only text.
+
+[WARN] text.empty  (united_states_of_america)
+    52 rows have empty or whitespace-only text.
+
+[WARN] text.fragments  (czechia)
+    16,203 rows (21.8%) hold fewer than 20 characters -- salutations, stage directions and boilerplate rather than statements.
+
+[WARN] text.fragments  (germany)
+    15,959 rows (26.7%) hold fewer than 20 characters -- salutations, stage directions and boilerplate rather than statements.
+
+[WARN] text.fragments  (hong_kong)
+    391 rows (13.5%) hold fewer than 20 characters -- salutations, stage directions and boilerplate rather than statements.
+
+[WARN] text.fragments  (hungary)
+    3,237 rows (11.5%) hold fewer than 20 characters -- salutations, stage directions and boilerplate rather than statements.
+
+[WARN] text.fragments  (india)
+    1,626,388 rows (20.4%) hold fewer than 20 characters -- salutations, stage directions and boilerplate rather than statements.
+
+[WARN] text.fragments  (japan)
+    759 rows (10.7%) hold fewer than 20 characters -- salutations, stage directions and boilerplate rather than statements.
+
+[WARN] text.fragments  (republic_of_korea)
+    4,479 rows (27.3%) hold fewer than 20 characters -- salutations, stage directions and boilerplate rather than statements.
+
+[WARN] text.granularity  (australia)
+    Median text length is 144 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 144
+
+[WARN] text.granularity  (austria)
+    Median text length is 189 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 189
+
+[WARN] text.granularity  (azerbaijan)
+    Median text length is 344 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 344
+
+[WARN] text.granularity  (bolivia)
+    Median text length is 288 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 288
+
+[WARN] text.granularity  (canada)
+    Median text length is 99 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 99
+
+[WARN] text.granularity  (costa_rica)
+    Median text length is 98 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 98
+
+[WARN] text.granularity  (czechia)
+    Median text length is 45 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 45
+
+[WARN] text.granularity  (denmark)
+    Median text length is 117 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 117
+
+[WARN] text.granularity  (dominican_republic)
+    Median text length is 166 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 166
+
+[WARN] text.granularity  (ecuador)
+    Median text length is 166 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 166
+
+[WARN] text.granularity  (georgia)
+    Median text length is 240 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 240
+
+[WARN] text.granularity  (germany)
+    Median text length is 187 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 187
+
+[WARN] text.granularity  (greece)
+    Median text length is 303 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 303
+
+[WARN] text.granularity  (hong_kong)
+    Median text length is 94 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 93
+
+[WARN] text.granularity  (hungary)
+    Median text length is 227 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 227
+
+[WARN] text.granularity  (iceland)
+    Median text length is 269 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 269
+
+[WARN] text.granularity  (india)
+    Median text length is 152 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 152
+
+[WARN] text.granularity  (indonesia)
+    Median text length is 219 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 219
+
+[WARN] text.granularity  (israel)
+    Median text length is 184 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 184
+
+[WARN] text.granularity  (italy)
+    Median text length is 232 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 232
+
+[WARN] text.granularity  (jamaica)
+    Median text length is 268 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 268
+
+[WARN] text.granularity  (japan)
+    Median text length is 109 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 109
+
+[WARN] text.granularity  (mexico)
+    Median text length is 206 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 206
+
+[WARN] text.granularity  (nigeria)
+    Median text length is 195 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 195
+
+[WARN] text.granularity  (norway)
+    Median text length is 140 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 140
+
+[WARN] text.granularity  (philippines)
+    Median text length is 203 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 203
+
+[WARN] text.granularity  (poland)
+    Median text length is 252 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 252
+
+[WARN] text.granularity  (portugal)
+    Median text length is 234 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 234
+
+[WARN] text.granularity  (republic_of_korea)
+    Median text length is 26 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 26
+
+[WARN] text.granularity  (spain)
+    Median text length is 322 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 322
+
+[WARN] text.granularity  (turkey)
+    Median text length is 283 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 283
+
+[WARN] text.granularity  (united_kingdom)
+    Median text length is 155 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 155
+
+[WARN] text.granularity  (united_states_of_america)
+    Median text length is 271 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 271
+
+[WARN] text.granularity  (uruguay)
+    Median text length is 316 characters, so rows are paragraph- or line-level, not document-level. Pooling this with document-level countries distorts any row count.
+      - median_chars: 316
+
+[WARN] text.mojibake  (united_states_of_america)
+    8 rows (0.0%) contain UTF-8 bytes that were decoded as latin-1/cp1252 (e.g. 'RepÃºblica' for 'República'). Re-decode at ingest.
+
+[WARN] type.case_variants  (dataset)
+    The same category appears under multiple casings.
+      - variants: {'speech': ['Speech', 'speech']}
+
+[WARN] type.uncontrolled_vocabulary  (dataset)
+    43 distinct `type` values across the release, with no shared scheme between countries. `type` cannot be used as a filter.
+      - values: ['announcements', 'article', 'barack obama', 'citations', 'communication', 'convention speeches', 'council of ministers', 'declaration', 'donald j. trump (1st term)', 'events', 'executive order', 'executive orders', 'george bush', 'george w. bush', 'gerald r. ford', 'gov_decisions', 'interview', 'jimmy carter', 'john f. kennedy', 'joseph r. biden, jr.', 'letters', 'lyndon b. johnson', 'memoranda', 'messages', 'miscellaneous written', 'news', 'other', 'presidential', 'presidential candidates', 'presidential proclamtion']
+
+[INFO] rows.exact_duplicates  (australia)
+    271 of 35,997 rows (0.8%) are exact duplicates on (url, text, date). Only 35,726 distinct rows remain.
+      - distinct_rows: 35,726
+
+[INFO] rows.exact_duplicates  (brazil)
+    27 of 5,104 rows (0.5%) are exact duplicates on (url, text, date). Only 5,077 distinct rows remain.
+      - distinct_rows: 5,077
+
+[INFO] rows.exact_duplicates  (canada)
+    101 of 19,960 rows (0.5%) are exact duplicates on (url, text, date). Only 19,859 distinct rows remain.
+      - distinct_rows: 19,859
+
+[INFO] rows.exact_duplicates  (chile)
+    5 of 1,879 rows (0.3%) are exact duplicates on (url, text, date). Only 1,874 distinct rows remain.
+      - distinct_rows: 1,874
+
+[INFO] rows.exact_duplicates  (georgia)
+    36 of 11,260 rows (0.3%) are exact duplicates on (url, text, date). Only 11,224 distinct rows remain.
+      - distinct_rows: 11,224
+
+[INFO] rows.exact_duplicates  (greece)
+    47 of 17,446 rows (0.3%) are exact duplicates on (url, text, date). Only 17,399 distinct rows remain.
+      - distinct_rows: 17,399
+
+[INFO] rows.exact_duplicates  (iceland)
+    12 of 4,988 rows (0.2%) are exact duplicates on (url, text, date). Only 4,976 distinct rows remain.
+      - distinct_rows: 4,976
+
+[INFO] rows.exact_duplicates  (israel)
+    361 of 55,823 rows (0.6%) are exact duplicates on (url, text, date). Only 55,462 distinct rows remain.
+      - distinct_rows: 55,462
+
+[INFO] rows.exact_duplicates  (jamaica)
+    60 of 6,481 rows (0.9%) are exact duplicates on (url, text, date). Only 6,421 distinct rows remain.
+      - distinct_rows: 6,421
+
+[INFO] rows.exact_duplicates  (japan)
+    14 of 7,093 rows (0.2%) are exact duplicates on (url, text, date). Only 7,079 distinct rows remain.
+      - distinct_rows: 7,079
+
+[INFO] rows.exact_duplicates  (nigeria)
+    1 of 299 rows (0.3%) are exact duplicates on (url, text, date). Only 298 distinct rows remain.
+      - distinct_rows: 298
+
+[INFO] rows.exact_duplicates  (portugal)
+    519 of 64,522 rows (0.8%) are exact duplicates on (text, date). Only 64,003 distinct rows remain.
+      - distinct_rows: 64,003
+
+[INFO] rows.exact_duplicates  (russia)
+    2 of 9,335 rows (0.0%) are exact duplicates on (url, text, date). Only 9,333 distinct rows remain.
+      - distinct_rows: 9,333
+
+[INFO] rows.exact_duplicates  (united_kingdom)
+    229 of 79,989 rows (0.3%) are exact duplicates on (url, text, date). Only 79,760 distinct rows remain.
+      - distinct_rows: 79,760
+
+[INFO] rows.exact_duplicates  (uruguay)
+    5 of 27,257 rows (0.0%) are exact duplicates on (url, text, date). Only 27,252 distinct rows remain.
+      - distinct_rows: 27,252
+
+[INFO] text.html_residue  (argentina)
+    1 rows still contain HTML tags.
+
+[INFO] text.html_residue  (austria)
+    10 rows still contain HTML tags.
+
+[INFO] text.html_residue  (brazil)
+    2 rows still contain HTML tags.
+
+[INFO] text.html_residue  (chile)
+    1 rows still contain HTML tags.
+
+[INFO] text.html_residue  (denmark)
+    133 rows still contain HTML tags.
+
+[INFO] text.html_residue  (dominican_republic)
+    18 rows still contain HTML tags.
+
+[INFO] text.html_residue  (ecuador)
+    18 rows still contain HTML tags.
+
+[INFO] text.html_residue  (norway)
+    24 rows still contain HTML tags.
+
+[INFO] text.html_residue  (poland)
+    2 rows still contain HTML tags.
+
+[INFO] text.html_residue  (republic_of_korea)
+    2 rows still contain HTML tags.
+
+[INFO] text.html_residue  (russia)
+    1 rows still contain HTML tags.
+
+[INFO] text.html_residue  (united_kingdom)
+    1 rows still contain HTML tags.
+
+[INFO] text.html_residue  (united_states_of_america)
+    9 rows still contain HTML tags.
+
+[INFO] text.html_residue  (uruguay)
+    2 rows still contain HTML tags.

@@ -50,3 +50,17 @@ library(dplyr)
 import ecdata as ec
 import polars as pl
 ```
+
+## Known issues in release 1.0.0
+
+An audit of the assets published in release `1.0.0` found problems in the data
+itself: the Dominican Republic and Ecuador files hold the same pooled corpus
+under swapped labels, `full_ecd.parquet` contains Ecuador twice and Portugal not
+at all, about 82% of rows are exact duplicates, and Venezuela's text is
+mis-decoded. The full write up, and the script that reproduces it from the
+published assets, are in
+[`data-validation/`](https://github.com/Executive-Communications-Dataset/ecdata/tree/main/data-validation).
+
+`load_ecd()` warns when you load an affected file. It also combines files that do
+not share a schema, and takes `deduplicate = TRUE` for the files that repeat
+themselves. These are workarounds for defects in the data, not fixes.
