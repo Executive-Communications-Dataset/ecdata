@@ -79,16 +79,21 @@ import polars as pl
 
 :::
 
-## Known issues in release 1.0.0
+## Releases, and what is still wrong
 
-An audit of the assets published in release `1.0.0` found problems in the data
-itself: the Dominican Republic and Ecuador files hold the same pooled corpus
-under swapped labels, `full_ecd.parquet` contains Ecuador twice and Portugal not
-at all, about 82% of rows are exact duplicates, and Venezuela's text is
-mis-decoded. The full write up, and the script that reproduces it from the
-published assets, are in
+`load_ecd()` defaults to release `1.0.1`. That is `1.0.0` with the defects that
+could be derived from the published files repaired: the pooled Dominican
+Republic/Ecuador corpus split by source domain, exact duplicates removed,
+Venezuela's mis-decoded text fixed, Jamaica's urls unwrapped, one schema across all
+42 assets, misspelled executives corrected, and `full_ecd.parquet` rebuilt from the
+country assets. **Row counts are 82.8% lower than in `1.0.0`** -- 2,891,622 against
+16,845,134 -- because that is how many rows were duplicates. Pass
+`ecd_version = '1.0.0'` for the original assets, which are still published.
+
+What `1.0.1` does not fix needs the source data back or a decision about what a
+column means: overlapping executive terms, Colombia's YouTube provenance, Russia's
+English translations, `type` in the US file, and the columns that are null for a
+whole country. `load_ecd()` warns for the assets those affect.
+
+The audit behind all of this, and the scripts that reproduce and repair it, are in
 [`data-validation/`](https://github.com/Executive-Communications-Dataset/ecdata/tree/main/data-validation).
-
-`load_ecd()` warns when you load an affected file. It also combines files that do
-not share a schema, and takes `deduplicate = TRUE` for the files that repeat
-themselves. These are workarounds for defects in the data, not fixes.

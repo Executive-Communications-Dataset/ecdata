@@ -17,11 +17,15 @@
 
 
 get_ecd_release = function(){
-  
+
  ecd_versions = piggyback::pb_releases(repo = 'Executive-Communications-Dataset/ecdata')
-  
- versions = ecd_versions$release_name 
- 
+
+ ## The tag, not the release name. Download urls are built from the tag, and a
+ ## release name is free text -- 1.0.1 is named '1.0.1 - repair release', which
+ ## validated against the name would reject the version its own url uses.
+ versions = ecd_versions$tag_name
+
+ if(is.null(versions)) versions = ecd_versions$release_name
 
 return(versions)
 }
@@ -32,7 +36,7 @@ return(versions)
 #' keywords @internal 
 #' @noRd
 
-validate_inputs = function(country = NULL,language = NULL, full_ecd = FALSE, version = '1.0.0'){
+validate_inputs = function(country = NULL,language = NULL, full_ecd = FALSE, version = '1.0.1'){
  
   versions = get_ecd_release()
 

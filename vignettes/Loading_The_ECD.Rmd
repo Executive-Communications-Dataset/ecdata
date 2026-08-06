@@ -37,7 +37,7 @@ tibble::tribble(~'Argument', ~`R Specific Quirks`, ~`Python Specific Quirks`,
 
 ```
 
-Functionally the `ecd_version` argument is not entirely useful since there has only been one release of the data. 
+`load_ecd` defaults to release `1.0.1`, a repair of `1.0.0` built from the published assets themselves. Row counts in `1.0.1` are 82.8% lower than in `1.0.0` because that is how many rows were exact duplicates. Pass `ecd_version = '1.0.0'` for the original assets, which are still published and unchanged.
 
 
 Say we only wanted data for South Korea^[I choose South Korea because the underlying file is relatively small compared to some of the other country files.] we can simply set the country argument like this: 

@@ -29,7 +29,7 @@
 #'
 
 
-lazy_load_ecd = function(country=NULL, language=NULL, full_ecd=FALSE, ecd_version = '1.0.0'){
+lazy_load_ecd = function(country=NULL, language=NULL, full_ecd=FALSE, ecd_version = '1.0.1'){
   if (!curl::has_internet()) {
     rlang::abort("Internet is required to use this function")
   }

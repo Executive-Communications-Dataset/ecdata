@@ -32,7 +32,6 @@ Imports:
     cachem (>= 1.0.0),
     memoise (>= 2.0.0),
     vctrs,
-    dplyr,
 Suggests: 
     duckplyr,
     testthat (>= 3.0.0),
@@ -42,6 +41,6 @@ Suggests:
     rmarkdown,
     tinytable,
     tibble,
-    curl
+    dplyr
 Config/testthat/edition: 3
 VignetteBuilder: knitr

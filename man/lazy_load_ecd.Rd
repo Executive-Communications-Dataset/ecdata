@@ -2,15 +2,13 @@
 % Please edit documentation in R/lazy_load_ecd.R
 \name{lazy_load_ecd}
 \alias{lazy_load_ecd}
-\title{Reading Executive Communications Dataset lazily
-
-This function imports data from the ECD lazily meaning the data is out loaded out of memory}
+\title{Reading Executive Communications Dataset lazily}
 \usage{
 lazy_load_ecd(
   country = NULL,
   language = NULL,
   full_ecd = FALSE,
-  ecd_version = "1.0.0"
+  ecd_version = "1.0.1"
 )
 }
 \arguments{
@@ -26,8 +24,6 @@ lazy_load_ecd(
 An arrow Dataset with the specified country/countries or language/languages. Call \code{dplyr::collect()} to bring it into memory.
 }
 \description{
-Reading Executive Communications Dataset lazily
-
 This function imports data from the ECD lazily meaning the data is out loaded out of memory
 }
 \examples{
@@ -35,11 +31,11 @@ This function imports data from the ECD lazily meaning the data is out loaded ou
 \dontrun{
 library(ecdata)
 
-## load one country 
+## load one country
 
 lazy_load_ecd(country = 'Greece')
 
-## load multiple countries 
+## load multiple countries
 
 lazy_load_ecd(country = c('Turkey', 'Republic of Korea'))
 
