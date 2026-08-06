@@ -59,3 +59,52 @@ fail on. The report and the JSON findings are uploaded as artifacts on every run
 The workflow does not fail the build by default, because release `1.0.0` does not
 pass. Once a release is clean, set `fail-on` to `ERROR` so that a regression is
 caught rather than reported.
+
+---
+
+# Repairing a release
+
+`ecd_repair.py` rebuilds the assets from a published release, fixing the defects
+that can be derived from the parquet files themselves. It exists because most of
+what is wrong with `1.0.0` does not need a re-scrape — the information needed to
+repair it is already in the files.
+
+```bash
+python ecd_repair.py --data-dir ./data --out-dir ./candidate --full-ecd
+python ecd_validate.py --data-dir ./candidate \
+       --full-ecd ./candidate/full_ecd.parquet --fail-on ERROR
+```
+
+| step | issue | what it does |
+|---|---|---|
+| `schema` | #14 | one set of 17 columns and dtypes; recovers `urls`/`subject`, which hold real data under a non-canonical name |
+| `pooled` | #10 | splits the shared DR/Ecuador corpus by source domain and re-derives `executive` from the date |
+| `dedupe` | #12 | drops exact duplicates on `(country, url, text, date)` |
+| `labels` | — | fills country-level columns a partial join left null (brazil, 611 rows) |
+| `text` | #16 | re-decodes UTF-8 that was read as latin-1, where the round-trip is clean |
+| `url` | #17 | unwraps jamaica's doubled host prefix |
+| `names` | #13 | corrects misspelled executives and brazil's `language` value |
+| `full` | #11 | rebuilds `full_ecd.parquet` from the repaired assets |
+
+Running it over `1.0.0` takes the validation report from **19 CRITICAL, 55 ERROR**
+to **0 CRITICAL, 20 ERROR**:
+
+| | 1.0.0 | repaired |
+|---|---:|---:|
+| rows | 16,845,134 | 2,808,940 |
+| CRITICAL | 19 | **0** |
+| ERROR | 55 | 20 |
+
+The 20 remaining errors are the defects a repair pass cannot reach, and each has an
+open issue: executive terms that overlap because there is no reviewed term table
+(#13), columns that are null for a whole file and need a decision rather than a
+transformation (#19), `type` holding president names in the US file (#20), and
+Colombia's YouTube provenance (#18). Fixing those means changing the pipeline that
+builds a release, which is the right place for all of them.
+
+**Two things to know before publishing the output.** The repair drops 83% of the
+rows, because that is how many were duplicates — check the change log it prints
+against your expectations before you upload anything. And the tables it applies —
+the DR and Ecuador presidential terms, the executive spellings — encode judgements
+rather than derivations. They are at the top of the script, in one block, to be
+reviewed.
