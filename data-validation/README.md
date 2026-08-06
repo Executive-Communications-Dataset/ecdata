@@ -18,7 +18,7 @@ before 1.0.0 shipped would have held the release.
 | `dup` | exact duplicate rows, and documents replicated within themselves by a many-to-many join |
 | `cross` | two countries publishing the same source urls, which means a pooled corpus was written out under two labels |
 | `domain` | source hosts that do not match the country the rows are labelled with |
-| `exec` | executives whose date spans overlap, near-identical names that split one person in two, composite values |
+| `exec` | executives credited with documents for the same dates, near-identical names that split one person in two, composite values |
 | `type` | `type` used as a controlled vocabulary |
 | `full` | `full_ecd.parquet` reconciles row for row against the per-country assets |
 
