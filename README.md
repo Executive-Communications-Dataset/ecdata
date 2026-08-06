@@ -30,13 +30,15 @@ includes data dictionaries, lazy loading, and caching by default.
 
 ## Installation
 
-You can download the latest stable releases of the packages through CRAN
-and PyPi
+Install both packages from GitHub. **Neither package index currently serves a
+current version**: the R package was archived from CRAN on 2025-01-12, and PyPI
+still holds `1.1.3`, which predates the data audit. Until both are re-published,
+GitHub is the only route to a package that defaults to the repaired data.
 
 ### R
 
 ``` r
-install.packages('ecdata')
+pak::pkg_install('Executive-Communications-Dataset/ecdata')
 library(ecdata)
 library(dplyr)
 ```
@@ -44,12 +46,18 @@ library(dplyr)
 ### Python
 
 ``` python
-%pip install ecdata
+%pip install git+https://github.com/Executive-Communications-Dataset/ecdata-py
 %pip install polars
 
 import ecdata as ec
 import polars as pl
 ```
+
+Both give you version `1.2.0`, which defaults to data release
+[`1.0.1`](https://github.com/Executive-Communications-Dataset/ecdata/releases/tag/1.0.1).
+`install.packages('ecdata')` will fail while the CRAN archival stands, and
+`pip install ecdata` will silently give you `1.1.3`, which defaults to `1.0.0` and
+carries the defects the audit found.
 
 ## Releases, and what is still wrong
 
