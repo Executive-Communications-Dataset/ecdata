@@ -33,7 +33,9 @@ What it fixes, and the issue each one closes:
                 plus brazil's `language` value ("Portugese"). The wrong handover
                 dates and overlapping terms are NOT fixed here: they need a reviewed
                 term table for every country, which belongs in the pipeline, not in
-                a repair pass.
+                a repair pass. Two windows where the date contradicts the
+                label outright ARE corrected: the US Obama/Trump handover, and
+                Italy's two composite values plus 593 rows predating Amato.
   full     #11  rebuilds full_ecd.parquet from the repaired country assets, so
                 Portugal stops being one empty row and Ecuador appears once.
 
@@ -126,6 +128,34 @@ TERMS = {
         ("2017-05-24", "Lenín Moreno"),
         ("2021-05-24", "Guillermo Lasso"),
         ("2023-11-23", "Daniel Noboa"),
+    ],
+}
+
+# Windows where `executive` is demonstrably wrong and the correct value follows
+# from the date. Rows dated [start, end) are re-credited to the named person.
+#
+# REVIEW THESE. Each one is a claim about who held office, and applying it
+# rewrites the main covariate for the rows it covers. They are deliberately
+# narrow: a window is listed only where the published data contradicts itself,
+# not as a general term table for every country.
+#
+# united_states_of_america -- the Obama/Trump handover is dated 2016-01-20
+#   instead of 2017-01-20, so Obama's final year is credited to Trump. Every
+#   other US handover in the file is correct to the day, which is what makes
+#   this a single-boundary fix rather than a term table.
+#
+# italy -- two `executive` values pack two people into one string, and 593 rows
+#   credited to Giuliano Amato predate his term. The three windows cover
+#   1996-2001, which is the only period affected; Berlusconi's rows begin
+#   2001-06-12 and are untouched.
+EXECUTIVE_WINDOWS = {
+    "united_states_of_america": [
+        ("2016-01-20", "2017-01-20", "Barack Obama"),
+    ],
+    "italy": [
+        ("1996-05-17", "1998-10-21", "Romano Prodi"),
+        ("1998-10-21", "2000-04-26", "Massimo D'Alema"),
+        ("2000-04-26", "2001-06-11", "Giuliano Amato"),
     ],
 }
 
@@ -332,6 +362,33 @@ def fill_language(df: pl.DataFrame, rep: Report, scope: str) -> pl.DataFrame:
     return df
 
 
+def repair_executive_windows(df: pl.DataFrame, rep: Report,
+                             scope: str) -> pl.DataFrame:
+    """Re-credit rows whose `executive` the date contradicts."""
+    windows = EXECUTIVE_WINDOWS.get(scope)
+    if not windows or df.is_empty():
+        return df
+
+    expr = pl.col("executive")
+    for start, end, who in windows:
+        lo = datetime.fromisoformat(start).replace(tzinfo=timezone.utc)
+        hi = datetime.fromisoformat(end).replace(tzinfo=timezone.utc)
+        expr = (pl.when((pl.col("date") >= pl.lit(lo)) & (pl.col("date") < pl.lit(hi)))
+                .then(pl.lit(who)).otherwise(expr))
+
+    after = df.with_columns(expr.alias("executive"))
+    moved = (df["executive"] != after["executive"]).sum()
+    if moved:
+        changes = (after.with_columns(was=df["executive"])
+                   .filter(pl.col("was") != pl.col("executive"))
+                   .group_by(["was", "executive"]).agg(pl.len().alias("n"))
+                   .sort("n", descending=True))
+        for row in changes.iter_rows(named=True):
+            rep.note(scope, f"re-credited {row['n']:,} rows from "
+                            f"{row['was']!r} to {row['executive']!r}", changed=row["n"])
+    return after
+
+
 def repair_languages(df: pl.DataFrame, rep: Report, scope: str) -> pl.DataFrame:
     hit = df.filter(pl.col("language").is_in(list(LANGUAGE_RENAMES))).height
     if not hit:
@@ -382,6 +439,7 @@ def repair(data_dir: pathlib.Path, out_dir: pathlib.Path, write_full: bool,
         if "names" not in skip:
             df = repair_names(df, rep, name)
             df = repair_languages(df, rep, name)
+            df = repair_executive_windows(df, rep, name)
         if "dedupe" not in skip:
             df = df.unique(subset=DEDUPE_KEY, keep="first", maintain_order=True)
 
