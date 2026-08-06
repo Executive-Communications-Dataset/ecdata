@@ -62,6 +62,13 @@ caught rather than reported.
 
 ---
 
+# Coverage
+
+[`COVERAGE.md`](COVERAGE.md) is a per-country table -- documents, rows, span,
+median text length -- generated from the published assets, with the same numbers
+plus source hosts in [`coverage-1.0.2.csv`](coverage-1.0.2.csv). Regenerate it
+for a new release before publishing; the spread it shows is the substance of #21.
+
 # Repairing a release
 
 `ecd_repair.py` rebuilds the assets from a published release, fixing the defects

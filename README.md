@@ -28,7 +28,8 @@ United States alone contributes 60,404 and Nigeria 10. Twenty-five of
 the 42 countries hold at least 1,000 documents. Anyone comparing
 countries should look at
 [`data-validation/`](https://github.com/Executive-Communications-Dataset/ecdata/tree/main/data-validation)
-and the open issues first. To facilitate data distribution we
+and the open issues first. A per-country breakdown -- documents, span and source -- is in
+[`data-validation/COVERAGE.md`](https://github.com/Executive-Communications-Dataset/ecdata/blob/main/data-validation/COVERAGE.md). To facilitate data distribution we
 developed the `ecdata` package in R and Python. It is a lightweight
 package heavily inspired by [nflreadr](https://nflreadr.nflverse.com/)
 for downloading data from the ECD repositories. Both packages include
