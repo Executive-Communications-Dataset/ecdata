@@ -123,3 +123,19 @@ def test_handover_day_is_not_an_overlap(validator, tmp_path):
     ])
     assert _findings(validator, path, "executive.term_overlap") == []
     assert _findings(validator, path, "executive.handover_day")
+
+
+def test_alternating_terms_are_not_an_overlap(validator, tmp_path):
+    """Two leaders who each hold office twice, in turn.
+
+    Italy: Berlusconi 2001-2006 and 2008-2011, Prodi 1996-1998 and 2006-2008.
+    Both have documents inside the other's span, but the dates never interleave.
+    """
+    path = _executives(tmp_path, [
+        ("G. First", "1996-05-18"), ("G. First", "1998-10-20"),
+        ("H. Second", "2001-06-12"), ("H. Second", "2006-05-12"),
+        ("G. First", "2006-05-18"), ("G. First", "2008-04-24"),
+        ("H. Second", "2008-05-08"), ("H. Second", "2011-11-12"),
+    ])
+    assert _findings(validator, path, "executive.term_overlap") == []
+    assert _findings(validator, path, "executive.alternating_terms")

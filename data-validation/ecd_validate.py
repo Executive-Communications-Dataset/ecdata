@@ -538,7 +538,8 @@ def check_executives(paths, rep, engine):
                     continue
                 try:
                     counts = engine.sql(
-                        "SELECT executive, count(*) FROM {t} "
+                        "SELECT executive, count(*), "
+                        "min(date::TIMESTAMP), max(date::TIMESTAMP) FROM {t} "
                         f"WHERE date::TIMESTAMP >= TIMESTAMP '{lo}' "
                         f"AND date::TIMESTAMP <= TIMESTAMP '{hi}' "
                         f"AND executive IN ('{na.replace(chr(39), chr(39) * 2)}', "
@@ -546,8 +547,26 @@ def check_executives(paths, rep, engine):
                         "GROUP BY executive", path)
                 except RuntimeError:
                     continue
-                inside = {r[0]: r[1] for r in counts}
-                a_in, b_in = inside.get(na, 0), inside.get(nb, 0)
+                inside = {r[0]: (r[1], r[2], r[3]) for r in counts}
+                a_in = inside.get(na, (0, None, None))[0]
+                b_in = inside.get(nb, (0, None, None))[0]
+
+                # Both hold documents in the window, but their dates do not
+                # interleave: one finishes before the other starts. That is two
+                # leaders alternating -- Berlusconi to 2006-05-12, Prodi from
+                # 2006-05-18 -- not one being credited with the other's work.
+                if a_in and b_in:
+                    _, a_lo, a_hi = inside[na]
+                    _, b_lo, b_hi = inside[nb]
+                    if a_hi < b_lo or b_hi < a_lo:
+                        first, second = ((na, nb) if a_hi < b_lo else (nb, na))
+                        rep.add("INFO", "executive.alternating_terms", name,
+                                f"'{na}' and '{nb}' both have documents between "
+                                f"{str(lo)[:10]} and {str(hi)[:10]}, but the dates "
+                                f"do not interleave -- '{first}' finishes before "
+                                f"'{second}' begins. Consistent with alternating "
+                                "terms.")
+                        continue
 
                 # A handover day legitimately carries documents from both the
                 # outgoing and incoming leader -- 33 of Ford's rows are dated
