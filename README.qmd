@@ -13,7 +13,7 @@ absence of a broad, cross-national dataset of speeches by political executives. 
 even basic descriptive questions related to the rate, content, and timing of political executive communications over
 time and space, let alone more theoretically interesting questions about the causes and consequences of executive communications. 
 
-We present the Executive Communications Dataset (ECD). The ECD covers the years between 1964 and 2024 in 42 countries with 108,289 commmunications (speeches, press conferences,  press releases etc) in 23 lanaguages. To faciliatate data distribution we developed the `ecdata` package in R and Python. The ecdata package is a lightweight package that is heavily inspired by [nflreadr](https://nflreadr.nflverse.com/) for downloading data from the ECD repositories. The both packages includes data dictionaries, lazy loading, and caching by default.
+We present the Executive Communications Dataset (ECD). Release `1.0.1` holds 166,588 documents from 42 countries in 22 languages -- speeches, press conferences, press releases and similar -- spanning 1963 to 2025. Coverage is uneven, and deliberately reported rather than averaged over: the median country contributes 1,648 documents, but the United States alone contributes 60,404 and Nigeria 10. Twenty-five of the 42 countries hold at least 1,000 documents. Anyone comparing countries should look at [`data-validation/`](https://github.com/Executive-Communications-Dataset/ecdata/tree/main/data-validation) and the open issues first. To facilitate data distribution we developed the `ecdata` package in R and Python. It is a lightweight package heavily inspired by [nflreadr](https://nflreadr.nflverse.com/) for downloading data from the ECD repositories. Both packages include data dictionaries, lazy loading, and caching by default.
 
 ## Installation
 
@@ -44,7 +44,10 @@ import ecdata as ec
 
 :::
 
-You can download the latest stable releases of the packages through CRAN and PyPi 
+Install both packages from GitHub. **Neither package index currently serves a
+current version**: the R package was archived from CRAN on 2025-01-12, and PyPI
+still holds `1.1.3`, which predates the data audit. Until both are re-published,
+GitHub is the only route to a package that defaults to the repaired data.
 
 :::panel-tabset
 
@@ -53,7 +56,7 @@ You can download the latest stable releases of the packages through CRAN and PyP
 
 ```{r}
 #| eval: false
-install.packages('ecdata')
+pak::pkg_install('Executive-Communications-Dataset/ecdata')
 library(ecdata)
 library(dplyr)
 
@@ -67,7 +70,7 @@ library(dplyr)
 ```{python}
 #| eval: false
 
-%pip install ecdata
+%pip install git+https://github.com/Executive-Communications-Dataset/ecdata-py
 %pip install polars
 
 import ecdata as ec
@@ -78,6 +81,12 @@ import polars as pl
 
 
 :::
+
+Both give you version `1.2.0`, which defaults to data release
+[`1.0.1`](https://github.com/Executive-Communications-Dataset/ecdata/releases/tag/1.0.1).
+`install.packages('ecdata')` will fail while the CRAN archival stands, and
+`pip install ecdata` will silently give you `1.1.3`, which defaults to `1.0.0` and
+carries the defects the audit found.
 
 ## Releases, and what is still wrong
 
