@@ -520,18 +520,82 @@ def check_executives(paths, rep, engine):
         spans = [(r[0], r[1], r[2], r[3]) for r in rows]
 
         # Overlapping tenures: at most one person holds the office at a time, so
-        # any real overlap means rows are attributed to the wrong executive.
+        # a real overlap means rows are attributed to the wrong executive.
+        #
+        # Comparing min/max spans alone is not enough. A leader with two
+        # non-contiguous terms -- Lars Lokke Rasmussen, Netanyahu, Putin -- has a
+        # span that encloses their successor's whole term while holding no
+        # documents inside it. Counting the documents each of them actually has
+        # in the intersection is what distinguishes a mis-attribution from a
+        # gap in someone's tenure.
         for i, (na, ca, sa, ea) in enumerate(spans):
             for nb, cb, sb, eb in spans[i + 1:]:
                 lo, hi = max(sa, sb), min(ea, eb)
-                if lo < hi:
-                    days = (hi - lo).days
-                    if days > 30:
-                        rep.add("ERROR", "executive.term_overlap", name,
-                                f"'{na}' and '{nb}' are both credited with documents "
-                                f"across an overlapping {days}-day window "
-                                f"({str(lo)[:10]} to {str(hi)[:10]}). One of them is "
-                                "being assigned another leader's statements.")
+                if lo >= hi:
+                    continue
+                days = (hi - lo).days
+                if days <= 30:
+                    continue
+                try:
+                    counts = engine.sql(
+                        "SELECT executive, count(*) FROM {t} "
+                        f"WHERE date::TIMESTAMP >= TIMESTAMP '{lo}' "
+                        f"AND date::TIMESTAMP <= TIMESTAMP '{hi}' "
+                        f"AND executive IN ('{na.replace(chr(39), chr(39) * 2)}', "
+                        f"'{nb.replace(chr(39), chr(39) * 2)}') "
+                        "GROUP BY executive", path)
+                except RuntimeError:
+                    continue
+                inside = {r[0]: r[1] for r in counts}
+                a_in, b_in = inside.get(na, 0), inside.get(nb, 0)
+
+                # A handover day legitimately carries documents from both the
+                # outgoing and incoming leader -- 33 of Ford's rows are dated
+                # 1977-01-20, Carter's inauguration. If every row on the smaller
+                # side falls on one date, and that date is an edge of the window,
+                # it is a handover rather than a mis-attribution.
+                if a_in and b_in:
+                    minority = na if a_in <= b_in else nb
+                    try:
+                        days = engine.sql(
+                            "SELECT DISTINCT date::DATE FROM {t} "
+                            f"WHERE date::TIMESTAMP >= TIMESTAMP '{lo}' "
+                            f"AND date::TIMESTAMP <= TIMESTAMP '{hi}' "
+                            f"AND executive = "
+                            f"'{minority.replace(chr(39), chr(39) * 2)}'", path)
+                    except RuntimeError:
+                        days = []
+                    dates = {str(d[0]) for d in days}
+                    if len(dates) == 1 and dates <= {str(lo)[:10], str(hi)[:10]}:
+                        rep.add("INFO", "executive.handover_day", name,
+                                f"'{na}' and '{nb}' share documents dated "
+                                f"{dates.pop()}, and that is the only date they "
+                                "share. Consistent with a handover rather than a "
+                                "mis-attribution.")
+                        continue
+
+                # Both present inside the window on more than the handover day:
+                # documents really are split between two people for the same dates.
+                if a_in and b_in:
+                    smaller = min(a_in, b_in)
+                    rep.add("ERROR", "executive.term_overlap", name,
+                            f"'{na}' ({a_in:,} rows) and '{nb}' ({b_in:,} rows) are "
+                            f"both credited with documents dated between "
+                            f"{str(lo)[:10]} and {str(hi)[:10]}. At most one of them "
+                            f"held office; at least {smaller:,} rows are attributed "
+                            "to the wrong executive.",
+                            rows_in_window=f"{na}: {a_in:,}, {nb}: {b_in:,}")
+                elif a_in or b_in:
+                    # Only one of them has documents in the intersection, so the
+                    # other's span merely encloses it -- two terms with a gap.
+                    holder = na if a_in else nb
+                    other = nb if a_in else na
+                    rep.add("INFO", "executive.span_encloses", name,
+                            f"'{other}' has a date span enclosing "
+                            f"{str(lo)[:10]} to {str(hi)[:10]}, but no documents in "
+                            f"it -- all {max(a_in, b_in):,} belong to '{holder}'. "
+                            "Consistent with non-contiguous terms, not a "
+                            "mis-attribution.")
 
         # Near-identical names almost always mean a typo splitting one person.
         for i, (na, ca, *_ ) in enumerate(spans):
