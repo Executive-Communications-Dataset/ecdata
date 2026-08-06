@@ -4,7 +4,7 @@
 \alias{link_builder}
 \title{Build our links}
 \usage{
-link_builder(country = NULL, language = NULL, ecd_version = "1.0.2")
+link_builder(country = NULL, language = NULL, ecd_version = "1.0.3")
 }
 \value{
 A glue string with the correct links to the Github data.

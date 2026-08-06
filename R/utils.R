@@ -6,7 +6,7 @@
 #' 
 
 
-link_builder = \(country = NULL, language = NULL, ecd_version = '1.0.2'){
+link_builder = \(country = NULL, language = NULL, ecd_version = '1.0.3'){
 
   if(!isTRUE(is.null(country)) && isTRUE(is.null(language))){
   
@@ -307,7 +307,7 @@ read_ecd_files = function(links, normalize_schema = TRUE, deduplicate = FALSE){
 #' @returns A named list of known issues for a release
 #' @noRd
 
-ecd_known_issues = function(ecd_version = '1.0.2'){
+ecd_known_issues = function(ecd_version = '1.0.3'){
 
   issues = list(
     `1.0.0` = list(
@@ -338,6 +338,21 @@ ecd_known_issues = function(ecd_version = '1.0.2'){
   ## 1.0.2 is 1.0.1 with `language` filled for Portugal and the United States.
   ## Every other caveat carries over, so the list is inherited rather than restated.
   issues[['1.0.2']] = issues[['1.0.1']]
+
+  ## 1.0.3 corrects `executive`, and drops the entries that were warning about
+  ## term overlaps which turned out to be an artefact of the validator comparing
+  ## date spans rather than counting documents. Austria, Denmark, Greece, Israel
+  ## and Italy hold no double-attributed rows, so they no longer warn.
+  issues[['1.0.3']] = issues[['1.0.1']][c('colombia', 'venezuela', 'ecuador',
+                                          'dominican_republic')]
+
+  issues[['1.0.3']]$russia = 'url is 100% null in russia.parquet, and the text is the English-language kremlin.ru edition rather than the Russian original.'
+
+  issues[['1.0.3']]$united_states_of_america = 'The type column in united_states_of_america.parquet holds president names alongside genuine document categories, so it cannot be used as a filter.'
+
+  issues[['1.0.3']]$brazil = 'A few brazil.parquet rows are credited to Michel Temer but dated before he took office in May 2016.'
+
+  issues[['1.0.3']]$chile = 'A few chile.parquet rows are credited to Gabriel Boric but dated before he took office in March 2022.'
 
   issues[['1.0.2']]$united_states_of_america = 'executive in united_states_of_america.parquet is unreliable: the Obama/Trump handover is dated 2016-01-20 rather than 2017-01-20 and Gerald R. Ford\'s rows run to 1996. type also holds president names.'
 
@@ -370,7 +385,7 @@ ecd_full_ecd_issues = function(){
 #' @returns No return value, called for the message it prints
 #' @noRd
 
-warn_known_issues = function(links = NULL, ecd_version = '1.0.2', full_ecd = FALSE){
+warn_known_issues = function(links = NULL, ecd_version = '1.0.3', full_ecd = FALSE){
 
   if(isTRUE(full_ecd)){
 

@@ -1,6 +1,6 @@
 # ecdata 1.2.0
 
-* `load_ecd()` and `lazy_load_ecd()` now default to release `1.0.2`, a repair of
+* `load_ecd()` and `lazy_load_ecd()` now default to release `1.0.3`, a repair of
   `1.0.0` built from the published assets themselves. **Row counts fall by 82.8%,
   from 16,845,134 to 2,891,622**, because that is how many rows were exact
   duplicates: India goes from 7,970,491 rows to 82,682, Denmark from 4,801,705 to
@@ -10,7 +10,16 @@
   assets, which are still published and unchanged. `1.0.2` additionally fills
   `language` for Portugal and the United States, 1,423,119 rows that previously
   carried none, so `load_ecd(language = 'English')` no longer omits the United
-  States.
+  States, and `1.0.3` corrects `executive`: the Obama/Trump handover moves from
+  2016-01-20 to 2017-01-20, returning 23,255 rows to Obama, and Italy's
+  composite values are split, so no `executive` value packs two people.
+
+* Known-issue warnings for `1.0.3` no longer mention Austria, Denmark, Greece,
+  Israel or Italy. Those files were reported as having overlapping executive
+  terms by a validator check that compared each executive's first and last date
+  rather than counting documents; a leader with two non-contiguous terms
+  appeared to overlap a successor they never overlapped. None of them holds a
+  double-attributed row.
 
 * Known-issue warnings are keyed to the release you ask for. Loading `1.0.1` warns
   only about what the repair could not fix -- Colombia's YouTube provenance,

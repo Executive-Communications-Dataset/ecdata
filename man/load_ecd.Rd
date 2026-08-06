@@ -8,7 +8,7 @@ load_ecd(
   country = NULL,
   language = NULL,
   full_ecd = FALSE,
-  ecd_version = "1.0.2",
+  ecd_version = "1.0.3",
   normalize_schema = TRUE,
   deduplicate = FALSE
 )
