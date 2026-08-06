@@ -1,5 +1,21 @@
 # ecdata 1.2.0
 
+* `load_ecd()` and `lazy_load_ecd()` now default to release `1.0.1`, a repair of
+  `1.0.0` built from the published assets themselves. **Row counts fall by 82.8%,
+  from 16,845,134 to 2,891,622**, because that is how many rows were exact
+  duplicates: India goes from 7,970,491 rows to 82,682, Denmark from 4,801,705 to
+  49,595. Ecuador and the Dominican Republic shrink further, because `1.0.0`
+  published one pooled corpus under two country labels. If you have results from
+  `1.0.0`, expect them to change. Pass `ecd_version = '1.0.0'` for the original
+  assets, which are still published and unchanged.
+
+* Known-issue warnings are keyed to the release you ask for. Loading `1.0.1` warns
+  only about what the repair could not fix -- Colombia's YouTube provenance,
+  Russia's English translations, the United States' `executive`, `type` and
+  `language` columns, and the countries whose executive terms still overlap. The
+  `full_ecd.parquet` warning is version-keyed too: `1.0.1` rebuilds that file from
+  the country assets, so it no longer warns there.
+
 * `load_ecd()` no longer fails when you ask for more than one country. The
   published country files do not share a schema: two are missing documented
   columns and carry scraper columns instead, two carry an extra column, and

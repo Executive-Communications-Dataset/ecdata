@@ -2,15 +2,13 @@
 % Please edit documentation in R/load_ecd.R
 \name{load_ecd}
 \alias{load_ecd}
-\title{Reading Executive Communications Dataset
-
-This function imports data from the ECD}
+\title{Reading Executive Communications Dataset}
 \usage{
 load_ecd(
   country = NULL,
   language = NULL,
   full_ecd = FALSE,
-  ecd_version = "1.0.0",
+  ecd_version = "1.0.1",
   normalize_schema = TRUE,
   deduplicate = FALSE
 )
@@ -32,8 +30,6 @@ load_ecd(
 A tibble with the specified country/countries or language/languages
 }
 \description{
-Reading Executive Communications Dataset
-
 This function imports data from the ECD
 }
 \examples{
@@ -41,13 +37,13 @@ This function imports data from the ECD
 \dontrun{
 library(ecdata)
 
-## load one country 
+## load one country
 
 load_ecd(country = 'Greece')
 
 
 
-## load multiple countries 
+## load multiple countries
 
 load_ecd(country = c('Turkey', 'Republic of Korea'))
 

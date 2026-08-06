@@ -34,7 +34,7 @@
 #'
 
 
-load_ecd = function(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = '1.0.0',
+load_ecd = function(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = '1.0.1',
                     normalize_schema = TRUE, deduplicate = FALSE){
   if (!curl::has_internet()) {
   rlang::abort("Internet is required to use this function")
