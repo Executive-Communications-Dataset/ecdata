@@ -23,7 +23,10 @@ What it fixes, and the issue each one closes:
   labels   --   country-level columns (country, isonumber, gwc, cowcodes, polity,
                 vdem, language) that a partial join left null on some rows. Only
                 brazil is affected in 1.0.0: 611 of its rows carry no country at
-                all, which is why full_ecd cannot account for them.
+                all, which is why full_ecd cannot account for them. Also fills
+                `language` for the two assets where it is null throughout
+                (portugal, united_states_of_america), from the country dictionary
+                both packages already ship.
   text     #16  UTF-8 decoded as latin-1, repaired where the round-trip is clean.
   url      #17  jamaica's doubled host prefix.
   names    #13  misspelled executives, the part of that issue that is a rename,
@@ -34,8 +37,8 @@ What it fixes, and the issue each one closes:
   full     #11  rebuilds full_ecd.parquet from the repaired country assets, so
                 Portugal stops being one empty row and Ecuador appears once.
 
-Not attempted: the all-null `file`/`office`/`language` columns (#19) and `type`
-(#20). Both need a decision about what the column is for, not a transformation.
+Not attempted: the all-null `file` and `office` columns (#19) and `type` (#20).
+Both need a decision about what the column is for, not a transformation.
 """
 
 import argparse
@@ -97,6 +100,16 @@ EXECUTIVE_RENAMES = {
 # packages says "Portuguese"; brazil.parquet says "Portugese", so a filter written
 # against the column rather than the dictionary returns nothing.
 LANGUAGE_RENAMES = {"Portugese": "Portuguese"}
+
+# `language` for assets where it is null for the whole file and the country
+# dictionary shipped with both packages gives exactly one language. Only filled
+# when the column is entirely empty -- a partially populated column is a different
+# defect, and India is genuinely bilingual (Hindi and English, labelled per row),
+# so no country belongs here unless its dictionary entry is unambiguous.
+LANGUAGE_BY_FILE = {
+    "portugal": "Portuguese",
+    "united_states_of_america": "English",
+}
 
 # Terms used to re-derive `executive` after the pooled corpus is split. Only the
 # two countries involved in that split are listed: assigning executives anywhere
@@ -300,6 +313,25 @@ def repair_names(df: pl.DataFrame, rep: Report, scope: str) -> pl.DataFrame:
     return df
 
 
+def fill_language(df: pl.DataFrame, rep: Report, scope: str) -> pl.DataFrame:
+    """Populate `language` where the whole asset is missing it.
+
+    The value comes from the country dictionary both packages already ship, so
+    this contradicts nothing: it writes down what the documentation says.
+    """
+    if df.is_empty() or df["language"].null_count() != df.height:
+        return df
+    language = LANGUAGE_BY_FILE.get(scope)
+    if language is None:
+        rep.note(scope, "WARNING language is null for the whole asset and no "
+                        "entry in LANGUAGE_BY_FILE; left empty")
+        return df
+    df = df.with_columns(pl.col("language").fill_null(pl.lit(language)))
+    rep.note(scope, f"language was null for the whole asset; set to "
+                    f"{language!r} from the country dictionary", changed=df.height)
+    return df
+
+
 def repair_languages(df: pl.DataFrame, rep: Report, scope: str) -> pl.DataFrame:
     hit = df.filter(pl.col("language").is_in(list(LANGUAGE_RENAMES))).height
     if not hit:
@@ -342,6 +374,7 @@ def repair(data_dir: pathlib.Path, out_dir: pathlib.Path, write_full: bool,
 
         if "labels" not in skip:
             df = repair_labels(df, rep, name)
+            df = fill_language(df, rep, name)
         if "text" not in skip:
             df = repair_text(df, rep, name)
         if "url" not in skip:
