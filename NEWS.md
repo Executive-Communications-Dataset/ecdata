@@ -1,13 +1,16 @@
 # ecdata 1.2.0
 
-* `load_ecd()` and `lazy_load_ecd()` now default to release `1.0.1`, a repair of
+* `load_ecd()` and `lazy_load_ecd()` now default to release `1.0.2`, a repair of
   `1.0.0` built from the published assets themselves. **Row counts fall by 82.8%,
   from 16,845,134 to 2,891,622**, because that is how many rows were exact
   duplicates: India goes from 7,970,491 rows to 82,682, Denmark from 4,801,705 to
   49,595. Ecuador and the Dominican Republic shrink further, because `1.0.0`
   published one pooled corpus under two country labels. If you have results from
   `1.0.0`, expect them to change. Pass `ecd_version = '1.0.0'` for the original
-  assets, which are still published and unchanged.
+  assets, which are still published and unchanged. `1.0.2` additionally fills
+  `language` for Portugal and the United States, 1,423,119 rows that previously
+  carried none, so `load_ecd(language = 'English')` no longer omits the United
+  States.
 
 * Known-issue warnings are keyed to the release you ask for. Loading `1.0.1` warns
   only about what the repair could not fix -- Colombia's YouTube provenance,

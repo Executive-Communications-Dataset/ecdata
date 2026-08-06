@@ -6,7 +6,7 @@
 #' 
 
 
-link_builder = \(country = NULL, language = NULL, ecd_version = '1.0.1'){
+link_builder = \(country = NULL, language = NULL, ecd_version = '1.0.2'){
 
   if(!isTRUE(is.null(country)) && isTRUE(is.null(language))){
   
@@ -307,7 +307,7 @@ read_ecd_files = function(links, normalize_schema = TRUE, deduplicate = FALSE){
 #' @returns A named list of known issues for a release
 #' @noRd
 
-ecd_known_issues = function(ecd_version = '1.0.1'){
+ecd_known_issues = function(ecd_version = '1.0.2'){
 
   issues = list(
     `1.0.0` = list(
@@ -334,6 +334,12 @@ ecd_known_issues = function(ecd_version = '1.0.1'){
       italy = 'Executive terms overlap in italy.parquet, and some values are composite (\'Romano Prodi/Massimo D\'Alema\'), so they will not group or join.'
     )
   )
+
+  ## 1.0.2 is 1.0.1 with `language` filled for Portugal and the United States.
+  ## Every other caveat carries over, so the list is inherited rather than restated.
+  issues[['1.0.2']] = issues[['1.0.1']]
+
+  issues[['1.0.2']]$united_states_of_america = 'executive in united_states_of_america.parquet is unreliable: the Obama/Trump handover is dated 2016-01-20 rather than 2017-01-20 and Gerald R. Ford\'s rows run to 1996. type also holds president names.'
 
   issues[[ecd_version]]
 
@@ -364,7 +370,7 @@ ecd_full_ecd_issues = function(){
 #' @returns No return value, called for the message it prints
 #' @noRd
 
-warn_known_issues = function(links = NULL, ecd_version = '1.0.1', full_ecd = FALSE){
+warn_known_issues = function(links = NULL, ecd_version = '1.0.2', full_ecd = FALSE){
 
   if(isTRUE(full_ecd)){
 
