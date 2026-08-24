@@ -160,6 +160,7 @@ rescrape_dat = rescrape |>
   mutate(date = dmy(date))
 
 bound_speeches = bind_rows(bound_speeches, rescrape_dat) |>
+  distinct() |>
   group_by(url) |>
   arrange(date, .by_group = TRUE) |>
   ungroup() |>
@@ -203,7 +204,10 @@ interview_dat = interview |>
         type = 'interview') |>
   bind_rows(lone_dat)
 
-all_together = bind_rows(bound_speeches, interview_dat)
+## the speech and interview link lists overlap, and the rescrape above appends
+## rather than replaces, so documents were appearing up to four times.
+all_together = bind_rows(bound_speeches, interview_dat) |>
+  distinct()
 
 write_csv(all_together, 'turkish_statements.csv')
 

@@ -117,12 +117,12 @@ for links in urls_vec:
     for paragragh in text_page:
         data['date'].append(date_page)
         data['subject'].append(subject_page)
-        data['text'].append(text_page)
+        data['text'].append(paragragh)
         data['url'].append(links)
     print('Done Scraping', links)
     time.sleep(5)
 
-hong_kong_press = pl.DataFrame(data).explode('text')
+hong_kong_press = pl.DataFrame(data)
 
 hong_kong_press.head()
 
@@ -192,13 +192,13 @@ for links in urls_vec:
     for paragragh in text_page:
         data_two['date'].append(date_page)
         data_two['subject'].append(subject_page)
-        data_two['text'].append(text_page)
+        data_two['text'].append(paragragh)
         data_two['url'].append(links)
     print('Done Scraping', links)
     time.sleep(5)
 
 
-speechs_data = pl.DataFrame(data_two).explode('text')
+speechs_data = pl.DataFrame(data_two)
 
 all_data=  pl.concat([hong_kong_press, speechs_data], how = 'vertical')
 

@@ -14,7 +14,10 @@ list2env(files_list, envir = .GlobalEnv)
 ## it loks like we just have a spare one in the mexico 2017 file 
 ## the problem is that it is the type of statement is in the 2017 file 
 
+## the three yearly exports overlap, so a document covered by all of them
+## appeared three times. distinct() after the bind, not before.
 all_together = bind_rows(mex_2023, mex_2019, mex_2017) |>
+  distinct() |>
   select(-...1) |>
   mutate(url = coalesce(url, summary_url)) |>
   select(-summary_url)

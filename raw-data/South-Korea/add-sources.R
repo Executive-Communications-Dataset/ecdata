@@ -7,6 +7,7 @@ raw_links = read_csv("scraped_links_df.csv")
 
 
 clean_links = raw_links |>
+  distinct(links_scraped) |>
 mutate(extract_links = gsub("javascript:move_page\\('[0-9]+'{1,2},'(.+)'\\)", "\\1", links_scraped),
 fix_links = paste0("https://www.president.go.kr", extract_links),
 fix_links = str_remove_all(fix_links, ";"))
@@ -80,19 +81,27 @@ get_bring_in = map(clean_links$fix_links, \(x) statement_scrapper(x))
 
 rescrape_these = which(lengths(get_bring_in) == 0)
 
+## scraped_links.df holds 377 rows for 301 distinct urls: 76 appear twice. The
+## duplicates land on BOTH sides of the join below, multiplying every paragraph
+## by 2 x 2 = 4. distinct() on each side is what the note above meant.
 bound_titles = get_bring_in |>
   list_rbind() |>
   mutate(clean_titles = str_squish(statement_title)) |>
-  select(clean_titles, url)
+  select(clean_titles, url) |>
+  distinct(clean_titles, url)
 
 
 joining_data = raw_dat |>
   mutate(statement_title = str_squish(statement_title)) 
 
 
+joining_data = distinct(joining_data)
+
 joined_data = joining_data |>
   left_join(bound_titles, join_by(statement_title == clean_titles)) |>
   mutate(date = ymd(date))
+
+stopifnot(nrow(joined_data) == nrow(joining_data))
 
 
 write_csv(joined_data, 'cleaned_korean_statements.csv')

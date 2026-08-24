@@ -143,7 +143,7 @@ for link in links_vec:
         for paragraph in hindi_text_page:
             hindi_data['date'].append(hindi_date_page)
             hindi_data['title'].append(hindi_subject_page)
-            hindi_data['text'].append(hindi_text_page)  # Append the entire text, not per paragraph
+            hindi_data['text'].append(paragraph)
             hindi_data['url'].append(link)
         
     except TimeoutException:
@@ -176,7 +176,7 @@ for link in links_vec:
 
         for paragraph in english_text:
             english_data['url'].append(english_link)
-            english_data['text'].append(english_text)  # Append the entire text
+            english_data['text'].append(paragraph)
             english_data['date'].append(hindi_date_page)  # Assuming date is the same for both
             english_data['title'].append(english_subject)
         
@@ -213,7 +213,7 @@ for link in rescrape:
         for paragraph in hindi_text_page:
             hindi_data['date'].append(hindi_date_page)
             hindi_data['title'].append(hindi_subject_page)
-            hindi_data['text'].append(hindi_text_page)  # Append the entire text, not per paragraph
+            hindi_data['text'].append(paragraph)
             hindi_data['url'].append(link)
         
     except TimeoutException:
@@ -246,7 +246,7 @@ for link in rescrape:
 
         for paragraph in english_text:
             english_data['url'].append(english_link)
-            english_data['text'].append(english_text)  # Append the entire text
+            english_data['text'].append(paragraph)
             english_data['date'].append(hindi_date_page)  # Assuming date is the same for both
             english_data['title'].append(english_subject)
         
@@ -278,7 +278,7 @@ rescrape_vec = rescrape_thes['links']
 
 bind_data = pl.concat([hindi_dat, english_dat], how='vertical')
 
-exploded = bind_data.explode('text')
+exploded = bind_data
 
 
 

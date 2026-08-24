@@ -191,7 +191,7 @@ for link in all_links_vec:
         for paragraph in text_page:
             data['date'].append(date_page)
             data['subject'].append(subject_page)
-            data['text'].append(text_page)
+            data['text'].append(paragraph)
             data['links'].append(link)
             data_frame_page = pl.DataFrame(data)
             data_frame.vstack(data_frame_page)
@@ -203,7 +203,7 @@ scraped_data_one = pl.DataFrame(data)
 ## umm thats interesting 
 ## the date is actually the selenium element 
 
-expand_text = scraped_data_one.explode('text')
+expand_text = scraped_data_one
 
 
 expand_text.write_csv('danish_press_releases_danish.csv')
@@ -236,7 +236,7 @@ for link in links_vec:
         for paragraph in text_page:
             data['date'].append(date_page)
             data['subject'].append(subject_page)
-            data['text'].append(text_page)
+            data['text'].append(paragraph)
             data['links'].append(link)
             data_frame_page = pl.DataFrame(data)
             data_frame.vstack(data_frame_page)
@@ -244,7 +244,7 @@ for link in links_vec:
         missing_element_links.append(link)
 
 
-danish_speeches = pl.DataFrame(data).explode('text')
+danish_speeches = pl.DataFrame(data)
 
 danish_speeches.head()
 
