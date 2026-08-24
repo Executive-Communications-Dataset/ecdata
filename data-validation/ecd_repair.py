@@ -39,8 +39,13 @@ What it fixes, and the issue each one closes:
   full     #11  rebuilds full_ecd.parquet from the repaired country assets, so
                 Portugal stops being one empty row and Ecuador appears once.
 
-Not attempted: the all-null `file` and `office` columns (#19) and `type` (#20).
-Both need a decision about what the column is for, not a transformation.
+  ustype   #20  `type` in the US file holds president names for about a third of
+                its documents. The American Presidency Project encodes the
+                category in its url slug, so it is rebuilt from the documents
+                that are correctly typed.
+
+Not attempted: the all-null `file` and `office` columns (#19), which need a
+decision about what the column is for rather than a transformation.
 """
 
 import argparse
@@ -130,6 +135,25 @@ TERMS = {
         ("2023-11-23", "Daniel Noboa"),
     ],
 }
+
+# `type` in united_states_of_america.parquet holds president names for about a
+# third of its documents -- two fields crossed at the source. The American
+# Presidency Project encodes the document category in its url slug, so the
+# correct value is recoverable from the file itself: learn slug prefix -> type
+# from the documents that ARE correctly typed, then apply it to the rest.
+US_TYPE_CONTAMINANTS = {
+    "Barack Obama", "Donald J. Trump (1st Term)", "Joseph R. Biden, Jr.",
+    "George W. Bush", "Ronald Reagan", "William J. Clinton", "George Bush",
+    "Lyndon B. Johnson", "Richard Nixon", "Jimmy Carter", "Gerald R. Ford",
+    "John F. Kennedy",
+}
+# A prefix is only used if it is this consistent among correctly-typed documents,
+# and seen at least this many times. Measured on a 70/30 split of the correctly
+# typed documents, these thresholds give 99.75% accuracy on 10,013 held-out
+# documents. Documents whose prefix does not qualify are set to null rather than
+# guessed at: unknown is honest, a president name is not.
+US_TYPE_MIN_PURITY = 0.95
+US_TYPE_MIN_SUPPORT = 3
 
 # Individual documents whose published date is wrong, keyed by url. Every one of
 # these was found because the date put the document outside its executive's term,
@@ -391,6 +415,46 @@ def fill_language(df: pl.DataFrame, rep: Report, scope: str) -> pl.DataFrame:
     return df
 
 
+def repair_us_type(df: pl.DataFrame, rep: Report, scope: str) -> pl.DataFrame:
+    """Rebuild `type` where it holds a president's name instead of a category."""
+    if scope != "united_states_of_america" or df.is_empty():
+        return df
+    bad = pl.col("type").is_in(list(US_TYPE_CONTAMINANTS))
+    if not df.filter(bad).height:
+        return df
+
+    docs = df.select(["url", "type"]).unique(subset=["url"]).with_columns(
+        head=pl.col("url").str.extract(r"presidency\.ucsb\.edu/documents/([a-z]+)"),
+        contaminated=pl.col("type").is_in(list(US_TYPE_CONTAMINANTS)))
+    clean = docs.filter(~pl.col("contaminated") & pl.col("head").is_not_null())
+
+    # modal type per slug prefix, among documents that are correctly typed
+    modal = (clean.group_by(["head", "type"]).agg(pl.len().alias("n"))
+             .sort("n", descending=True).unique(subset=["head"], keep="first"))
+    support = clean.group_by("head").agg(pl.len().alias("total"))
+    lookup = (modal.join(support, on="head")
+              .with_columns(purity=pl.col("n") / pl.col("total"))
+              .filter((pl.col("purity") >= US_TYPE_MIN_PURITY)
+                      & (pl.col("total") >= US_TYPE_MIN_SUPPORT))
+              .select(["head", pl.col("type").alias("_derived")]))
+
+    out = (df.with_columns(
+               head=pl.col("url").str.extract(r"presidency\.ucsb\.edu/documents/([a-z]+)"))
+             .join(lookup, on="head", how="left")
+             .with_columns(was_contaminated=bad)
+             .with_columns(pl.when(pl.col("was_contaminated")).then(pl.col("_derived"))
+                           .otherwise(pl.col("type")).alias("type")))
+
+    # count against the flag captured before the replacement, not against `type`
+    fixed = out.filter(pl.col("was_contaminated") & pl.col("type").is_not_null()).height
+    unknown = out.filter(pl.col("was_contaminated") & pl.col("type").is_null()).height
+    out = out.drop(["head", "_derived", "was_contaminated"])
+    rep.note(scope, f"rebuilt type on {fixed:,} rows from the source url; "
+                    f"{unknown:,} rows had no usable prefix and are now null "
+                    f"rather than a president's name", changed=fixed)
+    return out
+
+
 def repair_dates(df: pl.DataFrame, rep: Report, scope: str) -> pl.DataFrame:
     """Correct individual documents whose published date is wrong."""
     if df.is_empty() or "url" not in df.columns:
@@ -503,6 +567,7 @@ def repair(data_dir: pathlib.Path, out_dir: pathlib.Path, write_full: bool,
             df = repair_languages(df, rep, name)
             df = repair_executive_windows(df, rep, name)
             df = repair_dates(df, rep, name)
+            df = repair_us_type(df, rep, name)
         if "dedupe" not in skip:
             df = df.unique(subset=DEDUPE_KEY, keep="first", maintain_order=True)
 

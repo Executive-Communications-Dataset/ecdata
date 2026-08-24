@@ -201,6 +201,26 @@ class Engine:
 # checks
 # --------------------------------------------------------------------------
 
+# Country assets whose provenance is unusual but understood and documented. A
+# check that keeps reporting a known, accepted property is a check that trains
+# people to ignore it, so these are reported as INFO with the reason attached
+# rather than as ERROR. Anything NOT listed here is still an error.
+DOCUMENTED_PROVENANCE = {
+    ("colombia", "corpus.non_primary_source"):
+        "Colombia's corpus is transcripts of YouTube videos published by the "
+        "presidency. That is the source, not a scraping fault -- the url points "
+        "at the video the transcript came from.",
+    ("russia", "column.all_null"):
+        "Russia's rows come from a pre-existing dataset rather than a scrape of "
+        "kremlin.ru, so the fields that scrape would have populated -- url, "
+        "type -- are absent. The text is the English-language edition.",
+}
+
+
+def documented(name, check):
+    return DOCUMENTED_PROVENANCE.get((name, check))
+
+
 def check_schema(paths, rep):
     """Column presence, dtypes, and whether a vertical concat can succeed."""
     schemas = {}
@@ -312,13 +332,15 @@ def check_source_domain(paths, rep, engine):
                     if h and any(p in h for p in NON_PRIMARY_HOSTS)]
         if platform:
             pn = sum(n for _, n in platform)
-            rep.add("WARN" if pn / total < 0.5 else "ERROR",
+            note = documented(name, "corpus.non_primary_source")
+            rep.add("INFO" if note else ("WARN" if pn / total < 0.5 else "ERROR"),
                     "corpus.non_primary_source", name,
                     f"{pn:,} of {total:,} rows ({100*pn/total:.1f}%) cite a "
                     "third-party platform rather than an official government "
                     "source. The `url` is not a citable primary record and these "
                     "links are prone to rot.",
-                    hosts=[f"{h} ({n:,})" for h, n in platform[:5]])
+                    hosts=[f"{h} ({n:,})" for h, n in platform[:5]],
+                    **({"note": note} if note else {}))
 
         foreign = [(h, n) for h, n in rows
                    if h and not any(t in h for t in tlds)
@@ -409,10 +431,12 @@ def check_columns_content(paths, rep, engine):
 
         dead = [c for c, v in nulls.items() if v == n]
         if dead:
-            sev = "ERROR" if {"url", "text", "date", "language"} & set(dead) else "WARN"
+            note = documented(name, "column.all_null")
+            sev = ("INFO" if note else
+                   "ERROR" if {"url", "text", "date", "language"} & set(dead) else "WARN")
             rep.add(sev, "column.all_null", name,
                     f"{len(dead)} column(s) are 100% null and carry no information.",
-                    columns=dead)
+                    columns=dead, **({"note": note} if note else {}))
         heavy = {c: f"{100*v/n:.1f}%" for c, v in nulls.items()
                  if 0 < v < n and v / n > 0.30 and c not in ("type", "title")}
         if heavy:
