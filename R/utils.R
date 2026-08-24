@@ -6,7 +6,7 @@
 #' 
 
 
-link_builder = \(country = NULL, language = NULL, ecd_version = '1.0.3'){
+link_builder = \(country = NULL, language = NULL, ecd_version = '1.0.5'){
 
   if(!isTRUE(is.null(country)) && isTRUE(is.null(language))){
   
@@ -307,7 +307,7 @@ read_ecd_files = function(links, normalize_schema = TRUE, deduplicate = FALSE){
 #' @returns A named list of known issues for a release
 #' @noRd
 
-ecd_known_issues = function(ecd_version = '1.0.3'){
+ecd_known_issues = function(ecd_version = '1.0.5'){
 
   issues = list(
     `1.0.0` = list(
@@ -356,6 +356,23 @@ ecd_known_issues = function(ecd_version = '1.0.3'){
 
   issues[['1.0.2']]$united_states_of_america = 'executive in united_states_of_america.parquet is unreliable: the Obama/Trump handover is dated 2016-01-20 rather than 2017-01-20 and Gerald R. Ford\'s rows run to 1996. type also holds president names.'
 
+  ## 1.0.4 corrected three mis-dated documents, so brazil and chile drop out:
+  ## those rows were mis-dated rather than mis-attributed.
+  issues[['1.0.4']] = issues[['1.0.3']][setdiff(names(issues[['1.0.3']]),
+                                                c('brazil', 'chile'))]
+
+  ## 1.0.5 rebuilt the US type column and settled Colombia's and Russia's
+  ## provenance as documented rather than defective. Both still warn, because
+  ## anyone analysing those countries needs to know -- but as provenance.
+  issues[['1.0.5']] = issues[['1.0.1']][c('venezuela', 'ecuador',
+                                          'dominican_republic')]
+
+  issues[['1.0.5']]$colombia = 'colombia.parquet is transcripts of YouTube videos published by the presidency, so url points at the video a transcript came from rather than at a government page. That is the source, not a defect.'
+
+  issues[['1.0.5']]$russia = 'russia.parquet comes from a pre-existing dataset rather than a scrape of kremlin.ru, so the fields a scrape would have filled are absent: url and type are empty, and the text is the English-language edition.'
+
+  issues[['1.0.5']]$united_states_of_america = 'type in united_states_of_america.parquet was rebuilt from the source url in 1.0.5. 17,243 rows had no reliable prefix and are null rather than guessed at.'
+
   issues[[ecd_version]]
 
 }
@@ -385,7 +402,7 @@ ecd_full_ecd_issues = function(){
 #' @returns No return value, called for the message it prints
 #' @noRd
 
-warn_known_issues = function(links = NULL, ecd_version = '1.0.3', full_ecd = FALSE){
+warn_known_issues = function(links = NULL, ecd_version = '1.0.5', full_ecd = FALSE){
 
   if(isTRUE(full_ecd)){
 

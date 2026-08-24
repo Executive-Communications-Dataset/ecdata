@@ -36,7 +36,7 @@ return(versions)
 #' keywords @internal 
 #' @noRd
 
-validate_inputs = function(country = NULL,language = NULL, full_ecd = FALSE, version = '1.0.3'){
+validate_inputs = function(country = NULL,language = NULL, full_ecd = FALSE, version = '1.0.5'){
  
   versions = get_ecd_release()
 
