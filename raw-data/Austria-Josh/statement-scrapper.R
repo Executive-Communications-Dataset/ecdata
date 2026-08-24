@@ -95,11 +95,10 @@ statement_scrapper = function(links){
     
     
     
+    ## the two passes overlap, so documents in both appeared twice. This
+    ## statement was also written out twice, identically; once is enough.
     austrian_statements_bound = bind_rows(austrian_statements_df, text_to_bind) |>
-        mutate(date = str_squish(date),
-              date_fix = dmy(date, locale = 'de_AT'))
-    
-    austrian_statements_bound = bind_rows(austrian_statements_df, text_to_bind) |>
+        distinct() |>
         mutate(date = str_squish(date),
               date_fix = dmy(date, locale = 'de_AT'))
     

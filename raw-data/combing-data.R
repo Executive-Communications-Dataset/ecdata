@@ -111,7 +111,7 @@ add_types = exec_data |>
   ## there is probably a more databasy way to do that 
   ## at present that is a skill issue for me 
   mutate(fix_types = case_when(
-    str_detect(url, 'proclamation') ~ 'Presidential Proclamtion',
+    str_detect(url, 'proclamation') ~ 'Presidential Proclamation',
     str_detect(url, 'statement') ~ 'Press Statement',
     str_detect(url, 'speech|remarks|address|message|speeches|rede-') ~ 'Speech',
     str_detect(url, 'interview') ~ 'Interview',
@@ -131,10 +131,10 @@ add_types = exec_data |>
   country %in% c('Australia', 'Azerbaijan', 'Canada', 'Jamaica',  'Nigeria', 'New Zealand', 'United Kingdom', 'United States of America', 'Russia') ~ 'English',
   country %in% c('Argentina', 'Chile', 'Bolivia', 'Colombia', 'Ecuador', 'Mexico', 'Spain', 'Uruguay', 'Costa Rica',
                   'Venezuela') ~ 'Spanish',
-  country %in% c('Portugal', 'Brazil') ~ 'Portugese',
+  country %in% c('Portugal', 'Brazil') ~ 'Portuguese',
   country %in% c('Austria', 'Germany') ~ 'German',
   country == 'Hong Kong' ~ 'Chinese',
-  country == 'Republic of South Korea' ~ 'Korean',
+  country %in% c('Republic of Korea', 'Republic of South Korea') ~ 'Korean',
   country == 'Georgia' ~ 'Georgian',
   country == 'Denmark' ~ 'Danish', 
   country == 'France' ~ 'French',
@@ -198,41 +198,52 @@ fix_up |>
 
 
 
-## this is just for the manuscript 
-write_parquet(fix_up, '/Users/josh/Library/CloudStorage/Dropbox/EAD NSF RA Work/Paper Ideas/Scraping Dataset/technical-writeup/executive_statement_data/full_ecd.parquet')
+## this is just for the manuscript. Set ECD_MANUSCRIPT_DIR to write it; the
+## build no longer depends on one person's Dropbox path existing.
+manuscript_dir = Sys.getenv('ECD_MANUSCRIPT_DIR', unset = NA)
+
+if (!is.na(manuscript_dir) && dir.exists(manuscript_dir)) {
+  write_parquet(fix_up, file.path(manuscript_dir, 'full_ecd.parquet'))
+}
 
 
 if(!dir.exists('piggyback-release-data')){
   dir.create('piggyback-release-data')
 }
 
-saving_name = fix_up |>
-  mutate(saving_name = str_replace_all(country, ' ', '_'),
-         saving_name = str_squish(saving_name),
-         saving_name = str_to_lower(saving_name)) |>
-  distinct(saving_name) |>
-  pull(saving_name)
-
+## Derive the filename from the country inside the split rather than pairing two
+## separately-ordered vectors by position. split() orders by factor level and
+## distinct() by row order; walk2() paired them element by element, so if those
+## orders ever disagreed a country's documents were written to another country's
+## file -- silently, because the only guard was a length comparison that was
+## printed rather than asserted.
+slugify = \(x) str_to_lower(str_squish(str_replace_all(x, ' ', '_')))
 
 make_splits = split(fix_up, fix_up$country)
 
-length(make_splits) == length(saving_name)
+stopifnot(length(make_splits) == n_distinct(fix_up$country))
 
-
-walk2(make_splits, saving_name, \(data, name) write_parquet(data, paste0('piggyback-release-data/', paste0(name, '.parquet'))))
+iwalk(make_splits, \(data, country) {
+  write_parquet(data, file.path('piggyback-release-data', paste0(slugify(country), '.parquet')))
+})
 
 write_parquet(fix_up, 'piggyback-release-data/full_ecd.parquet')
 
 
 
 
-piggyback::pb_release_create('joshuafayallen/executivestatements', tag = '1.0.0')
+## Releases live on the organisation's repository, not a personal one. Override
+## with ECD_RELEASE_REPO / ECD_RELEASE_TAG rather than editing this line.
+release_repo = Sys.getenv('ECD_RELEASE_REPO', unset = 'Executive-Communications-Dataset/ecdata')
+release_tag  = Sys.getenv('ECD_RELEASE_TAG',  unset = '1.0.0')
+
+piggyback::pb_release_create(release_repo, tag = release_tag)
 
 
 
 country_files = list.files('piggyback-release-data', pattern = '*.parquet', full.names = TRUE)
 
-walk(country_files, \(x) pb_upload(x, repo ='joshuafayallen/executivestatements', tag = '1.0.0'))
+walk(country_files, \(x) pb_upload(x, repo = release_repo, tag = release_tag))
 
 
 

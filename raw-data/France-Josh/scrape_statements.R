@@ -91,11 +91,17 @@ join_data = pdf_scrape |>
   left_join(bound_pdfs, join_by(pdf_link == url))
 
 
-joined_statements_pdf = bound_statements |>
-  left_join(join_data, join_by(url, pdf_link)) |>
-  mutate(text = coalesce(text.x, text.y),
-        text = str_squish(text)) |>
-  select(-c(text.x,text.y))
+## bound_statements is one row per HTML paragraph and join_data one row per PDF
+## paragraph, so joining them on (url, pdf_link) paired every HTML paragraph with
+## every PDF paragraph: N x M rows per document. Stack them instead and mark
+## which source each row came from.
+joined_statements_pdf = bind_rows(
+    bound_statements |> mutate(source = 'html'),
+    join_data        |> mutate(source = 'pdf')
+  ) |>
+  mutate(text = str_squish(text))
+
+stopifnot(nrow(joined_statements_pdf) == nrow(bound_statements) + nrow(join_data))
 
 
 scraping_links_small = scraping_links |>
