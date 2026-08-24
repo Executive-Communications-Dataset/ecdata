@@ -1,3 +1,18 @@
+# ecdata 1.3.0
+
+* `load_ecd()` and `lazy_load_ecd()` now default to release `1.0.5`, the first
+  release that validates with no CRITICAL and no ERROR findings. Since `1.0.3`
+  it rebuilt `type` in the United States file -- 486,000 rows held a president's
+  name rather than a document category, and 468,321 of them were recovered from
+  the source url -- and corrected three mis-dated documents.
+
+* Known-issue warnings for `1.0.5` no longer mention Brazil or Chile, whose rows
+  dated before their executive took office turned out to be mis-dated rather
+  than mis-attributed. Colombia and Russia still warn, but as provenance rather
+  than as faults: Colombia is transcripts of YouTube videos the presidency
+  published, and Russia comes from a pre-existing dataset rather than a scrape,
+  which is why its `url` and `type` are empty.
+
 # ecdata 1.2.0
 
 * `load_ecd()` and `lazy_load_ecd()` now default to release `1.0.3`, a repair of
