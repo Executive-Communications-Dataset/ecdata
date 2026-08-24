@@ -22,6 +22,11 @@ before 1.0.0 shipped would have held the release.
 | `type` | `type` used as a controlled vocabulary |
 | `full` | `full_ecd.parquet` reconciles row for row against the per-country assets |
 
+Provenance that is unusual but understood is listed in `DOCUMENTED_PROVENANCE`
+and reported as `INFO` with the reason attached, rather than as an error --
+Colombia's YouTube transcripts and Russia's missing fields are both there. A check
+that keeps reporting a known, accepted property trains people to ignore it.
+
 Findings are graded `CRITICAL`, `ERROR`, `WARN`, `INFO`. `--fail-on` decides which
 of those makes the run exit non-zero.
 

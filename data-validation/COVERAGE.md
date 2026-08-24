@@ -64,6 +64,19 @@ a causal one.
 9,333 rows are the English-language kremlin.ru edition rather than Russian
 originals.
 
+## Provenance notes
+
+Two countries are sourced differently from the rest. Neither is a fault, and the
+validator reports both as INFO with the reason attached rather than as an error:
+
+* **Colombia** — the corpus is transcripts of YouTube videos published by the
+  presidency, so `url` points at the video a transcript came from rather than at
+  a page on a government site.
+* **Russia** — the rows come from a pre-existing dataset rather than a scrape of
+  kremlin.ru. The fields a scrape would have filled are therefore absent: `url`
+  and `type` are empty for every row, and the text is the English-language
+  edition rather than the Russian original.
+
 ## Notable
 
 * **Nigeria is ten documents** by two presidents across nine months. Costa Rica is
