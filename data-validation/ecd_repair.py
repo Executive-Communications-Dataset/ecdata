@@ -131,6 +131,35 @@ TERMS = {
     ],
 }
 
+# Individual documents whose published date is wrong, keyed by url. Every one of
+# these was found because the date put the document outside its executive's term,
+# and every one turned out to be a bad date rather than a bad executive -- so the
+# fix is here rather than in EXECUTIVE_WINDOWS.
+#
+# REVIEW THESE. Each is a claim that a published date is wrong, checked against
+# what the document itself describes.
+DATE_CORRECTIONS = {
+    # Announces Marcela Rios' resignation as Justice Minister and Luis Cordero's
+    # appointment. That happened on 2023-01-07, not 2022-01-07 -- and on the
+    # published date Boric had not taken office.
+    "https://prensa.presidencia.cl/comunicado.aspx?id=207821": "2023-01-07",
+
+    # Lunch for President Macri at Itamaraty. Macri's first official visit to
+    # Brasilia was 2017-02-07.
+    "http://www.biblioteca.presidencia.gov.br/presidencia/ex-presidentes/michel-temer/"
+    "discursos-do-presidente-da-republica/brinde-do-presidente-da-republica-michel-temer-"
+    "durante-almoco-oferecido-ao-presidente-da-republica-argentina-mauricio-macri-palacio-"
+    "itamaraty": "2017-02-07",
+
+    # Meeting of the MCTI advisory council with minister Gilberto Kassab. The
+    # ministry in that form was created in May 2016 and Kassab took it then, so a
+    # January date can only be 2017.
+    "http://www.biblioteca.presidencia.gov.br/presidencia/ex-presidentes/michel-temer/"
+    "discursos-do-presidente-da-republica/discurso-do-presidente-da-republica-michel-temer-"
+    "durante-reuniao-com-o-conselho-consultivo-do-ministerio-da-ciencia-tecnologia-inovacoes-"
+    "e-comunicacoes-mcti-brasilia-df": "2017-01-24",
+}
+
 # Windows where `executive` is demonstrably wrong and the correct value follows
 # from the date. Rows dated [start, end) are re-credited to the named person.
 #
@@ -362,6 +391,39 @@ def fill_language(df: pl.DataFrame, rep: Report, scope: str) -> pl.DataFrame:
     return df
 
 
+def repair_dates(df: pl.DataFrame, rep: Report, scope: str) -> pl.DataFrame:
+    """Correct individual documents whose published date is wrong."""
+    if df.is_empty() or "url" not in df.columns:
+        return df
+    hits = df.filter(pl.col("url").is_in(list(DATE_CORRECTIONS)))
+    if hits.is_empty():
+        return df
+
+    expr = pl.col("date")
+    for url, corrected in DATE_CORRECTIONS.items():
+        when = datetime.fromisoformat(corrected).replace(tzinfo=timezone.utc)
+        expr = (pl.when(pl.col("url") == url).then(pl.lit(when)).otherwise(expr))
+    after = df.with_columns(expr.cast(CANONICAL["date"]).alias("date"))
+
+    # year_of_statement is derived from date upstream, so it has to follow --
+    # otherwise the correction leaves the two disagreeing, which the validator
+    # reports as date.year_mismatch.
+    if "year_of_statement" in after.columns:
+        after = after.with_columns(
+            pl.when(pl.col("url").is_in(list(DATE_CORRECTIONS)))
+            .then(pl.col("date").dt.year().cast(CANONICAL["year_of_statement"]))
+            .otherwise(pl.col("year_of_statement"))
+            .alias("year_of_statement")
+        )
+
+    for url in hits["url"].unique().to_list():
+        was = str(hits.filter(pl.col("url") == url)["date"][0])[:10]
+        n = hits.filter(pl.col("url") == url).height
+        rep.note(scope, f"re-dated {n:,} row(s) from {was} to "
+                        f"{DATE_CORRECTIONS[url]}", changed=n)
+    return after
+
+
 def repair_executive_windows(df: pl.DataFrame, rep: Report,
                              scope: str) -> pl.DataFrame:
     """Re-credit rows whose `executive` the date contradicts."""
@@ -440,6 +502,7 @@ def repair(data_dir: pathlib.Path, out_dir: pathlib.Path, write_full: bool,
             df = repair_names(df, rep, name)
             df = repair_languages(df, rep, name)
             df = repair_executive_windows(df, rep, name)
+            df = repair_dates(df, rep, name)
         if "dedupe" not in skip:
             df = df.unique(subset=DEDUPE_KEY, keep="first", maintain_order=True)
 
