@@ -120,3 +120,82 @@ against your expectations before you upload anything. And the tables it applies 
 the DR and Ecuador presidential terms, the executive spellings — encode judgements
 rather than derivations. They are at the top of the script, in one block, to be
 reviewed.
+
+---
+
+# A sentence-level view
+
+`ecd_sentences.py` derives one row per sentence from a release, and writes it
+as a parallel set of files. The release it reads is left untouched.
+
+```bash
+pip install polars pysbd
+python ecd_sentences.py --data-dir ./data --out-dir ./sentences --jobs 8
+```
+
+Over `1.0.5` that turns **2,891,622 rows into 9,207,251 sentences**, 3.2 per row.
+It takes about twenty minutes on eight cores.
+
+## Why it is a separate view rather than a new release
+
+The unit of observation already differs by country (#15) — a row is a whole
+document in Brazil, a paragraph in Spain, a sentence in Canada, and an HTML
+block in Czechia. Splitting into sentences gives one unit that means the same
+thing everywhere, which is what cross-country text analysis needs. But
+paragraph structure is real information for anything studying how an argument is
+built, so this adds a view rather than replacing the release.
+
+Every documented column is carried through, plus four that make the result
+joinable and auditable:
+
+| column | meaning |
+|---|---|
+| `document_id` | stable id for the source document, from its url |
+| `block_index` | which original row within that document the sentence came from — the release's own grain, preserved |
+| `sentence_index` | position of the sentence within the document |
+| `segmenter` | which rules split it |
+
+## Segmentation
+
+[pysbd](https://github.com/nipunsadvilkar/pySBD) has rules for 11 of the 22
+languages in the release: Spanish, German, French, Italian, Greek, Danish,
+Polish, Japanese, Chinese, Hindi and English. The other 11 fall back to the
+English rules.
+
+The fallback was tested against real rows rather than assumed. In Czech,
+Portuguese, Turkish, Korean, Hungarian, Hebrew, Indonesian, Icelandic,
+Norwegian and Georgian, fewer than 4% of long passages collapse to a single
+sentence. What it loses is language-specific abbreviation handling, so an
+abbreviation followed by a capital letter can split early. The `segmenter`
+column records which case each row was, so this is visible in the data rather
+than only in this file.
+
+## Where the output is poor, and why
+
+Sentence splitting cannot improve on what it is given.
+
+* **Colombia cannot be segmented at all.** Its rows are auto-generated YouTube
+  captions with no punctuation and no capitalisation — 198 of 198 long rows
+  yield a single "sentence". It is passed through whole and marked
+  `segmenter = "none (unpunctuated source)"` rather than silently split wrong.
+* **Czechia (47% of sentences under 20 characters), Republic of Korea (25%),
+  Japan (20%) and Hong Kong (18%)** are extracted block by block, so headings,
+  captions and signature lines become "sentences". That is the source grain
+  showing through, not a segmentation failure.
+* **Italy** is OCR'd PDF text with a running page header, so some sentences are
+  page furniture and some carry OCR noise.
+
+## Checking the result
+
+Total non-whitespace character mass is identical before and after, for all 42
+countries — nothing is lost, duplicated or reordered:
+
+```python
+import polars as pl
+mass = lambda p, c: (pl.read_parquet(p, columns=[c])[c]
+                     .str.replace_all(r"\s+", "").str.len_chars().sum())
+assert mass("sentences/canada.parquet", "text") == mass("data/canada.parquet", "text")
+```
+
+73 documents across Portugal, Ecuador, the Dominican Republic and Israel do not
+appear in the output, because every row of those documents has empty text.
