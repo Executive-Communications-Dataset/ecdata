@@ -1,3 +1,33 @@
+# ecdata 1.4.0
+
+* `load_ecd()` and `lazy_load_ecd()` gain a `unit` argument. The default,
+  `"document"`, is the release as published and nothing about it changes.
+  `unit = "sentence"` loads a sentence-level view of the same release: one row
+  per sentence, 9,207,251 of them against 2,891,622 rows.
+
+  The unit of observation differs by country -- a row is a whole document in
+  Brazil, a paragraph in Spain, a sentence in Canada, an HTML block in Czechia
+  -- so counting rows across countries measures the scraper as much as the
+  executive. Sentences are comparable everywhere.
+
+  ```r
+  load_ecd(country = 'Chile')                     # 1,874 rows
+  load_ecd(country = 'Chile', unit = 'sentence')  # 16,787 sentences
+  ```
+
+  The view adds `document_id`, `block_index` and `sentence_index`, which survive
+  `normalize_schema`, so a sentence can always be put back in its document and
+  the release's own grain is still visible. `segmenter` records which rules split
+  each row.
+
+  Colombia is not segmented: its rows are auto-generated YouTube captions with no
+  punctuation to split on, and are returned whole. Czechia, Republic of Korea,
+  Japan and Hong Kong are extracted block by block upstream, so a good share of
+  their "sentences" are headings and captions.
+
+  There is no pooled file for the sentence view, so `unit = 'sentence'` with
+  `full_ecd = TRUE` is an error rather than a silent 404.
+
 # ecdata 1.3.0
 
 * `load_ecd()` and `lazy_load_ecd()` now default to release `1.0.5`, the first

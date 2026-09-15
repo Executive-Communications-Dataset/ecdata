@@ -9,6 +9,7 @@ load_ecd(
   language = NULL,
   full_ecd = FALSE,
   ecd_version = "1.0.5",
+  unit = c("document", "sentence"),
   normalize_schema = TRUE,
   deduplicate = FALSE
 )
@@ -21,6 +22,8 @@ load_ecd(
 \item{full_ecd}{to download the full Executive Communications Dataset set full_ecd to TRUE}
 
 \item{ecd_version}{a character of ecd versions.}
+
+\item{unit}{the unit of observation. "document", the default, is the release as published, where a row is whatever the scraper produced for that country -- a whole document, a paragraph, a sentence or an HTML block. "sentence" loads the sentence-level view of the same release, one row per sentence, with document_id, block_index and sentence_index added so a sentence can be put back in its document. Colombia is not segmented in that view; its rows carry no punctuation to split on.}
 
 \item{normalize_schema}{the country files do not all share a schema. When TRUE, the default, each file is put on the 17 documented columns before the files are combined. Set to FALSE to get the columns exactly as they are published.}
 

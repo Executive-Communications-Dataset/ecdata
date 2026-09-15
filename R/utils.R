@@ -168,6 +168,40 @@ ecd_canonical_columns = function(){
 }
 
 
+#' Columns the sentence view adds to the documented schema
+#'
+#' Kept through normalisation rather than dropped with the scraper leftovers,
+#' since without them a sentence cannot be put back in its document.
+#'
+#' keywords @internal
+#' @returns A character vector of column names
+#' @noRd
+
+ecd_sentence_columns = function(){
+
+  c('document_id', 'block_index', 'sentence_index', 'segmenter')
+
+}
+
+
+#' The release tag holding a given version at a given unit of observation
+#'
+#' The sentence view of a release lives in its own tag, so that publishing it
+#' never modifies the release it was derived from.
+#'
+#' keywords @internal
+#' @returns A length-one character vector naming a release tag
+#' @noRd
+
+ecd_release_tag = function(ecd_version, unit = 'document'){
+
+  if(identical(unit, 'sentence')) return(paste0(ecd_version, '-sentences'))
+
+  ecd_version
+
+}
+
+
 #' Columns that hold canonical data under another name
 #'
 #' Verified against release 1.0.0: portugal.parquet has no `url` but its `urls`
@@ -217,7 +251,11 @@ normalize_ecd_schema = function(ecd_data){
 
   }
 
-  ecd_data[canonical_columns]
+  ## the sentence view's identifiers are additive, and dropping them here would
+  ## leave a sentence with no way back to its document
+  keep = c(canonical_columns, intersect(ecd_sentence_columns(), names(ecd_data)))
+
+  ecd_data[keep]
 
 }
 
