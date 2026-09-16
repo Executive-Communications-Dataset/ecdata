@@ -60,11 +60,50 @@ import ecdata as ec
 import polars as pl
 ```
 
-Both give you version `1.2.0`, which defaults to data release
-[`1.0.1`](https://github.com/Executive-Communications-Dataset/ecdata/releases/tag/1.0.1).
+Both give you version `1.4.0`, which defaults to data release
+[`1.0.5`](https://github.com/Executive-Communications-Dataset/ecdata/releases/tag/1.0.5) --
+the first release that validates with no critical or error findings.
 `install.packages('ecdata')` will fail while the CRAN archival stands, and
 `pip install ecdata` will silently give you `1.1.3`, which defaults to `1.0.0` and
 carries the defects the audit found.
+
+## Sentences instead of documents
+
+A row means different things in different countries: a whole document in Brazil,
+a paragraph in Spain, a sentence in Canada, an HTML block in Czechia. Counting
+rows across countries therefore measures the scraper as much as the executive,
+which is why the per-country table in
+[`data-validation/COVERAGE.md`](data-validation/COVERAGE.md) reports documents
+rather than rows.
+
+`unit = 'sentence'` loads a sentence-level view of the same release --
+**9,207,251 sentences against 2,891,622 rows**:
+
+``` r
+load_ecd(country = 'Chile')                     # 1,874 rows
+load_ecd(country = 'Chile', unit = 'sentence')  # 16,787 sentences
+```
+
+``` python
+ec.load_ecd(country='Chile')                    # 1,874 rows
+ec.load_ecd(country='Chile', unit='sentence')   # 16,787 sentences
+```
+
+It adds `document_id`, `block_index` and `sentence_index`, so a sentence can be
+put back in its document and the release's own grain is still visible, plus
+`segmenter` recording which rules split each row.
+
+Two things to know before using it. **Colombia is not segmented** -- its rows are
+auto-generated YouTube captions with no punctuation to split on, and come back
+whole. **Czechia, the Republic of Korea, Japan and Hong Kong** are extracted
+block by block upstream, so a good share of their "sentences" are headings and
+captions rather than prose.
+
+The view is published as
+[`1.0.5-sentences`](https://github.com/Executive-Communications-Dataset/ecdata/releases/tag/1.0.5-sentences)
+and built by
+[`data-validation/ecd_sentences.py`](data-validation/ecd_sentences.py). The
+document-level release is untouched.
 
 ## Releases, and what is still wrong
 
