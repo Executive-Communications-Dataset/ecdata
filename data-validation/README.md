@@ -123,6 +123,115 @@ reviewed.
 
 ---
 
+# Restoring Colombia's punctuation
+
+Colombia's rows are auto-generated YouTube captions. Each is a whole speech as
+one run of words with no punctuation at all, and with no capitals through most
+of Duque's term and YouTube's own through most of Petro's, which capitalise
+some sentence starts and proper nouns and plenty of words that are neither.
+`ecd_punctuate.py` puts the punctuation and capitals back, and changes nothing
+else.
+
+```bash
+pip install polars torch transformers onnx onnxruntime sentencepiece huggingface_hub
+python ecd_punctuate.py --data-dir ./data --out-dir ./candidate
+```
+
+Over `1.0.5` that adds 171,408 full stops, 373,394 commas and 2,226
+questions to Colombia's 2,018 rows, 4.42 million words. It takes about forty
+minutes on a CPU, or twenty-five with `--device mps` on Apple silicon; the two
+give identical output.
+
+## Why token classifiers
+
+A token classifier labels the words it is given — a mark before, a mark after,
+which letters are capitals. It can add punctuation and change case, but it has
+no way to add, drop, reorder or respell a word. A generative model could punctuate
+more fluently and would also quietly fix what it took for recognition errors,
+which is not an edit a dataset can make. So every output row is checked against
+its input, independently of the code that produced it: same whitespace, same
+words up to case, at most a `¿` before a word and one of `.` `,` `?` after it.
+If a single row fails, nothing is written.
+
+Caption annotations — `[Aplausos]`, `[Risas]` — are left exactly as they are and
+never shown to the models.
+
+## Two models
+
+| model | does | revision |
+|---|---|---|
+| [kredor/punctuate-all](https://huggingface.co/kredor/punctuate-all) | the mark after each word: `.` `,` `?` | `0fe3701` |
+| [1-800-BAD-CODE/punctuation_fullstop_truecase_romance](https://huggingface.co/1-800-BAD-CODE/punctuation_fullstop_truecase_romance) | capitals, and `¿` | `1e8d395` |
+
+The romance model punctuates too, and is the only one of the two that does
+capitals or `¿` at all, but kredor is ahead on human punctuation by 0.10 F1 on
+commas and 0.15 on full stops. So kredor places the marks, and the romance model
+cases the words. The romance model decides capitals by first deciding
+punctuation — it embeds the mark it chose after each token and conditions
+capitalisation on that — so its graph is given kredor's marks in place of its
+own, and the capitals follow the punctuation that is actually written: a word
+after a comma is not left with the capital it would have had after a full stop.
+
+Four rules on top:
+
+* A sentence starts with a capital and a row ends with a terminal mark.
+* Where kredor predicts a colon a comma is written, because there the human
+  text has a comma more often than a colon.
+* No mark is written inside a fixed connective — *por ejemplo*, *sin embargo*,
+  *por lo tanto*, 55 of them, listed in `CONNECTIVES` for review. kredor marks a
+  parenthetical by putting a comma after every word of it and the word before,
+  so it writes "y, por, lo, tanto," where a transcriber writes "y, por lo
+  tanto,". In the transcripts used to evaluate it, kredor puts a mark at 1,320 of
+  the 2,564 positions inside one of these, and the transcribers at 4.
+* A `¿` is kept only in a sentence that a `?` closes, and a `?` with no `¿`
+  gets one at the start of its sentence, so every question is opened and
+  closed.
+
+Input is lower-cased first, so Petro's rows are re-cased by the same model as
+Duque's rather than keeping YouTube's capitals, and the two terms come out with
+one convention.
+
+## How good it is
+
+`--evaluate` takes human-punctuated Spanish from the same release, strips its
+punctuation and capitals, restores them, and scores the result: Mexico's
+stenographic press-conference transcripts, which are spontaneous speech, and
+Argentina's speeches. 60 documents of each, 3,000 words at most from each.
+
+```bash
+python ecd_punctuate.py --evaluate --data-dir ./data
+```
+
+| | Mexico precision | recall | F1 | Argentina precision | recall | F1 |
+|---|---:|---:|---:|---:|---:|---:|
+| `,` comma | 0.70 | 0.67 | **0.68** | 0.62 | 0.54 | **0.58** |
+| `.` full stop | 0.57 | 0.75 | **0.65** | 0.48 | 0.69 | **0.57** |
+| `?` question | 0.77 | 0.19 | 0.30 | 0.71 | 0.17 | 0.28 |
+| `¿` opening | 0.77 | 0.19 | 0.30 | 0.65 | 0.16 | 0.25 |
+| sentence boundary | 0.59 | 0.74 | **0.65** | 0.51 | 0.68 | **0.58** |
+| capital letter | 0.75 | 0.87 | **0.80** | 0.70 | 0.77 | **0.73** |
+
+177,280 words from Mexico and 98,276 from Argentina. The restored text has 1.26
+and 1.34 times as many sentences as the transcripts.
+
+Read these with two things in mind. They are an upper bound, because a
+transcript has no recognition errors and a caption does. And they score every
+disagreement with the transcriber as an error, when in spontaneous speech where
+one sentence ends and the next begins is often a matter of style. About nine in
+ten of the sentence breaks fall where the transcriber put a full stop or a
+comma, and most of the rest of the disagreement is the model ending a sentence
+at the transcriber's comma. Expect breaks at real clause boundaries, and
+sentences somewhat shorter than a stenographer would make them.
+
+**Questions are marked conservatively.** kredor marks about one question in
+five and is right about three times in four. Adding the romance model's
+question marks would find more than twice as many and get more than half of
+them wrong, turning statements into questions. A missed question reads as a statement,
+which is what every row was before; a false one says something the speaker did
+not.
+
+---
+
 # A sentence-level view
 
 `ecd_sentences.py` derives one row per sentence from a release, and writes it
@@ -134,7 +243,10 @@ python ecd_sentences.py --data-dir ./data --out-dir ./sentences --jobs 8
 ```
 
 Over `1.0.5` that turns **2,891,622 rows into 9,207,251 sentences**, 3.2 per row.
-It takes about twenty minutes on eight cores.
+It takes about twenty minutes on eight cores. Over `1.0.6`, where Colombia is
+punctuated, it is **9,378,448 sentences**, and Colombia adds about a quarter of an
+hour on one core: each of its rows is a whole speech, and pysbd's time grows
+with the square of the length of what it is given.
 
 ## Why it is a separate view rather than a new release
 
@@ -174,9 +286,15 @@ than only in this file.
 
 Sentence splitting cannot improve on what it is given.
 
-* **Colombia cannot be segmented at all.** Its rows are auto-generated YouTube
-  captions with no punctuation and no capitalisation — 198 of 198 long rows
-  yield a single "sentence". It is passed through whole and marked
+* **Colombia's sentence boundaries are a model's.** Its rows are auto-generated
+  YouTube captions with no punctuation of their own. From `1.0.6` they carry the
+  punctuation `ecd_punctuate.py` restores (above), and are segmented on it and
+  marked `segmenter = "pysbd/es on restored punctuation"`: 2,018 rows become
+  173,215 sentences, with a median of 120 characters. A few passages where the
+  model chose commas throughout run on: 45 sentences are over 1,000 characters,
+  0.3% of the text. A release without it, such as `1.0.5`, has no
+  boundaries to find — 198 of 198 long rows yield a single "sentence" — so
+  Colombia is passed through whole and marked
   `segmenter = "none (unpunctuated source)"` rather than silently split wrong.
 * **Czechia (47% of sentences under 20 characters), Republic of Korea (25%),
   Japan (20%) and Hong Kong (18%)** are extracted block by block, so headings,

@@ -8,7 +8,7 @@ lazy_load_ecd(
   country = NULL,
   language = NULL,
   full_ecd = FALSE,
-  ecd_version = "1.0.5",
+  ecd_version = "1.0.6",
   unit = c("document", "sentence")
 )
 }
@@ -21,7 +21,7 @@ lazy_load_ecd(
 
 \item{ecd_version}{a character of ecd versions.}
 
-\item{unit}{the unit of observation. "document", the default, is the release as published, where a row is whatever the scraper produced for that country -- a whole document, a paragraph, a sentence or an HTML block. "sentence" loads the sentence-level view of the same release, one row per sentence, with document_id, block_index and sentence_index added so a sentence can be put back in its document. Colombia is not segmented in that view; its rows carry no punctuation to split on.}
+\item{unit}{the unit of observation. "document", the default, is the release as published, where a row is whatever the scraper produced for that country -- a whole document, a paragraph, a sentence or an HTML block. "sentence" loads the sentence-level view of the same release, one row per sentence, with document_id, block_index and sentence_index added so a sentence can be put back in its document. Colombia's YouTube captions carry no punctuation of their own; from 1.0.6 they are segmented on punctuation restored by a model, and in earlier releases they are returned whole.}
 }
 \value{
 An arrow Dataset with the specified country/countries or language/languages. Call \code{dplyr::collect()} to bring it into memory.

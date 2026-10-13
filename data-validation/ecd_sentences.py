@@ -21,10 +21,12 @@ Icelandic, Norwegian and Georgian, where fewer than 4% of long rows collapse to
 a single sentence. What the fallback loses is language-specific abbreviation
 handling, so an abbreviation followed by a capital may split early.
 
-Colombia cannot be segmented at all and is passed through whole, marked
-`segmenter = "none (unpunctuated source)"`. Its rows are auto-generated YouTube
-captions with no punctuation and no capitalisation, so there are no sentence
-boundaries to find.
+Colombia's rows are auto-generated YouTube captions, which carry no
+punctuation of their own. From release 1.0.6 they carry punctuation restored by
+ecd_punctuate.py and are segmented on it, marked
+`segmenter = "pysbd/es on restored punctuation"`. A release without it has no
+sentence boundaries to find, so Colombia is passed through whole, marked
+`segmenter = "none (unpunctuated source)"`.
 """
 
 import argparse
@@ -52,8 +54,8 @@ ISO = {
     "Spanish": "es", "Turkish": "tr",
 }
 
-# Sources with no sentence boundaries to find.
-UNSEGMENTABLE = {"colombia"}
+# Sources whose punctuation is not their own: restored from 1.0.6, absent before.
+RESTORED = {"colombia"}
 
 CHUNK = 20_000
 
@@ -81,6 +83,13 @@ def _split_chunk(args):
     return out
 
 
+def _punctuated(df):
+    """Whether the long rows of a file have sentence boundaries inside them."""
+    text = df["text"].drop_nulls()
+    long = text.filter(text.str.len_chars() > 500)
+    return long.len() > 0 and long.str.contains(r"[.!?]\s").mean() > 0.5
+
+
 def segment_country(path, out_dir, jobs):
     name = path.stem
     df = pl.read_parquet(path)
@@ -97,7 +106,7 @@ def segment_country(path, out_dir, jobs):
         block_index=pl.col("_row").rank("ordinal").over("document_id").cast(pl.Int32) - 1
     ).drop("_row")
 
-    if name in UNSEGMENTABLE:
+    if name in RESTORED and not _punctuated(df):
         out = df.with_columns(
             sentence_index=pl.col("block_index"),
             segmenter=pl.lit("none (unpunctuated source)"),
@@ -118,7 +127,8 @@ def segment_country(path, out_dir, jobs):
             pieces.append(
                 part.with_columns(
                     _sents=pl.Series("_sents", flat, dtype=pl.List(pl.String)),
-                    segmenter=pl.lit(_label(iso)),
+                    segmenter=pl.lit(_label(iso) + (" on restored punctuation"
+                                                    if name in RESTORED else "")),
                 )
             )
         merged = pl.concat(pieces, how="vertical")
