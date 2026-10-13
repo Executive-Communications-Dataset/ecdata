@@ -32,13 +32,15 @@ The split is by what each does best on human punctuation from this release
 stops, and the romance model is the only one of the two that cases or opens a
 question at all.
 
-Questions are left to kredor, which marks few but is right about three times
-in four. Taking the romance model's `?` as well finds more than twice as many and gets
-more than half of them wrong, turning statements into questions. Where kredor
-writes a colon, the human text has a comma more often than a colon, so a comma
-is written. kredor also marks a parenthetical by putting a comma after every
-word of it -- "por, lo, tanto," -- so no mark is written inside the fixed
-connectives listed in CONNECTIVES.
+Questions are left to kredor, which marks few but is right more than three
+times in four. Taking the romance model's `?` as well finds more than twice as
+many and gets more than half of them wrong, turning statements into questions.
+Where kredor writes a colon, the human text has a comma more often than a
+colon, so a comma is written. kredor also marks a parenthetical by putting a
+comma after every word of it -- "por, lo, tanto," -- and splits names whose
+words are also ordinary words -- "Estados, Unidos" -- so no mark is written
+inside the fixed phrases listed in FIXED_PHRASES, each of which
+`--review-phrases` checks against the release's own human punctuation.
 
 Words are lower-cased before either model sees them, so Petro's rows are
 re-cased by the same model as Duque's rather than keeping YouTube's capitals.
@@ -103,25 +105,43 @@ CASE_MODEL = dict(
 # a mark as written -> the post label the casing model is conditioned on
 CONDITION = {"": None, ".": ".", ",": ",", "?": "?"}
 
-# Fixed connectives that no mark is written inside. kredor marks a
-# parenthetical by putting a comma after every word of it and the word before
-# -- "y, por, supuesto," -- and in Mexico's and Argentina's transcripts it puts
-# a mark at 1,320 of the 2,564 positions inside one of these, where the
-# transcribers put one at 4. This is a judgement rather than a derivation, so it
-# is here to be reviewed.
-CONNECTIVES = [p.split() for p in """
+# Phrases that no mark is written inside. kredor splits two kinds of fixed unit:
+#
+# * connectives, because it marks a parenthetical by putting a comma after
+#   every word of it and the word before -- "y, por, supuesto,". In Mexico's and
+#   Argentina's transcripts it puts a mark at about half the positions inside
+#   one of these.
+# * names and idioms whose words are also ordinary words -- in release 1.0.6,
+#   which kept only connectives whole, it wrote "Estados, Unidos" 385 times,
+#   "Naciones, Unidas" 182 and "a, veces" 73. These were found by searching
+#   that output for pairs it splits.
+#
+# Choosing what is a fixed unit is a judgement, so each one is also held to a
+# derivation: across the human-punctuated Spanish in the release it occurs at
+# least MIN_USES times, and the transcribers put a mark inside it in fewer than
+# 1 in 100 of them. `--review-phrases` checks that. "eso sí" (split 7.4% of the
+# time: "nada de eso. Sí se afectaron") and "más aún" (1.1%) failed, and "por lo
+# demás" is too rare to judge (83 uses), so they are not here.
+FIXED_PHRASES = [p.split() for p in """
     a la vez | a propósito | a su vez | ahora bien | al contrario | al mismo tiempo |
     ante todo | de alguna manera | de esta forma | de esta manera | de hecho |
     de todas formas | de todas maneras | de verdad | desde luego | en cambio |
     en consecuencia | en definitiva | en efecto | en ese sentido | en especial |
     en este sentido | en fin | en general | en particular | en primer lugar |
     en realidad | en resumen | en segundo lugar | en tercer lugar | en todo caso |
-    eso sí | es decir | más aún | no obstante | o sea | por cierto |
-    por consiguiente | por ejemplo | por el contrario | por eso | por fin |
-    por lo demás | por lo general | por lo menos | por lo tanto | por otra parte |
-    por otro lado | por supuesto | por tanto | por último | por un lado |
-    por una parte | sin embargo | sobre todo
+    es decir | no obstante | o sea | por cierto | por consiguiente | por ejemplo |
+    por el contrario | por eso | por fin | por lo general |
+    por lo menos | por lo tanto | por otra parte | por otro lado | por supuesto |
+    por tanto | por último | por un lado | por una parte | sin embargo | sobre todo |
+
+    a veces | al día | al respecto | de nuevo | hasta ahora | por qué |
+    costa rica | el salvador | estados unidos | naciones unidas | nueva york |
+    países bajos | puerto rico | reino unido
     """.split("|")]
+MIN_USES = 100        # enough to see a split rate of 1 in 100
+MAX_SPLIT_RATE = 0.01
+SPANISH = ("argentina", "bolivia", "chile", "costa_rica", "dominican_republic",
+           "ecuador", "mexico", "spain", "uruguay", "venezuela")
 
 COUNTRIES = ("colombia",)
 BATCH = 16
@@ -317,7 +337,7 @@ class Punctuator:
         . , ?
         """
         lowered = [[w.lower() for w in words] for words in docs]
-        marks = [_keep_connectives_whole(words, m)
+        marks = [_keep_phrases_whole(words, m)
                  for words, m in zip(lowered, self.marks(lowered))]
         encoded = [self._encode(words) for words in lowered]
         given = []
@@ -367,16 +387,16 @@ class Punctuator:
         return out
 
 
-_CONNECTIVES_BY_FIRST = {}
-for _phrase in CONNECTIVES:
-    _CONNECTIVES_BY_FIRST.setdefault(_phrase[0], []).append(_phrase)
+_PHRASES_BY_FIRST = {}
+for _phrase in FIXED_PHRASES:
+    _PHRASES_BY_FIRST.setdefault(_phrase[0], []).append(_phrase)
 
 
-def _keep_connectives_whole(words, marks):
-    """Drop any mark that would split one of CONNECTIVES."""
+def _keep_phrases_whole(words, marks):
+    """Drop any mark that would split one of FIXED_PHRASES."""
     marks = list(marks)
     for i, w in enumerate(words):
-        for phrase in _CONNECTIVES_BY_FIRST.get(w, ()):
+        for phrase in _PHRASES_BY_FIRST.get(w, ()):
             if words[i:i + len(phrase)] == phrase:
                 for k in range(i, i + len(phrase) - 1):
                     marks[k] = ""
@@ -542,6 +562,34 @@ def evaluate(data_dir, model, n_docs, max_words, seed):
         print(f"{name:<28}{len(docs)} documents, {len(gold_post):,} words\n")
 
 
+def review_phrases(data_dir):
+    """Hold each of FIXED_PHRASES to the release's own human punctuation.
+
+    Counts every occurrence of the phrase in the Spanish-language files, with
+    or without a mark between its words, and how many have one. Returns the
+    phrases that are too rare to judge or that transcribers do split.
+    """
+    text = pl.concat([pl.read_parquet(data_dir / f"{c}.parquet", columns=["text"])
+                      for c in SPANISH]).drop_nulls()["text"].str.to_lowercase()
+    print(f"{text.len():,} rows of human-punctuated Spanish from {len(SPANISH)} countries\n")
+    print(f"{'phrase':<22}{'uses':>8}{'split':>7}{'rate':>8}")
+    failed = []
+    for phrase in FIXED_PHRASES:
+        words = [re.escape(w) for w in phrase]
+        uses = int(text.str.count_matches(
+            r"\b" + r"(?:\s*[.,;:!?…]+\s*|\s+)".join(words) + r"\b").sum())
+        whole = int(text.str.count_matches(r"\b" + r"\s+".join(words) + r"\b").sum())
+        rate = (uses - whole) / uses if uses else 1.0
+        ok = uses >= MIN_USES and rate < MAX_SPLIT_RATE
+        if not ok:
+            failed.append(" ".join(phrase))
+        print(f"{' '.join(phrase):<22}{uses:>8,}{uses - whole:>7,}{rate:>8.2%}"
+              f"{'' if ok else '   FAILS'}")
+    print(f"\n{len(FIXED_PHRASES) - len(failed)} of {len(FIXED_PHRASES)} pass: at least "
+          f"{MIN_USES} uses, split in fewer than {MAX_SPLIT_RATE:.0%} of them")
+    return failed
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -553,17 +601,22 @@ def main():
     ap.add_argument("--chunk", type=int, default=50, help="rows per progress line")
     ap.add_argument("--evaluate", action="store_true",
                     help="score against Mexico's and Argentina's human punctuation instead")
+    ap.add_argument("--review-phrases", action="store_true",
+                    help="check FIXED_PHRASES against the release's human punctuation instead")
     ap.add_argument("--eval-docs", type=int, default=60)
     ap.add_argument("--eval-words", type=int, default=3000)
     ap.add_argument("--seed", type=int, default=1)
     args = ap.parse_args()
+
+    if args.review_phrases:
+        return 1 if review_phrases(args.data_dir) else 0
 
     model = Punctuator(device=args.device, threads=args.threads)
     if args.evaluate:
         evaluate(args.data_dir, model, args.eval_docs, args.eval_words, args.seed)
         return 0
     if not args.out_dir:
-        ap.error("--out-dir is required unless --evaluate")
+        ap.error("--out-dir is required unless --evaluate or --review-phrases")
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     for name in COUNTRIES:

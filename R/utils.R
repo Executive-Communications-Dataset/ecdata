@@ -6,7 +6,7 @@
 #' 
 
 
-link_builder = \(country = NULL, language = NULL, ecd_version = '1.0.6'){
+link_builder = \(country = NULL, language = NULL, ecd_version = '1.0.7'){
 
   if(!isTRUE(is.null(country)) && isTRUE(is.null(language))){
   
@@ -345,7 +345,7 @@ read_ecd_files = function(links, normalize_schema = TRUE, deduplicate = FALSE){
 #' @returns A named list of known issues for a release
 #' @noRd
 
-ecd_known_issues = function(ecd_version = '1.0.6'){
+ecd_known_issues = function(ecd_version = '1.0.7'){
 
   issues = list(
     `1.0.0` = list(
@@ -415,7 +415,11 @@ ecd_known_issues = function(ecd_version = '1.0.6'){
   ## had none. Nothing else changed, so every other caveat carries over.
   issues[['1.0.6']] = issues[['1.0.5']]
 
-  issues[['1.0.6']]$colombia = 'colombia.parquet is auto-generated captions of YouTube videos published by the presidency, which carry no punctuation. In 1.0.6 it was restored by a model: the words are the captions\' own, the punctuation and capitals are not. Few questions are marked -- about one in five.'
+  issues[['1.0.6']]$colombia = 'colombia.parquet is auto-generated captions of YouTube videos published by the presidency, which carry no punctuation. From 1.0.6 it is restored by a model: the words are the captions\' own, the punctuation and capitals are not. Few questions are marked -- about one in five.'
+
+  ## 1.0.7 refined which fixed phrases a mark may not split, checked against
+  ## the release's own human punctuation. The caveats are 1.0.6's.
+  issues[['1.0.7']] = issues[['1.0.6']]
 
   issues[[ecd_version]]
 
@@ -446,7 +450,7 @@ ecd_full_ecd_issues = function(){
 #' @returns No return value, called for the message it prints
 #' @noRd
 
-warn_known_issues = function(links = NULL, ecd_version = '1.0.6', full_ecd = FALSE){
+warn_known_issues = function(links = NULL, ecd_version = '1.0.7', full_ecd = FALSE){
 
   if(isTRUE(full_ecd)){
 

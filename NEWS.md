@@ -1,9 +1,9 @@
 # ecdata 1.5.0
 
-* `load_ecd()` and `lazy_load_ecd()` now default to release `1.0.6`, which
+* `load_ecd()` and `lazy_load_ecd()` now default to release `1.0.7`, which
   restores punctuation and capitalisation to Colombia. Its rows are
   auto-generated YouTube captions, each a whole speech with no punctuation at
-  all. `1.0.6` puts it back with token classifiers, which can add marks and
+  all. `1.0.7` puts it back with token classifiers, which can add marks and
   change case but cannot change a word, and every row is checked against
   `1.0.5` to confirm that the words are the captions' own. Nothing else in the
   release differs from `1.0.5`.
@@ -12,7 +12,10 @@
   are marked -- about one in five. `data-validation/README.md` has how it
   scores against human punctuation from the same release.
 
-* The sentence view now segments Colombia: 2,018 rows become 173,215
+  `1.0.6`, published the same day, is superseded: it split names such as
+  "Estados, Unidos" that `1.0.7` keeps whole.
+
+* The sentence view now segments Colombia: 2,018 rows become 172,698
   sentences, where `1.0.5-sentences` returned each speech whole. `segmenter`
   reads `"pysbd/es on restored punctuation"` on every one of them, so the
   provenance of the boundaries is in the data. `unit = 'sentence'` with

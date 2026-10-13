@@ -137,10 +137,10 @@ pip install polars torch transformers onnx onnxruntime sentencepiece huggingface
 python ecd_punctuate.py --data-dir ./data --out-dir ./candidate
 ```
 
-Over `1.0.5` that adds 171,408 full stops, 373,394 commas and 2,226
-questions to Colombia's 2,018 rows, 4.42 million words. It takes about forty
-minutes on a CPU, or twenty-five with `--device mps` on Apple silicon; the two
-give identical output.
+Over `1.0.5` that adds 170,971 full stops, 372,343 commas and 2,119
+questions to Colombia's 2,018 rows, 4.42 million words. It takes about
+thirty-five minutes with `--device mps` on Apple silicon, and longer on a CPU;
+the two give identical output.
 
 ## Why token classifiers
 
@@ -177,15 +177,31 @@ Four rules on top:
 * A sentence starts with a capital and a row ends with a terminal mark.
 * Where kredor predicts a colon a comma is written, because there the human
   text has a comma more often than a colon.
-* No mark is written inside a fixed connective — *por ejemplo*, *sin embargo*,
-  *por lo tanto*, 55 of them, listed in `CONNECTIVES` for review. kredor marks a
-  parenthetical by putting a comma after every word of it and the word before,
-  so it writes "y, por, lo, tanto," where a transcriber writes "y, por lo
-  tanto,". In the transcripts used to evaluate it, kredor puts a mark at 1,320 of
-  the 2,564 positions inside one of these, and the transcribers at 4.
+* No mark is written inside a fixed phrase — 66 of them, in `FIXED_PHRASES`.
+  kredor splits two kinds. Connectives, because it marks a parenthetical by
+  putting a comma after every word of it and the word before: "y, por, lo,
+  tanto," where a transcriber writes "y, por lo tanto,". And names and idioms
+  whose words are also ordinary words: in `1.0.6` it wrote "Estados, Unidos"
+  385 times, "Naciones, Unidas" 182 and "a, veces" 73.
 * A `¿` is kept only in a sentence that a `?` closes, and a `?` with no `¿`
   gets one at the start of its sentence, so every question is opened and
   closed.
+
+Which phrases are fixed is a judgement, so each one is also held to the
+release's own human punctuation. `--review-phrases` checks that it occurs at
+least 100 times in the Spanish-language files — enough to see a rate of 1 in
+100 — and that the transcribers put a mark inside it in fewer than 1 in 100 of
+them:
+
+```bash
+python ecd_punctuate.py --review-phrases --data-dir ./data
+```
+
+All 66 pass: across 274,828 uses in 753,095 rows from ten countries, the
+transcribers split one 49 times. Three phrases came off the list that way.
+*eso sí* is split 7.4% of the time, and rightly — "nada de eso. Sí se
+afectaron" — while *más aún* is split 1.1% of the time and *por lo demás* is too
+rare to judge, at 83 uses.
 
 Input is lower-cased first, so Petro's rows are re-cased by the same model as
 Duque's rather than keeping YouTube's capitals, and the two terms come out with
@@ -206,9 +222,9 @@ python ecd_punctuate.py --evaluate --data-dir ./data
 |---|---:|---:|---:|---:|---:|---:|
 | `,` comma | 0.70 | 0.67 | **0.68** | 0.62 | 0.54 | **0.58** |
 | `.` full stop | 0.57 | 0.75 | **0.65** | 0.48 | 0.69 | **0.57** |
-| `?` question | 0.77 | 0.19 | 0.30 | 0.71 | 0.17 | 0.28 |
-| `¿` opening | 0.77 | 0.19 | 0.30 | 0.65 | 0.16 | 0.25 |
-| sentence boundary | 0.59 | 0.74 | **0.65** | 0.51 | 0.68 | **0.58** |
+| `?` question | 0.80 | 0.19 | 0.30 | 0.76 | 0.17 | 0.28 |
+| `¿` opening | 0.80 | 0.19 | 0.30 | 0.69 | 0.16 | 0.26 |
+| sentence boundary | 0.59 | 0.74 | **0.66** | 0.51 | 0.68 | **0.58** |
 | capital letter | 0.75 | 0.87 | **0.80** | 0.70 | 0.77 | **0.73** |
 
 177,280 words from Mexico and 98,276 from Argentina. The restored text has 1.26
@@ -224,7 +240,7 @@ at the transcriber's comma. Expect breaks at real clause boundaries, and
 sentences somewhat shorter than a stenographer would make them.
 
 **Questions are marked conservatively.** kredor marks about one question in
-five and is right about three times in four. Adding the romance model's
+five and is right more than three times in four. Adding the romance model's
 question marks would find more than twice as many and get more than half of
 them wrong, turning statements into questions. A missed question reads as a statement,
 which is what every row was before; a false one says something the speaker did
@@ -243,8 +259,8 @@ python ecd_sentences.py --data-dir ./data --out-dir ./sentences --jobs 8
 ```
 
 Over `1.0.5` that turns **2,891,622 rows into 9,207,251 sentences**, 3.2 per row.
-It takes about twenty minutes on eight cores. Over `1.0.6`, where Colombia is
-punctuated, it is **9,378,448 sentences**, and Colombia adds about a quarter of an
+It takes about twenty minutes on eight cores. Over `1.0.7`, where Colombia is
+punctuated, it is **9,377,931 sentences**, and Colombia adds about a quarter of an
 hour on one core: each of its rows is a whole speech, and pysbd's time grows
 with the square of the length of what it is given.
 
@@ -290,7 +306,7 @@ Sentence splitting cannot improve on what it is given.
   YouTube captions with no punctuation of their own. From `1.0.6` they carry the
   punctuation `ecd_punctuate.py` restores (above), and are segmented on it and
   marked `segmenter = "pysbd/es on restored punctuation"`: 2,018 rows become
-  173,215 sentences, with a median of 120 characters. A few passages where the
+  172,698 sentences, with a median of 121 characters. A few passages where the
   model chose commas throughout run on: 45 sentences are over 1,000 characters,
   0.3% of the text. A release without it, such as `1.0.5`, has no
   boundaries to find — 198 of 198 long rows yield a single "sentence" — so
