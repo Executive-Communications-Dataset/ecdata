@@ -8,7 +8,7 @@ load_ecd(
   country = NULL,
   language = NULL,
   full_ecd = FALSE,
-  ecd_version = "1.0.5",
+  ecd_version = "1.0.7",
   unit = c("document", "sentence"),
   normalize_schema = TRUE,
   deduplicate = FALSE
@@ -23,7 +23,7 @@ load_ecd(
 
 \item{ecd_version}{a character of ecd versions.}
 
-\item{unit}{the unit of observation. "document", the default, is the release as published, where a row is whatever the scraper produced for that country -- a whole document, a paragraph, a sentence or an HTML block. "sentence" loads the sentence-level view of the same release, one row per sentence, with document_id, block_index and sentence_index added so a sentence can be put back in its document. Colombia is not segmented in that view; its rows carry no punctuation to split on.}
+\item{unit}{the unit of observation. "document", the default, is the release as published, where a row is whatever the scraper produced for that country -- a whole document, a paragraph, a sentence or an HTML block. "sentence" loads the sentence-level view of the same release, one row per sentence, with document_id, block_index and sentence_index added so a sentence can be put back in its document. Colombia's YouTube captions carry no punctuation of their own; from 1.0.6 they are segmented on punctuation restored by a model, and in earlier releases they are returned whole.}
 
 \item{normalize_schema}{the country files do not all share a schema. When TRUE, the default, each file is put on the 17 documented columns before the files are combined. Set to FALSE to get the columns exactly as they are published.}
 

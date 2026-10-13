@@ -5,7 +5,7 @@
 #' @param language a character vector with a lanaguage or languages in our dataset to download.
 #' @param full_ecd to download the full Executive Communications Dataset set full_ecd to TRUE
 #' @param ecd_version a character of ecd versions.
-#' @param unit the unit of observation. "document", the default, is the release as published, where a row is whatever the scraper produced for that country -- a whole document, a paragraph, a sentence or an HTML block. "sentence" loads the sentence-level view of the same release, one row per sentence, with document_id, block_index and sentence_index added so a sentence can be put back in its document. Colombia is not segmented in that view; its rows carry no punctuation to split on.
+#' @param unit the unit of observation. "document", the default, is the release as published, where a row is whatever the scraper produced for that country -- a whole document, a paragraph, a sentence or an HTML block. "sentence" loads the sentence-level view of the same release, one row per sentence, with document_id, block_index and sentence_index added so a sentence can be put back in its document. Colombia's YouTube captions carry no punctuation of their own; from 1.0.6 they are segmented on punctuation restored by a model, and in earlier releases they are returned whole.
 #' @returns An arrow Dataset with the specified country/countries or language/languages. Call `dplyr::collect()` to bring it into memory.
 #' @importFrom curl multi_download
 #' @export
@@ -30,7 +30,7 @@
 #'
 
 
-lazy_load_ecd = function(country=NULL, language=NULL, full_ecd=FALSE, ecd_version = '1.0.5',
+lazy_load_ecd = function(country=NULL, language=NULL, full_ecd=FALSE, ecd_version = '1.0.7',
                          unit = c('document', 'sentence')){
   if (!curl::has_internet()) {
     rlang::abort("Internet is required to use this function")
