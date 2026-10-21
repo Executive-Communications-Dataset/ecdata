@@ -8,7 +8,7 @@ lazy_load_ecd(
   country = NULL,
   language = NULL,
   full_ecd = FALSE,
-  ecd_version = "1.0.7",
+  ecd_version = "1.0.8",
   unit = c("document", "sentence")
 )
 }

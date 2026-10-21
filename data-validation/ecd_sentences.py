@@ -133,10 +133,12 @@ def segment_country(path, out_dir, jobs):
             )
         merged = pl.concat(pieces, how="vertical")
         rows_in = merged.height
+        # the document's text goes before the explode, which copies every other
+        # column into each sentence: 21,000 copies of a 1.7-million-character text
         out = (merged.filter(pl.col("_sents").list.len() > 0)
+                     .drop("text")
                      .explode("_sents")
-                     .with_columns(text=pl.col("_sents"))
-                     .drop("_sents"))
+                     .rename({"_sents": "text"}))
         out = out.with_row_index("_i").with_columns(
             sentence_index=pl.col("_i").rank("ordinal").over("document_id").cast(pl.Int32) - 1
         ).drop("_i")

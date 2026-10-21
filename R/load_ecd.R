@@ -39,7 +39,7 @@
 #'
 
 
-load_ecd = function(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = '1.0.7',
+load_ecd = function(country=NULL, language=NULL , full_ecd=FALSE, ecd_version = '1.0.8',
                     unit = c('document', 'sentence'),
                     normalize_schema = TRUE, deduplicate = FALSE){
   if (!curl::has_internet()) {
