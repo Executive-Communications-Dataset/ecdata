@@ -1,3 +1,28 @@
+# ecdata 1.6.0
+
+* `load_ecd()` and `lazy_load_ecd()` now default to release `1.0.8`, which
+  rebuilds Brazil. In `1.0.7` it had nothing between March 1991 and December
+  2002, 439 rows with no executive, and no record of the files it was built
+  from. `1.0.8` goes back to the presidency's library, through web archives,
+  and holds the eight presidents since 1985: 6,069 documents against 5,077.
+  Nothing else in the release differs from `1.0.7`.
+
+  Every row now has an executive, and `type` is filled for every row. Itamar
+  Franco and Fernando Henrique Cardoso appear for the first time, and Lula's
+  current term runs to April 2026. 1991 to 2002 is still thin -- 126
+  documents -- because the archives hold few readable copies of them, so
+  loading Brazil warns about it.
+
+  `executive` reads "Luiz Inácio Lula da Silva" where `1.0.7` had "Lula da
+  Silva". Code that filters on the old value needs updating.
+
+  The text of the rows carried over from `1.0.7` is repaired: words broken
+  across PDF lines are rejoined, and the press office's header, which sat in
+  mid-sentence at every page break of Lula's 2003-10 speeches, is removed.
+  The release notes have the counts.
+
+* The code that rebuilt Brazil is in `raw-data/Brazil-juan/rescrape-2026`.
+
 # ecdata 1.5.0
 
 * `load_ecd()` and `lazy_load_ecd()` now default to release `1.0.7`, which

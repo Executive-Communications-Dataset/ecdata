@@ -6,7 +6,7 @@
 #' 
 
 
-link_builder = \(country = NULL, language = NULL, ecd_version = '1.0.7'){
+link_builder = \(country = NULL, language = NULL, ecd_version = '1.0.8'){
 
   if(!isTRUE(is.null(country)) && isTRUE(is.null(language))){
   
@@ -345,7 +345,7 @@ read_ecd_files = function(links, normalize_schema = TRUE, deduplicate = FALSE){
 #' @returns A named list of known issues for a release
 #' @noRd
 
-ecd_known_issues = function(ecd_version = '1.0.7'){
+ecd_known_issues = function(ecd_version = '1.0.8'){
 
   issues = list(
     `1.0.0` = list(
@@ -421,6 +421,12 @@ ecd_known_issues = function(ecd_version = '1.0.7'){
   ## the release's own human punctuation. The caveats are 1.0.6's.
   issues[['1.0.7']] = issues[['1.0.6']]
 
+  ## 1.0.8 rebuilt Brazil from web archives of the presidency's library. Every
+  ## row now has an executive, so it warns about coverage rather than attribution.
+  issues[['1.0.8']] = issues[['1.0.7']]
+
+  issues[['1.0.8']]$brazil = 'brazil.parquet was rebuilt in 1.0.8 from web archives of the presidency\'s library, which was offline at the time. 1991 to 2002 is still thin -- Itamar Franco has 8 documents and Fernando Henrique Cardoso 102 -- because the archives hold few readable copies of them. 12 rows are annual Messages to Congress, government reports of up to several hundred pages: filter on type before counting words.'
+
   issues[[ecd_version]]
 
 }
@@ -450,7 +456,7 @@ ecd_full_ecd_issues = function(){
 #' @returns No return value, called for the message it prints
 #' @noRd
 
-warn_known_issues = function(links = NULL, ecd_version = '1.0.7', full_ecd = FALSE){
+warn_known_issues = function(links = NULL, ecd_version = '1.0.8', full_ecd = FALSE){
 
   if(isTRUE(full_ecd)){
 

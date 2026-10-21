@@ -1,0 +1,8 @@
+requests
+polars
+pypdf
+pdfplumber
+beautifulsoup4
+lxml
+ocrmac
+pypdfium2
